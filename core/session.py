@@ -17,7 +17,7 @@ from core.exceptions import SessionLimitError
 
 logger = logging.getLogger('mayday.session')
 
-MAX_SESSION_STEPS = 15
+MAX_SESSION_STEPS = 50
 MAX_CONTEXT_TOKENS = 1500
 MAX_RETRIES = 3
 MAX_RECOVERY_DEPTH = 2
