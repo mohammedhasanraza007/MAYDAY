@@ -1,0 +1,2412 @@
+﻿```
+=== START MAYDAY_Codex_Handoff.txt ===
+
+
+================================================================================
+M.A.Y.D.A.Y v4.3.0 — CODEX / ANTIGRAVITY HANDOFF BRIEF
+Modular Checkpoint Implementation Plan
+15 phases (06→06a/06b, 07→07a/07b, 09→09a/09b)
+Source: MAYDAY Full Implementation Audit Report (May 2026) + R10 Policy Pack
+Target: Convert chat-bot shell into REAL agentic AI software factory
+        — fully portable, plug-and-play, self-healing, NO mocks —
+================================================================================
+
+
+--------------------------------------------------------------------------------
+0. READ THIS FIRST — NON-NEGOTIABLE RULES FOR THE AGENT
+--------------------------------------------------------------------------------
+
+
+YOU ARE: an autonomous coding agent (Codex / Antigravity / Claude Code).
+YOU ARE NOT: a chat assistant. Do not explain. Do not summarize. Execute.
+
+
+THE PROJECT: M.A.Y.D.A.Y — an offline-first local AI software factory.
+CURRENT STATE: 40% built. UI shell works. Execution layer is missing.
+
+
+USER'S COMPLAINTS (all must be solved):
+  (a) "Tools don't make real files. It's just a chatbot."
+  (b) "If I delete runtime/ or models/, build.bat breaks. I want plug-and-play."
+  (c) "It writes code into chat instead of executing. I want REAL tool use."
+  (d) "It pretends — fake progress bars, fake success, fake file writes."
+  (e) "It can't do browser tasks (Gmail, Meet, forms) — only text replies."
+  (f) "It forgets context between sessions. No memory."
+
+
+YOUR JOB:
+  1. Build the missing execution layer in 15 isolated checkpoints.
+  2. Make the entire project SELF-HEALING and PORTABLE.
+  3. Enforce REAL execution at every layer — no mocks, no fakes, no chat-only.
+  4. Add real browser automation and persistent memory subsystems.
+
+
+ABSOLUTE RULES:
+
+
+R1. CHECKPOINT DISCIPLINE
+    - Each phase below is ONE checkpoint.
+    - Finish ONE checkpoint completely. Commit. STOP.
+    - Do NOT start the next phase in the same session.
+    - If you run low on tokens mid-phase, STOP and report exactly where you are.
+    - Never claim a phase done if any acceptance test fails.
+
+
+R2. PROTECTION LAYER (TRIPLE LOCK)
+    Lock 1 — Branch isolation:
+      - Each phase runs on its own branch (phase-01-engine, phase-02-scaffold...)
+      - Never commit to main directly.
+      - Never delete or rebase another phase's branch.
+    Lock 2 — Allow-list write paths:
+      - You may CREATE files only inside ALLOWED_WRITES.
+      - You may MODIFY existing files only if listed in ALLOWED_MODIFIES.
+      - All other files are READ-ONLY.
+    Lock 3 — Pre-commit guard:
+      - Before every commit run: python scripts/protection_check.py
+      - If it fails, abort. Do NOT bypass with --no-verify.
+
+
+R3. PROTECTED FILES (NEVER TOUCH UNLESS PHASE EXPLICITLY ALLOWS)
+    - core/exceptions.py        (additions only via Phase 11)
+    - ui/theme.py               (color constants — never edit)
+    - model/loader.py           (touch only in Phase 09a)
+    - tools/file_tools.py       (already has L3 fix — do not regress)
+    - Any file under venv/, runtime/python/, __pycache__/, .git/, models/
+
+
+R4. NO HALLUCINATION
+    - Never invent a file path you have not listed via `ls` or `find`.
+    - Never claim a test passed without showing the actual command output.
+    - Never claim a server started without showing the HTTP 200 response.
+    - Never write "TODO" or "stub returns None" — every function must work.
+    - If you cannot complete a function, STOP and report. Do not fake it.
+
+
+R5. API FALLBACK POLICY (USER-GATED)
+    - You have NO permission to call Claude / Gemini / OpenAI APIs autonomously.
+    - When you hit a wall, output: "API_FALLBACK_REQUEST: <reason>"
+    - WAIT for the user to approve. Do not proceed without explicit "yes".
+    - Same rule applies to runtime code (Phase 05 enforces this in code).
+
+
+R6. EVIDENCE-BASED COMPLETION
+    - End of each phase, output a CHECKPOINT_REPORT (template in Section 3).
+    - Report must include: files created, tests run with output, git sha,
+      next phase to start.
+    - No report = phase not done.
+
+
+R7. SMALL FOOTPRINT
+    - No new heavy dependencies without listing them in CHECKPOINT_REPORT.
+    - Prefer stdlib over libraries. httpx is allowed.
+    - Do not add: langchain, llamaindex, autogen, crewai, or similar.
+    - This is a focused agent, not a framework wrapper.
+
+
+R8. PORTABILITY MANDATE
+    - ZERO hardcoded absolute paths anywhere. No `C:\Users\...`, no `/home/...`.
+    - All paths derive from one of:
+        * Path(__file__).resolve().parent  (script location)
+        * MAYDAY_ROOT env var               (set by build.bat at runtime)
+        * Path.cwd() ONLY when explicitly the project root
+    - Every script must work whether the folder lives at:
+        C:\MAYDAY\, D:\stuff\MAYDAY\, E:\USB\MAYDAY\, or any other location.
+    - Static linter (Phase 11) will grep for `C:\\`, `/home/`, `/Users/` and
+      fail the build if found outside comments/docs.
+
+
+R9. SELF-HEALING MANDATE
+    - If runtime/python/ is missing → build.bat must auto-download & extract.
+    - If models/ is missing or empty → models_downloader.py must auto-fetch.
+    - If venv packages are missing/broken → pip install -r requirements.txt
+      must auto-run.
+    - User can delete ANY of {runtime/python, models, venv} and re-running
+      build.bat must restore it without manual intervention.
+    - Phase 00 lays the foundation; Phase 10 finishes it.
+
+
+R10. REAL EXECUTION ENFORCEMENT  ★★★ CRITICAL — NEW ★★★
+    The agent and the runtime BOTH obey this rule.
+
+
+    DEFINITION — "Executable intent" is any user message containing:
+      make, build, create, generate, scaffold, implement, run, execute, fix,
+      patch, modify, refactor, launch, open, install, deploy, edit, rewrite,
+      schedule, book, login, search, upload, fill form, start server, test app
+
+
+    WHEN EXECUTABLE INTENT IS DETECTED, the runtime MUST:
+      1. Generate a structured JSON action (per ACTION_SCHEMA).
+      2. Invoke the real execution tool via runtime/engine.py.
+      3. Write real files to disk OR run real subprocess OR drive real browser.
+      4. Verify filesystem / process / HTTP result actually changed.
+      5. Return execution evidence (paths, stdout, exit codes, screenshots).
+
+
+    THE RUNTIME MUST NOT:
+      - Reply with only conversational code blocks.
+      - Pretend files were created (no `print("Created: ...")` without write).
+      - Simulate execution (no `time.sleep()` masquerading as work).
+      - Claim success without verification (no `return {'status':'success'}`
+        unless preceded by a real check).
+      - Return placeholder code instead of tool execution.
+
+
+    YOU (the coding agent building this) MUST NOT:
+      - Write functions that return canned success dicts.
+      - Stub anything with `pass`, `...`, `return None`, or `return {}`.
+      - Fake progress bars (no for-loop with sleep + emit signal).
+      - Write tests that mock filesystem instead of touching real disk
+        (mocks allowed only for network APIs in Phase 05).
+
+
+    Phase 11 lint enforces this. Phase 12 e2e test proves it.
+
+
+R11. INTENT ROUTING POLICY  ★★★ NEW ★★★
+    Every executable intent maps to MANDATORY tools. Hard requirements:
+
+
+    PROJECT_CREATION
+      Triggers: "make app", "create project", "build website",
+                "generate backend", "implement system", "scaffold"
+      Mandatory tools: scaffold_engine, file_write, project_manager
+      Forbidden: chat-only output, returning source code blocks
+
+
+    EXECUTION_COMMANDS
+      Triggers: "run", "execute", "launch", "start server", "test app"
+      Mandatory tools: shell_run, server_runner
+
+
+    AUTOMATION_COMMANDS
+      Triggers: "open", "schedule", "book", "login", "search", "upload",
+                "fill form", "google meet", "gmail"
+      Mandatory tools: browser_automation, playwright_runner
+
+
+    FILE_OPERATIONS
+      Triggers: "edit file", "modify", "patch", "rewrite", "refactor"
+      Mandatory tools: file_tools, diff_engine
+
+
+    Phase 04 implements the router. Phase 11 tests verify each trigger
+    family invokes the correct tool — failure = phase BLOCKED.
+
+
+R12. NO-MOCK MANDATE  ★★★ NEW ★★★
+    Across the ENTIRE project (excluding pytest unit tests for pure logic):
+
+
+    FORBIDDEN:
+      - Fake execution success
+      - Simulated filesystem writes
+      - Mocked browser launches outside tests/test_browser_automation.py
+      - Placeholder subprocess execution
+      - UI-only implementations (every UI button must call real backend)
+      - Fake progress bars (must reflect real byte counts / step indices)
+      - Fake loading steps (every step must perform real work)
+      - Pretend server launches (must show real bound port + HTTP 200)
+      - Pretend API calls (must show real HTTP request/response cycle)
+      - Fake verification messages
+
+
+    MANDATORY:
+      - Every UI action maps to a real backend capability.
+      - Every success claim is verifiable via filesystem, process, or HTTP.
+      - Every execution result originates from a real runtime action.
+      - All filesystem changes must physically exist on disk.
+
+
+    DETECTION (Phase 11 static_linter.py extra checks):
+      grep "return {'status': 'success'}" in non-test code → FAIL unless
+        preceded within 20 lines by a verification call.
+      grep "QProgressBar" without corresponding signal from real worker → FAIL.
+      grep "time.sleep" inside emit-signal loops → FAIL.
+
+
+--------------------------------------------------------------------------------
+1. PROJECT CONTEXT (FROM AUDIT + POLICY PACK)
+--------------------------------------------------------------------------------
+
+
+WHAT EXISTS (do not rebuild):
+  - PyQt6 UI shell (panels.py: chat, model, log, lora — partial)
+  - model/loader.py (singleton, L1 fixed)
+  - model/downloader.py (L2 + L9 fixed)
+  - tools/file_tools.py (L3 _tool_name dispatch fixed)
+  - core/exceptions.py
+  - core/orchestrator.py (broken — references missing runtime/engine.py)
+  - bootstrap/gui.py (wrong name, fake install steps, no self-heal)
+  - main.py (crashes on import — references missing runtime/engine)
+  - tests/smoke_test.py (only existing test)
+
+
+WHAT IS MISSING (52 files now, after policy pack):
+  - Entire runtime/ directory (16 files — execution backbone + browser + memory)
+  - Entire audit/ subsystem (5 files)
+  - 9 individual UI panel files (currently merged into panels.py)
+  - 10 gate tests (EX01–EX10) + portability + browser + memory tests
+  - packaging/packager.py with ExecutionGate enforcement
+  - bootstrap/bootstrap_ui.py with REAL self-healing install steps
+  - scripts/manual_runner.py, scripts/static_linter.py, scripts/bootstrap_check.py
+  - scripts/models_downloader.py (PORTABLE model fetcher)
+  - core/intent_router.py  ★ NEW (R11) ★
+
+
+WHY TOOLS DON'T MAKE REAL FILES (R10 root cause):
+  Step 1: User asks "build a Flask app"
+  Step 2: Model generates response
+  Step 3: Response is displayed as chat text and DISCARDED
+  Step 4: There is no JSON parser, no engine, no scaffold writer
+  Step 5: Nothing ever touches the filesystem
+  FIX: ACTION_SCHEMA → JSON parser → intent_router → engine.py → scaffold_engine
+       → server_runner → live_preview. Phases 01–04 deliver this.
+
+
+7 IMMEDIATE BUGS (Phase 00 fixes them all):
+  C1. NumPy 2.x vs torch ABI mismatch ("_ARRAY_API not found")
+  C2. main.py imports missing runtime/engine
+  C3. main.py validate_runtime() checks non-existent runtime/python path
+  C4. build.bat hardcoded path C:\Users\GOD\...
+  C5. bootstrap/gui.py has fake time.sleep installer steps
+  C6. build.bat does NOT self-heal if runtime/ is deleted
+  C7. No models_downloader.py — models/ deletion = dead app
+
+
+--------------------------------------------------------------------------------
+2. THE 15 CHECKPOINTS — EXECUTION ORDER
+--------------------------------------------------------------------------------
+
+
+Phase 00  — Protection scaffolding + crash fixes + portable build.bat
+Phase 01  — runtime/engine.py (execution hub + ACTION_SCHEMA + system prompt)
+Phase 02  — runtime/scaffold_engine.py (atomic file writer = real file creation)
+Phase 03  — runtime/server_runner.py + server_launcher.py (live preview backbone)
+Phase 04  — Agentic loop + intent_router (observe → act → verify)  ★ R11 ★
+Phase 05  — runtime/api_manager.py (encrypted key store, NO auto-calls)
+Phase 06a — runtime/web_access.py + search_router.py + page_fetcher.py
+Phase 06b — Browser automation runtime (Gmail, Meet, forms)  ★ NEW ★
+Phase 07a — runtime/ram_manager.py + process_manager.py + runtime_monitor.py
+Phase 07b — Persistent memory runtime (task/session/goal/context)  ★ NEW ★
+Phase 08  — audit/ subsystem (health, execution_gate, stability, self_audit, repair)
+Phase 09a — Move EXISTING 5 panels out of panels.py into ui/*.py
+Phase 09b — Build 4 NEW panels + cli_dashboard + browser/memory panels
+Phase 10  — Self-healing bootstrap rebuild (real installer, auto-recovery)
+Phase 11  — Gate tests (EX01–EX10) + portability + R10/R11/R12 lint
+Phase 12  — packaging/packager.py + final integration verification
+
+
+EACH PHASE OUTPUT:
+  - Branch: phase-NN-shortname
+  - Commit message: "phase NN: <one-line summary>"
+  - CHECKPOINT_REPORT printed at end
+  - Stop. Wait for user to merge and start next session.
+
+
+--------------------------------------------------------------------------------
+PHASE 00 — PROTECTION SCAFFOLDING + CRASH FIXES + PORTABLE BUILD.BAT
+--------------------------------------------------------------------------------
+
+
+GOAL: Set up protection layer. Fix 7 bugs. Make build.bat portable AND
+      self-healing. No new features. Stop the bleeding.
+
+
+BRANCH: phase-00-protection
+
+
+ALLOWED_WRITES:
+  - scripts/protection_check.py
+  - scripts/allowlist.json
+  - scripts/bootstrap_check.py
+  - scripts/models_downloader.py    (stub; full impl in Phase 10)
+  - .gitignore
+  - runtime/__init__.py
+  - runtime/engine.py               (MINIMAL STUB — Phase 01 replaces)
+
+
+ALLOWED_MODIFIES:
+  - requirements.txt
+  - build.bat
+  - main.py
+  - bootstrap/gui.py  (rename only — see T00.8)
+
+
+PROTECTED: everything else
+
+
+TASKS (in order):
+
+
+  T00.1 Create scripts/allowlist.json:
+        {
+          "phase": "00",
+          "allowed_writes": ["scripts/", "runtime/__init__.py",
+                             "runtime/engine.py", ".gitignore"],
+          "allowed_modifies": ["requirements.txt", "build.bat", "main.py",
+                               "bootstrap/gui.py"],
+          "protected": ["core/exceptions.py", "ui/theme.py", "model/loader.py",
+                        "tools/file_tools.py"]
+        }
+
+
+  T00.2 Create scripts/protection_check.py:
+        - Reads allowlist.json (resolved relative to script location, NOT cwd)
+        - Runs `git diff --name-only --cached`
+        - For each staged file:
+            * If in protected[] → print error, exit 1
+            * If new file not under allowed_writes[] → exit 1
+            * If modified file not in allowed_modifies[] → exit 1
+        - Exit 0 only if all checks pass
+
+
+  T00.3 Create .gitignore:
+        venv/
+        runtime/python/
+        runtime/browser_profile/    ★ NEW (Phase 06b) ★
+        runtime/memory_store/       ★ NEW (Phase 07b) ★
+        __pycache__/
+        *.pyc
+        .env
+        .mayday_salt
+        models/
+        logs/
+        projects/
+        .mayday_manifest.json
+        ready.flag
+
+
+  T00.4 Fix C1 (NumPy/torch ABI):
+        Edit requirements.txt — add `numpy==1.26.4` BEFORE torch line.
+
+
+  T00.5 Fix C2 (main.py import crash):
+        Create runtime/__init__.py (empty file).
+        Create runtime/engine.py with MINIMAL STUB:
+
+
+          from tools.file_tools import FileTools
+          from core.exceptions import ToolTimeoutError
+          import concurrent.futures
+
+
+          class ExecutionEngine:
+              def __init__(self):
+                  self._tools = {}
+              def register_tools(self, tools: dict):
+                  self._tools = tools
+              def execute(self, tool_name: str, parameters: dict) -> dict:
+                  base = tool_name.split('_')[0]
+                  tool = self._tools.get(base)
+                  if not tool:
+                      return {'status': 'error',
+                              'error': f'Unknown tool: {tool_name}'}
+                  params = {**parameters, '_tool_name': tool_name}
+                  with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+                      fut = ex.submit(tool.execute, params)
+                      try:
+                          return fut.result(timeout=30)
+                      except concurrent.futures.TimeoutError:
+                          raise ToolTimeoutError(
+                              f'{tool_name} exceeded 30s timeout')
+
+
+  T00.6 Fix C3 (main.py validate_runtime):
+        Find function validate_runtime() in main.py.
+        Remove the check for "runtime/python" directory (handled by build.bat
+        self-heal now).
+        Keep checks only for: core, ui, model, tools.
+        Replace any hardcoded path with:
+          MAYDAY_ROOT = Path(__file__).resolve().parent
+
+
+  T00.7 Fix C4 + C6 (PORTABLE + SELF-HEALING build.bat):  ★ CRITICAL ★
+
+
+        REPLACE build.bat with:
+
+
+          @echo off
+          setlocal ENABLEDELAYEDEXPANSION
+          REM ===== MAYDAY portable build.bat =====
+          REM Works from any folder. No hardcoded paths.
+
+
+          set "MAYDAY_ROOT=%~dp0"
+          set "MAYDAY_ROOT=%MAYDAY_ROOT:~0,-1%"
+          cd /d "%MAYDAY_ROOT%"
+
+
+          echo [MAYDAY] Root: %MAYDAY_ROOT%
+
+
+          REM --- 1. Locate or auto-install Python ---
+          set "PY_EXE=%MAYDAY_ROOT%\runtime\python\python.exe"
+          if not exist "%PY_EXE%" (
+              echo [MAYDAY] Embedded runtime missing. Attempting recovery...
+              where python >nul 2>&1
+              if errorlevel 1 (
+                  echo [ERROR] No system Python found AND runtime is missing.
+                  echo         Install Python 3.10+ or restore runtime\python\
+                  exit /b 1
+              )
+              set "PY_EXE=python"
+              echo [MAYDAY] Using system Python as fallback.
+              "%PY_EXE%" "%MAYDAY_ROOT%\scripts\bootstrap_check.py" --install-runtime
+              if errorlevel 1 (
+                  echo [ERROR] Runtime auto-install failed.
+                  exit /b 1
+              )
+              set "PY_EXE=%MAYDAY_ROOT%\runtime\python\python.exe"
+          )
+
+
+          REM --- 2. Verify / create venv ---
+          if not exist "%MAYDAY_ROOT%\venv\Scripts\python.exe" (
+              echo [MAYDAY] venv missing — creating...
+              "%PY_EXE%" -m venv "%MAYDAY_ROOT%\venv"
+          )
+          set "VENV_PY=%MAYDAY_ROOT%\venv\Scripts\python.exe"
+
+
+          REM --- 3. Verify / install requirements ---
+          "%VENV_PY%" "%MAYDAY_ROOT%\scripts\bootstrap_check.py" --check-deps
+          if errorlevel 1 (
+              echo [MAYDAY] Dependencies missing — installing...
+              "%VENV_PY%" -m pip install --upgrade pip
+              "%VENV_PY%" -m pip install -r "%MAYDAY_ROOT%\requirements.txt"
+              "%VENV_PY%" -m pip install torch==2.3.1 --index-url https://download.pytorch.org/whl/cpu
+              "%VENV_PY%" -m playwright install chromium
+          )
+
+
+          REM --- 4. Verify / download models ---
+          "%VENV_PY%" "%MAYDAY_ROOT%\scripts\bootstrap_check.py" --check-models
+          if errorlevel 1 (
+              echo [MAYDAY] Models missing — downloading...
+              "%VENV_PY%" "%MAYDAY_ROOT%\scripts\models_downloader.py"
+              if errorlevel 1 (
+                  echo [ERROR] Model download failed.
+                  exit /b 1
+              )
+          )
+
+
+          REM --- 5. Launch app ---
+          echo [MAYDAY] Launching app...
+          "%VENV_PY%" "%MAYDAY_ROOT%\main.py"
+          endlocal
+
+
+  T00.7b Create scripts/bootstrap_check.py (self-heal brain):
+
+
+          """
+          Portable health check. Called by build.bat with one of:
+            --install-runtime   download embeddable Python to runtime/python/
+            --check-deps        exit 1 if any required package missing
+            --check-models      exit 1 if models/ empty or missing
+          """
+          import sys, os, subprocess, urllib.request, zipfile, importlib.util
+          from pathlib import Path
+
+
+          ROOT = Path(__file__).resolve().parent.parent
+          RUNTIME_DIR = ROOT / 'runtime' / 'python'
+          MODELS_DIR = ROOT / 'models'
+          PY_EMBED_URL = ('https://www.python.org/ftp/python/3.10.11/'
+                          'python-3.10.11-embed-amd64.zip')
+
+
+          def install_runtime():
+              RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+              zip_path = ROOT / 'python_embed.zip'
+              urllib.request.urlretrieve(PY_EMBED_URL, zip_path)
+              with zipfile.ZipFile(zip_path) as z:
+                  z.extractall(RUNTIME_DIR)
+              zip_path.unlink()
+              for pth in RUNTIME_DIR.glob('python*._pth'):
+                  txt = pth.read_text()
+                  pth.write_text(txt.replace('#import site', 'import site'))
+              return 0
+
+
+          def check_deps():
+              required = ['PyQt6', 'torch', 'transformers',
+                          'peft', 'httpx', 'playwright', 'cryptography',
+                          'huggingface_hub', 'psutil']
+              missing = [m for m in required
+                         if importlib.util.find_spec(m) is None]
+              return 1 if missing else 0
+
+
+          def check_models():
+              if not MODELS_DIR.exists():
+                  return 1
+              files = [f for f in MODELS_DIR.rglob('*')
+                       if f.is_file() and f.stat().st_size > 1024 * 1024]
+              return 0 if files else 1
+
+
+          if __name__ == '__main__':
+              arg = sys.argv[1] if len(sys.argv) > 1 else ''
+              if arg == '--install-runtime': sys.exit(install_runtime())
+              if arg == '--check-deps':     sys.exit(check_deps())
+              if arg == '--check-models':   sys.exit(check_models())
+              print('Usage: bootstrap_check.py [--install-runtime|--check-deps|--check-models]')
+              sys.exit(2)
+
+
+  T00.7c Create scripts/models_downloader.py (STUB — Phase 10 expands):
+
+
+          """
+          Portable model downloader. Reads a manifest, fetches models into
+          ROOT/models/<model_id>/ . No hardcoded paths.
+          """
+          import sys, json
+          from pathlib import Path
+          from huggingface_hub import snapshot_download
+
+
+          ROOT = Path(__file__).resolve().parent.parent
+          MODELS_DIR = ROOT / 'models'
+          DEFAULT_MANIFEST = [
+              {'repo_id': 'Qwen/Qwen2.5-Coder-1.5B-Instruct',
+               'local_dir': 'qwen2_5_coder_1_5b'}
+          ]
+
+
+          def main():
+              MODELS_DIR.mkdir(parents=True, exist_ok=True)
+              manifest_file = ROOT / 'models_manifest.json'
+              manifest = (json.loads(manifest_file.read_text())
+                          if manifest_file.exists() else DEFAULT_MANIFEST)
+              for entry in manifest:
+                  target = MODELS_DIR / entry['local_dir']
+                  if target.exists() and any(target.iterdir()):
+                      print(f'[skip] {entry["local_dir"]} already present')
+                      continue
+                  print(f'[get ] {entry["repo_id"]} -> {target}')
+                  snapshot_download(repo_id=entry['repo_id'],
+                                    local_dir=str(target),
+                                    local_dir_use_symlinks=False)
+              return 0
+
+
+          if __name__ == '__main__':
+              sys.exit(main())
+
+
+        Add `huggingface_hub>=0.20` to requirements.txt.
+
+
+  T00.8 Fix C5 partially (bootstrap rename):
+        git mv bootstrap/gui.py bootstrap/bootstrap_ui.py
+        Do NOT fix the fake sleep steps yet — that is Phase 10.
+        Update any imports referencing bootstrap.gui → bootstrap.bootstrap_ui.
+
+
+ACCEPTANCE TESTS (must all pass before commit):
+  AT00.1  python -c "import runtime.engine"  exits 0
+  AT00.2  python -c "import main"            does not raise ImportError
+  AT00.3  python scripts/protection_check.py exits 0 on a clean staged diff
+  AT00.4  python scripts/protection_check.py exits 1 if you stage a mod to
+          core/exceptions.py
+  AT00.5  grep -r "C:\\Users" build.bat      returns nothing
+  AT00.6  grep "numpy==1.26.4" requirements.txt returns the line
+  AT00.7  PORTABILITY TEST:
+          - Move project folder to a different drive
+          - Delete runtime\python\ entirely
+          - Run build.bat
+          - runtime\python\python.exe is recreated; app launches
+  AT00.8  SELF-HEAL TEST:
+          - Delete venv\
+          - Run build.bat
+          - venv recreated, deps reinstalled, app launches
+  AT00.9  python scripts/bootstrap_check.py --check-deps exits 0 on healthy
+          venv, exits 1 after `pip uninstall -y httpx`
+
+
+CHECKPOINT_REPORT (Phase 00):
+  - Branch, files created/modified, AT00.1–AT00.9 output, app launches yes/no,
+    git sha, next phase = Phase 01.
+
+
+--------------------------------------------------------------------------------
+PHASE 01 — runtime/engine.py FULL + ACTION_SCHEMA
+--------------------------------------------------------------------------------
+
+
+GOAL: Replace engine stub with real execution hub. Define ACTION_SCHEMA covering
+      ALL R11 intent families. Define TOOL_SYSTEM_PROMPT. Wire PermissionGate.
+
+
+BRANCH: phase-01-engine
+
+
+ALLOWED_WRITES:
+  - runtime/action_schema.py
+  - runtime/tool_system_prompt.py
+  - tests/test_engine.py
+
+
+ALLOWED_MODIFIES:
+  - runtime/engine.py    (replace stub with full version)
+
+
+TASKS:
+
+
+  T01.1 Create runtime/action_schema.py — covering ALL R11 families:
+
+
+        ACTION_SCHEMA = {
+          # PROJECT_CREATION
+          "scaffold":     ["project_name", "stack", "files"],
+          # FILE_OPERATIONS
+          "file_write":   ["path", "content"],
+          "file_read":    ["path"],
+          "file_patch":   ["path", "diff"],          # diff_engine
+          # EXECUTION_COMMANDS
+          "shell_run":    ["command", "working_dir"],
+          "server_launch":["project_dir", "stack"],
+          # AUTOMATION_COMMANDS (Phase 06b)
+          "browser_open": ["url"],
+          "browser_act":  ["session_id", "steps"],   # list of {action, selector, value}
+          "browser_close":["session_id"],
+          # WEB
+          "web_search":   ["query"],
+          "web_fetch":    ["url"],
+          # AGENT
+          "respond":      ["text"],
+          "remember":     ["key", "value", "level"], # short|mid|long
+          "recall":       ["query"]
+        }
+
+
+        REQUIRED_TOOL_FOR = {
+          "scaffold": "scaffold_engine",
+          "file_write": "file_tools",
+          "file_read": "file_tools",
+          "file_patch": "diff_engine",
+          "shell_run": "shell_runner",
+          "server_launch": "server_runner",
+          "browser_open": "browser_automation",
+          "browser_act": "browser_automation",
+          "browser_close": "browser_automation",
+          "web_search": "web_access",
+          "web_fetch": "page_fetcher",
+          "remember": "memory",
+          "recall": "memory",
+          "respond": None
+        }
+
+
+        def validate(action: dict) -> tuple[bool, str]:
+            # checks: 'action' key exists, value in ACTION_SCHEMA,
+            # all required fields present, correct types, no extra unknown keys
+
+
+  T01.2 Create runtime/tool_system_prompt.py:
+
+
+        TOOL_SYSTEM_PROMPT = """
+        You are MAYDAY, an autonomous software factory and automation agent.
+        You MUST respond ONLY with one JSON action per turn. No prose.
+
+
+        Rules:
+        1. If user wants to BUILD/CREATE/SCAFFOLD a project → use 'scaffold'.
+        2. If user wants to RUN/LAUNCH/START/EXECUTE → use 'shell_run' or
+           'server_launch'.
+        3. If user wants to OPEN/SCHEDULE/BOOK/LOGIN/SEARCH ONLINE/FILL FORM /
+           interact with Gmail/Meet → use 'browser_open' then 'browser_act'.
+        4. If user wants to EDIT/MODIFY/PATCH/REWRITE a file → use 'file_patch'
+           or 'file_write'.
+        5. If user wants to REMEMBER something → 'remember'. To RECALL → 'recall'.
+        6. Only when user is asking a pure question with no executable verb,
+           use 'respond'.
+
+
+        NEVER write code in plain text. NEVER claim something was done without
+        invoking the tool. Output ONLY valid JSON.
+
+
+        Schema examples: [embed JSON examples for each action — keep terse]
+        """
+
+
+  T01.3 Replace runtime/engine.py with full ExecutionEngine:
+        - register_tools(tools: dict)
+        - execute(tool_name, parameters) -> dict:
+            * Calls PermissionGate.check(tool_name, parameters) first
+            * Validates parameters against ACTION_SCHEMA
+            * Looks up REQUIRED_TOOL_FOR[action] — raises if not registered
+            * Injects {'_tool_name': tool_name} (L3 fix preserved)
+            * Wraps tool.execute() in ThreadPoolExecutor(max_workers=1)
+            * Raises ToolTimeoutError after configurable timeout (default 30s,
+              override 120s for browser_act, 60s for server_launch)
+            * Catches all exceptions → {'status':'error','error':str}
+        - get_system_prompt() -> str
+        - assert_real_execution(result: dict) -> None  ★ R10/R12 ★
+            * For file actions: asserts target path exists OR raises
+            * For shell_run: asserts result has stdout/stderr/exit_code keys
+            * For server_launch: asserts URL responds 200 OR raises
+            * For browser_act: asserts at least one screenshot path returned
+
+
+  T01.4 Create tests/test_engine.py:
+        - test_unknown_tool_returns_error
+        - test_tool_name_injected_in_params
+        - test_timeout_raises_tooltimeouterror (sleep(40) fake tool)
+        - test_action_schema_rejects_missing_field
+        - test_action_schema_accepts_valid_scaffold
+        - test_action_schema_accepts_browser_act        ★ NEW ★
+        - test_assert_real_execution_rejects_fake_success ★ NEW (R12) ★
+            (call assert_real_execution with {'status':'success'} for
+             file_write where path doesn't exist → must raise)
+
+
+ACCEPTANCE TESTS:
+  AT01.1 pytest tests/test_engine.py -v shows 7/7 passing
+  AT01.2 python -c "from runtime.engine import ExecutionEngine; \
+         e=ExecutionEngine(); print(e.get_system_prompt())" prints prompt
+  AT01.3 protection_check.py exits 0
+  AT01.4 git diff --name-only main shows only ALLOWED_WRITES/MODIFIES
+
+
+--------------------------------------------------------------------------------
+PHASE 02 — runtime/scaffold_engine.py — REAL FILE CREATION
+--------------------------------------------------------------------------------
+
+
+GOAL: After this phase, the model can actually write files. R10 enforced.
+
+
+BRANCH: phase-02-scaffold
+
+
+ALLOWED_WRITES:
+  - runtime/scaffold_engine.py
+  - tests/test_scaffold.py
+
+
+ALLOWED_MODIFIES:
+  - runtime/engine.py   (only to register ScaffoldEngine in tool dict)
+
+
+TASKS:
+
+
+  T02.1 Create runtime/scaffold_engine.py:
+        - Class ScaffoldEngine
+        - PROJECT_ROOT = Path(__file__).resolve().parent.parent / 'projects'
+        - execute(parameters: dict) -> dict:
+            * Read project_name, stack, files
+            * Create tempdir via tempfile.mkdtemp()
+            * Write each file atomically (write_text utf-8)
+            * Validate no path escapes tempdir
+            * If all writes succeed:
+                - If projects/{name} exists → shutil.rmtree it
+                - shutil.copytree(tempdir, projects/{name})
+                - Write projects/{name}/.mayday_manifest.json
+                  {name, stack, files: [paths], created_at, sha256_per_file}
+                - VERIFY: every file in manifest exists on disk and sha matches
+                  (R10/R12 — fail if not)
+                - Return {'status':'success', 'project_dir': str(...),
+                          'files_written': [paths]}
+            * On any error:
+                - shutil.rmtree(tempdir, ignore_errors=True)
+                - Raise ScaffoldError (E015)
+
+
+  T02.2 Path traversal guard:
+        - Reject paths starting with '/', containing '..', or resolving
+          outside tempdir after Path.resolve()
+        - Raise ScaffoldError on rejection
+
+
+  T02.3 tests/test_scaffold.py:
+        - test_writes_files_to_projects_dir          (real disk check)
+        - test_atomic_rollback_on_error              (force mid-write error)
+        - test_path_traversal_rejected               ('../etc/passwd')
+        - test_manifest_written
+        - test_overwrites_existing_project
+        - test_post_write_verification_catches_tamper ★ NEW (R12) ★
+            (mock os.remove between write and verify → expect ScaffoldError)
+
+
+  T02.4 Modify runtime/engine.py: register ScaffoldEngine under 'scaffold'.
+
+
+ACCEPTANCE TESTS:
+  AT02.1 pytest tests/test_scaffold.py -v 6/6 passing
+  AT02.2 Manual run via python -c "..."  → projects/demo/app.py exists
+  AT02.3 cat projects/demo/.mayday_manifest.json shows valid JSON with sha256
+  AT02.4 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 03 — runtime/server_runner.py + server_launcher.py + live_preview.py
+--------------------------------------------------------------------------------
+
+
+GOAL: Make scaffolded projects RUN. Open in browser. R10 enforced.
+
+
+BRANCH: phase-03-server
+
+
+ALLOWED_WRITES:
+  - runtime/server_runner.py
+  - runtime/server_launcher.py
+  - runtime/live_preview.py
+  - tests/test_runtime_launch.py
+
+
+TASKS:
+
+
+  T03.1 runtime/server_runner.py:
+        - find_free_port(start=5000, end=5999) using socket.connect_ex
+        - class ServerRunner with self._processes = {}
+        - launch(project_dir, stack) -> dict {url, port, pid}:
+            * port = find_free_port()
+            * cmd by stack (flask, fastapi, static)
+            * subprocess.Popen with env PORT=str(port), cwd=project_dir
+            * Poll http://localhost:{port} for 15s with httpx
+            * On success: store proc, return dict
+            * On timeout: proc.kill(), raise ServerStartError (E016)
+            * VERIFY (R10): assert response.status_code == 200 OR raise
+        - stop(project_dir): self._processes[project_dir].terminate()
+        - status(project_dir) -> dict {port, pid, running}
+
+
+  T03.2 runtime/server_launcher.py (L7 re-export):
+        from runtime.server_runner import ServerRunner as ServerLauncher
+        __all__ = ['ServerLauncher']
+
+
+  T03.3 runtime/live_preview.py:
+        - class LivePreview
+        - open_browser(url) using webbrowser.open()
+        - get_active_previews() -> list[dict]
+
+
+  T03.4 tests/test_runtime_launch.py (EX09):
+        - Build tiny flask app via ScaffoldEngine
+        - Launch via ServerRunner
+        - Assert HTTP 200 within 15s (REAL request, not mock)
+        - Stop, assert process gone
+
+
+ACCEPTANCE TESTS:
+  AT03.1 pytest tests/test_runtime_launch.py passes
+  AT03.2 Manual: scaffold flask, launch, curl returns 200
+  AT03.3 from runtime.server_launcher import ServerLauncher works
+  AT03.4 No zombie processes after stop (ps/tasklist check)
+  AT03.5 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 04 — AGENTIC LOOP + INTENT_ROUTER (R11 enforcement)
+--------------------------------------------------------------------------------
+
+
+GOAL: Wire it all together. Add INTENT ROUTER that maps user prompts to
+      mandatory tools per R11. Enforce R10: no chat-only output for
+      executable intents.
+
+
+BRANCH: phase-04-agentic
+
+
+ALLOWED_WRITES:
+  - core/json_parser.py
+  - core/intent_router.py    ★ NEW ★
+  - tests/test_agent_dryrun.py
+  - tests/test_intent_router.py   ★ NEW ★
+
+
+ALLOWED_MODIFIES:
+  - core/orchestrator.py
+
+
+TASKS:
+
+
+  T04.1 core/json_parser.py:
+        - parse_model_output(raw: str) -> dict
+        - Strategy:
+            1. json.loads(raw) directly
+            2. If fails, regex extract first {...} block, retry
+            3. If still fails, raise SchemaValidationError (E003)
+        - Validate result with action_schema.validate()
+
+
+  T04.2 core/intent_router.py  ★ R11 ★ :
+        TRIGGERS = {
+          'PROJECT_CREATION': ['make app','create project','build website',
+            'generate backend','implement system','scaffold','build me a'],
+          'EXECUTION':        ['run','execute','launch','start server',
+            'test app'],
+          'AUTOMATION':       ['open ','schedule','book','login','search ',
+            'upload','fill form','google meet','gmail','calendar'],
+          'FILE_OPS':         ['edit file','modify','patch','rewrite',
+            'refactor']
+        }
+        REQUIRED_TOOLS = {
+          'PROJECT_CREATION': ['scaffold_engine','file_write'],
+          'EXECUTION':        ['shell_run','server_runner'],
+          'AUTOMATION':       ['browser_automation','playwright_runner'],
+          'FILE_OPS':         ['file_tools','diff_engine']
+        }
+
+
+        def classify(prompt: str) -> str|None:
+            # case-insensitive substring match; return family or None
+        def required_tools_for(prompt: str) -> list[str]:
+            fam = classify(prompt)
+            return REQUIRED_TOOLS.get(fam, [])
+        def is_executable_intent(prompt: str) -> bool:
+            return classify(prompt) is not None
+
+
+  T04.3 Rewrite core/orchestrator.py run():
+
+
+        MAX_STEPS = 50
+        MAX_INFERENCE_DEPTH = 1
+
+
+        def run(self, user_prompt: str) -> str:
+            messages = [
+                {'role':'system', 'content': self.engine.get_system_prompt()},
+                {'role':'user',   'content': user_prompt}
+            ]
+            executable = is_executable_intent(user_prompt)   # R11
+            required = required_tools_for(user_prompt)
+
+
+            for step in range(MAX_STEPS):
+                if self._inference_depth > MAX_INFERENCE_DEPTH:
+                    raise RecursiveCallError()
+
+
+                raw, provider = self.router.route(messages)
+                action = parse_model_output(raw)
+
+
+                # R10/R11 GUARD: executable intent must NOT terminate with
+                # 'respond' on the FIRST step
+                if executable and step == 0 and action['action'] == 'respond':
+                    raise ChatOnlyOutputError(
+                        'Executable intent detected but model returned '
+                        'respond — required tools were: ' + ', '.join(required))
+
+
+                if action['action'] == 'respond':
+                    return action['text']
+
+
+                result = self.engine.execute(action['action'], action)
+                self.engine.assert_real_execution(result)   # R10/R12
+
+
+                messages.append({'role':'assistant','content': raw})
+                messages.append({'role':'tool','content': json.dumps(result)})
+                self.session.add_step(action, result)
+            raise SessionLimitError()
+
+
+  T04.4 tests/test_agent_dryrun.py (EX04):
+        - Mock router returns: scaffold action → respond "done"
+        - Run orchestrator
+        - Assert: scaffold tool called, projects/test_app exists,
+                  return == "done"
+
+
+  T04.5 tests/test_intent_router.py  ★ NEW ★ :
+        - test_classify_make_app_returns_project_creation
+        - test_classify_run_returns_execution
+        - test_classify_book_meeting_returns_automation
+        - test_classify_refactor_returns_file_ops
+        - test_executable_intent_blocks_immediate_respond:
+            run orchestrator on "build me a flask app", mock router to
+            return respond action → expect ChatOnlyOutputError
+
+
+ACCEPTANCE TESTS:
+  AT04.1 pytest tests/test_agent_dryrun.py passes
+  AT04.2 pytest tests/test_intent_router.py passes (5/5)
+  AT04.3 No direct tool.execute() in orchestrator:
+         grep -n "tool.execute\|tools\[.*\].execute" core/orchestrator.py
+         → ZERO matches
+  AT04.4 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 05 — runtime/api_manager.py (USER-GATED, NO AUTO CALLS)
+--------------------------------------------------------------------------------
+
+
+GOAL: Encrypted key storage. NEVER call APIs without user approval.
+
+
+BRANCH: phase-05-api
+
+
+ALLOWED_WRITES:
+  - runtime/api_manager.py
+  - runtime/provider_clients/__init__.py
+  - runtime/provider_clients/claude_client.py
+  - runtime/provider_clients/gemini_client.py
+  - runtime/provider_clients/openai_compatible_client.py
+  - tests/test_api_integration.py
+
+
+TASKS:
+
+
+  T05.1 runtime/api_manager.py (L10 fix):
+        SALT_PATH = Path(__file__).resolve().parent.parent / '.mayday_salt'
+        - _get_or_create_salt():
+            * If file missing → os.urandom(32), write with 0o600 perms
+        - _derive_key(salt) uses PBKDF2HMAC(SHA256, iters=100000)
+            * NEVER falls back to hardcoded 'mayday' string
+        - save_key(provider, key) — Fernet encrypt → keys.enc
+        - get_key(provider) -> str — decrypt
+        - has_active_provider() -> bool
+        - active_provider_name() -> str
+
+
+        USER-GATE ENFORCEMENT:
+        - complete(prompt, context) method:
+            * Read api_user_approved (default False)
+            * If False → raise APIApprovalRequired
+            * If True → dispatch to provider client
+        - set_user_approved(value: bool) — must be called by UI explicitly
+
+
+  T05.2 Provider clients:
+        - Each: complete(messages, system, max_tokens=2000) -> str
+        - Use httpx, no other deps. Raise on HTTP error.
+
+
+  T05.3 tests/test_api_integration.py (EX07):
+        - test_no_call_without_approval (asserts APIApprovalRequired raised)
+        - test_call_after_approval (httpx mock — only place mocks allowed)
+        - test_pbkdf2_no_hardcoded_fallback:
+            patch out salt file → assert raises, NOT silent 'mayday' fallback
+
+
+ACCEPTANCE TESTS:
+  AT05.1 pytest tests/test_api_integration.py passes
+  AT05.2 grep -n "'mayday'" runtime/api_manager.py — zero matches in _derive_key
+  AT05.3 ApiManager().complete("hi", {}) without approval → APIApprovalRequired
+  AT05.4 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 06a — runtime/web_access.py + search_router.py + page_fetcher.py
+--------------------------------------------------------------------------------
+
+
+GOAL: Web search with module-level keys (L4). Standalone fetcher (L6).
+
+
+BRANCH: phase-06a-web
+
+
+ALLOWED_WRITES:
+  - runtime/web_access.py
+  - runtime/search_router.py
+  - runtime/page_fetcher.py
+  - tests/test_web_access.py
+
+
+TASKS:
+
+
+  T06a.1 runtime/web_access.py — module-level state (L4):
+         _brave_key, _serper_key, _searxng_url, _web_enabled = None,None,None,False
+         configure_search(...), set_web_enabled(...), search(query, provider=None)
+         search() raises WebAccessDisabledError if disabled.
+
+
+  T06a.2 runtime/search_router.py:
+         SearchRouter(brave_key, serper_key, searxng_url)
+         search(query, provider=None) -> list[{title, url, snippet}]
+         Order: SearXNG → Brave → Serper. [] on all-fail.
+
+
+  T06a.3 runtime/page_fetcher.py (L6):
+         class PageFetcher; fetch(url, timeout=10) -> dict
+         Uses httpx. Refuses if _web_enabled is False.
+
+
+  T06a.4 tests/test_web_access.py (EX08):
+         - test_disabled_raises
+         - test_keys_persist_across_calls (proves L4 fixed)
+         - test_searxng_pytest_importorskip
+
+
+ACCEPTANCE TESTS:
+  AT06a.1 pytest tests/test_web_access.py passes (skips allowed)
+  AT06a.2 Protection check passes
+```
+
+
+---
+
+
+```
+--------------------------------------------------------------------------------
+PHASE 06b — BROWSER AUTOMATION RUNTIME  ★ NEW ★
+--------------------------------------------------------------------------------
+
+
+GOAL: Real browser control — Gmail, Meet, forms, login, scheduling.
+      Every action gated by PermissionGate. No silent execution. R12 enforced.
+
+
+BRANCH: phase-06b-browser
+
+
+ALLOWED_WRITES:
+  - runtime/browser_automation.py
+  - runtime/playwright_runner.py
+  - runtime/browser_session.py
+  - runtime/browser_audit_log.py
+  - tests/test_browser_automation.py
+
+
+ALLOWED_MODIFIES:
+  - runtime/engine.py    (register browser_automation under 3 actions)
+
+
+DEPENDENCY: playwright (already required by Phase 00)
+
+
+TASKS:
+
+
+  T06b.1 runtime/browser_session.py:
+         - PROFILE_DIR = MAYDAY_ROOT / 'runtime' / 'browser_profile'
+         - class BrowserSession:
+             * id (uuid4)
+             * created_at, last_used_at
+             * playwright context (persistent — uses PROFILE_DIR)
+             * pages: list[Page]
+             * is_alive() -> bool
+             * close() — close context, mark dead
+         - SessionRegistry singleton:
+             * create() -> BrowserSession
+             * get(session_id) -> BrowserSession
+             * close_all() — called on app shutdown
+             * cleanup_idle(timeout_minutes=30)
+
+
+  T06b.2 runtime/playwright_runner.py:
+         - launch_persistent(profile_dir, headless=False) -> BrowserContext
+         - Uses playwright.sync_api.sync_playwright()
+         - chromium with args: --disable-blink-features=AutomationControlled
+         - Returns context (NEVER returns mock — raises if playwright missing)
+
+
+  T06b.3 runtime/browser_automation.py — class BrowserAutomation:
+         execute(parameters: dict) -> dict — dispatches by _tool_name:
+
+
+         action 'browser_open' (params: url):
+           1. PermissionGate.check_browser('open', url)
+              → must show preview dialog with URL + Approve/Cancel
+              → if denied: return {'status':'cancelled', 'reason': 'user_denied'}
+           2. session = SessionRegistry.create()
+           3. page = session.context.new_page()
+           4. page.goto(url, wait_until='domcontentloaded', timeout=20000)
+           5. screenshot_path = LOGS_DIR / f'browser_{session.id}_open.png'
+              page.screenshot(path=screenshot_path, full_page=False)
+           6. browser_audit_log.record('open', url, session.id, screenshot_path)
+           7. return {'status':'success', 'session_id': session.id,
+                      'url': page.url, 'title': page.title(),
+                      'screenshot': str(screenshot_path)}
+
+
+         action 'browser_act' (params: session_id, steps[list]):
+           Each step is one of:
+             {'action':'click', 'selector': '...'}
+             {'action':'type', 'selector': '...', 'value': '...'}
+             {'action':'wait_for', 'selector': '...', 'timeout': 10000}
+             {'action':'press', 'key': 'Enter'}
+             {'action':'navigate', 'url': '...'}
+             {'action':'screenshot'}
+           1. PermissionGate.check_browser('act', preview=steps)
+              → MUST show all steps to user before executing
+              → support cancellation mid-sequence (PermissionGate may
+                return 'cancelled' on later steps)
+           2. session = SessionRegistry.get(session_id)
+           3. For each step:
+                * Re-check cancellation flag — if set, stop and return
+                  {'status':'cancelled', 'completed_steps': N}
+                * Execute step on session.pages[-1] (or specified)
+                * On error: record to audit, raise BrowserActionError
+                * After every step: take screenshot, append to audit
+           4. return {'status':'success', 'completed_steps': len(steps),
+                     'screenshots': [paths], 'final_url': page.url}
+
+
+         action 'browser_close' (params: session_id):
+           1. session = SessionRegistry.get(session_id)
+           2. session.close()
+           3. browser_audit_log.record('close', None, session_id, None)
+           4. return {'status':'success'}
+
+
+         REAL-EXECUTION GUARDS (R10/R12):
+           - If playwright import fails → raise (NEVER mock)
+           - If page.goto returns no response → raise
+           - Every success return MUST include screenshot path that exists
+
+
+  T06b.4 runtime/browser_audit_log.py:
+         AUDIT_PATH = MAYDAY_ROOT / 'logs' / 'browser_audit.jsonl'
+         record(action, target, session_id, screenshot_path):
+           - Append one JSON line: {timestamp, action, target, session_id,
+             screenshot, user_approved: bool}
+           - Never overwrite, never truncate
+         read_recent(n=100) -> list[dict]
+
+
+  T06b.5 PermissionGate extension (in core/exceptions.py allowed addition
+         WAIT — core/exceptions.py is PROTECTED. So instead:
+         create runtime/permission_gate.py if it doesn't exist (check first;
+         if it exists in tools/, do not duplicate — modify its registration
+         instead by adding via runtime/engine register_permission_handler).
+         Add methods:
+           check_browser(action: str, target=None, preview=None) -> bool
+             - Emits a Qt signal 'browser_permission_requested' carrying
+               (action, target, preview). UI handler shows dialog, sets
+               approval flag, signals back.
+             - If no UI is registered (e.g. headless tests), checks env var
+               MAYDAY_AUTO_APPROVE_BROWSER (default unset → DENY).
+             - Records decision to audit log.
+
+
+  T06b.6 tests/test_browser_automation.py (EX_BROWSER):
+         - All tests skip if playwright chromium not installed
+           (pytest.importorskip + check `playwright install --dry-run`)
+         - test_open_real_url:
+             set MAYDAY_AUTO_APPROVE_BROWSER=1
+             open('https://example.com')
+             assert title contains 'Example'
+             assert screenshot file exists and size > 1KB
+         - test_act_form_fill_real:
+             open 'https://httpbin.org/forms/post'
+             act steps: type into 'input[name=custname]' value 'TEST'
+             assert page.input_value() returns 'TEST'
+         - test_permission_denied_blocks:
+             unset MAYDAY_AUTO_APPROVE_BROWSER
+             open('https://example.com') → status == 'cancelled'
+             assert no screenshot generated
+         - test_audit_log_written:
+             after open call, browser_audit.jsonl has new line with action='open'
+         - test_session_persistence:
+             open google.com, close session, reopen → cookies persisted
+             (PROFILE_DIR has Cookies file > 0 bytes)
+
+
+  T06b.7 Modify runtime/engine.py:
+         - register BrowserAutomation under 'browser_open', 'browser_act',
+           'browser_close' (same instance, dispatches by _tool_name)
+         - Override default 30s timeout: 120s for 'browser_act'
+
+
+ACCEPTANCE TESTS:
+  AT06b.1 pytest tests/test_browser_automation.py — all 5 pass (or skip if
+          chromium not installed; SKIP must report reason)
+  AT06b.2 Real run with chromium installed:
+          python -c "from runtime.browser_automation import BrowserAutomation; \
+          import os; os.environ['MAYDAY_AUTO_APPROVE_BROWSER']='1'; \
+          ba=BrowserAutomation(); print(ba.execute({'_tool_name':'browser_open',\
+          'url':'https://example.com'}))"
+          → prints status=success, screenshot path exists
+  AT06b.3 cat logs/browser_audit.jsonl shows the 'open' record
+  AT06b.4 NO MOCK CHECK (R12):
+          grep -rn "Mock\|MagicMock" runtime/browser_automation.py \
+            runtime/playwright_runner.py runtime/browser_session.py
+          → ZERO matches (mocks belong in tests only)
+  AT06b.5 grep "browser_automation" runtime/engine.py — registered under
+          all 3 actions
+  AT06b.6 Protection check passes
+
+
+CHECKPOINT_REPORT (Phase 06b):
+  Must include screenshot of a real browser.open run + audit log line.
+  Next phase: Phase 07a
+
+
+--------------------------------------------------------------------------------
+PHASE 07a — ram_manager + process_manager + runtime_monitor
+--------------------------------------------------------------------------------
+
+
+GOAL: Resource governance. Crash detection. Feed monitor panel.
+
+
+BRANCH: phase-07a-monitors
+
+
+ALLOWED_WRITES:
+  - runtime/ram_manager.py
+  - runtime/process_manager.py
+  - runtime/runtime_monitor.py
+  - tests/test_monitors.py
+
+
+TASKS:
+
+
+  T07a.1 runtime/ram_manager.py:
+         - check_budget(phase: str) -> bool using psutil.virtual_memory()
+         - emergency_cleanup() — gc.collect(); torch.cuda.empty_cache() if cuda
+         - Raise MemoryBudgetExceededError (E018) if RSS > 4.5 GB after cleanup
+
+
+  T07a.2 runtime/process_manager.py:
+         - register(name, proc); poll_all() -> {name: status}; kill(name)
+
+
+  T07a.3 runtime/runtime_monitor.py:
+         - get_stats() -> {ram_pct, cpu_pct, active_model, active_port,
+                           active_browser_sessions, memory_store_size_mb}
+
+
+  T07a.4 tests/test_monitors.py:
+         - test_ram_budget_exceeds_raises (mock psutil → 5GB)
+         - test_process_register_and_poll
+         - test_runtime_monitor_returns_dict_with_keys
+
+
+ACCEPTANCE TESTS:
+  AT07a.1 pytest tests/test_monitors.py 3/3 passing
+  AT07a.2 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 07b — PERSISTENT MEMORY RUNTIME  ★ NEW ★
+--------------------------------------------------------------------------------
+
+
+GOAL: Real persistent memory across sessions. Three tiers: short / mid / long.
+      No mocks. Uses SQLite + simple embedding cache.
+
+
+BRANCH: phase-07b-memory
+
+
+ALLOWED_WRITES:
+  - runtime/task_memory.py
+  - runtime/session_memory.py
+  - runtime/goal_tracker.py
+  - runtime/context_compressor.py
+  - runtime/memory_store.py        (shared SQLite layer)
+  - tests/test_memory.py
+
+
+ALLOWED_MODIFIES:
+  - runtime/engine.py    (register memory under 'remember' and 'recall')
+
+
+TASKS:
+
+
+  T07b.1 runtime/memory_store.py — shared SQLite layer:
+         STORE_DIR = MAYDAY_ROOT / 'runtime' / 'memory_store'
+         DB_PATH = STORE_DIR / 'memory.db'
+
+
+         Tables:
+           short_term(id, session_id, role, content, ts)
+           mid_term(id, session_id, summary, ts, source_ids JSON)
+           long_term(id, key, value, embedding BLOB, ts, decay)
+           tasks(id, goal_id, title, status, deps JSON, created, updated)
+           goals(id, title, status, parent_id, created, updated)
+
+
+         class MemoryStore (singleton):
+           connect() — creates file if missing, runs migrations
+           insert_short(session_id, role, content) -> id
+           insert_mid(session_id, summary, source_ids) -> id
+           insert_long(key, value, embedding=None) -> id
+           query_short(session_id, limit=20) -> list
+           query_mid(session_id, limit=10) -> list
+           query_long(query_text, top_k=5) -> list
+              (cosine if embedding present, else LIKE fallback)
+           total_size_mb() -> float
+
+
+  T07b.2 runtime/session_memory.py:
+         class SessionMemory(session_id):
+           add_turn(role, content) — inserts short_term
+           recent(n=20) -> list
+           summarize_and_promote(threshold=30):
+             when short_term rows for session > threshold:
+               * take oldest (count - 10) rows
+               * call ContextCompressor.summarize(rows) → summary
+               * insert into mid_term with source_ids
+               * delete those rows from short_term
+           full_context(token_budget=2000) -> str:
+             interleave: long_term (relevant) → mid_term (last N)
+             → short_term (recent), trimming to budget
+
+
+  T07b.3 runtime/task_memory.py:
+         class TaskMemory:
+           create_task(title, goal_id=None, deps=[]) -> id
+           update_status(task_id, status)   # pending|active|done|failed
+           pending_tasks() -> list
+           resume_unfinished() -> list      # tasks left active on previous run
+           dependencies_met(task_id) -> bool
+
+
+  T07b.4 runtime/goal_tracker.py:
+         class GoalTracker:
+           create_goal(title, parent_id=None) -> id
+           list_active() -> list
+           mark_done(goal_id)
+           progress(goal_id) -> dict {total, done, active, failed}
+
+
+  T07b.5 runtime/context_compressor.py:
+         class ContextCompressor:
+           summarize(rows: list[dict]) -> str
+             - Builds prompt: "Compress these N turns into <= 300 tokens
+               keeping decisions, file paths, errors."
+             - Calls local model via ModelRouter (NEVER external API
+               unless user_approved per R5)
+             - Returns plain text summary
+           compress_to_long(session_id):
+             - Aggregate mid_term entries → semantic facts
+             - Insert into long_term with key='session:{id}:facts'
+
+
+  T07b.6 Memory tool registration in engine:
+         class MemoryTool:
+           execute(params) — dispatches by _tool_name:
+             'remember' (key, value, level):
+                 if level=='short': session_memory.add_turn('memory', value)
+                 elif level=='mid': memory_store.insert_mid(...)
+                 elif level=='long': memory_store.insert_long(key, value)
+                 return {'status':'success', 'level': level}
+             'recall' (query):
+                 hits = memory_store.query_long(query, top_k=5)
+                 return {'status':'success', 'hits': hits}
+
+
+  T07b.7 RAM-overflow protection:
+         - Phase 07a's RamManager.check_budget('memory') called before
+           summarize_and_promote
+         - If over budget: force compress_to_long to drop oldest mid_term
+
+
+  T07b.8 tests/test_memory.py:
+         - test_short_term_insert_and_recent
+         - test_promotion_summarizes_on_threshold (real summarize call;
+           mock model_router to return canned summary — only mock allowed)
+         - test_long_term_recall_returns_relevant
+         - test_resume_unfinished_after_restart:
+             create_task('a'), update active, close store, reopen,
+             resume_unfinished() returns 'a'
+         - test_no_mock_in_runtime_paths (R12):
+             grep runtime/task_memory.py runtime/session_memory.py for
+             "Mock\|MagicMock" → zero
+         - test_memory_db_file_exists_after_first_use
+
+
+ACCEPTANCE TESTS:
+  AT07b.1 pytest tests/test_memory.py — 6/6 passing
+  AT07b.2 ls runtime/memory_store/memory.db shows real file > 0 bytes after
+          test run
+  AT07b.3 Manual: insert long_term, restart python, query — survives
+  AT07b.4 grep "MagicMock\|return.*summary.*hardcoded" runtime/context_compressor.py
+          → zero (compressor calls real model)
+  AT07b.5 Engine registers 'remember' and 'recall' (verify via dict inspect)
+  AT07b.6 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 08 — audit/ SUBSYSTEM (5 files)
+--------------------------------------------------------------------------------
+
+
+GOAL: Health scoring, gate enforcement, stability tracking, self-audit, repair.
+      Self-auditor learns to detect R10/R11/R12 violations.
+
+
+BRANCH: phase-08-audit
+
+
+ALLOWED_WRITES:
+  - audit/health_monitor.py
+  - audit/execution_gate.py
+  - audit/stability_tracker.py
+  - audit/self_auditor.py
+  - audit/repair_engine.py
+  - tests/test_audit.py
+
+
+TASKS:
+
+
+  T08.1 audit/health_monitor.py:
+        compute_score() -> int (0-100):
+          model_loaded:               15 pts
+          ram_ok (<80%):              15 pts
+          no_active_errors:           15 pts
+          test_pass_rate:             15 pts
+          last_run_clean:             10 pts
+          browser_runtime_ok:         10 pts   ★ NEW ★
+          memory_store_ok:            10 pts   ★ NEW ★
+          intent_router_present:      10 pts   ★ NEW ★
+
+
+  T08.2 audit/execution_gate.py:
+        run_all_tests() -> {test_id: pass|fail|skip}
+        all_passed() -> bool (True only if all non-skip == pass)
+        Includes: EX01–EX10, test_browser_automation, test_memory,
+                  test_intent_router, test_portability
+
+
+  T08.3 audit/stability_tracker.py:
+        record_run(passed: bool); consecutive_passes() -> int;
+        is_stable() -> bool (>= 3 consecutive)
+
+
+  T08.4 audit/self_auditor.py — REGEX VIOLATION CHECKS:
+        Existing checks:
+          - colour hex outside ui/theme.py
+          - exception class outside core/exceptions.py
+          - blocking call (.join, time.sleep > 1) on PyQt main thread
+          - unpinned packages in requirements.txt
+          - hardcoded absolute paths (C:\\, /home/, /Users/)
+
+
+        ★ NEW (R10/R11/R12) ★ :
+          - "return\s*\{\s*['\"]status['\"]\s*:\s*['\"]success['\"]" in
+            non-test files WITHOUT a verification call (assert / Path.exists /
+            response.status_code) within previous 25 lines → violation
+          - "MagicMock\|Mock\(\)" in any file under runtime/ → violation
+            (mocks belong in tests/ only)
+          - "time.sleep" inside a function that emits Qt signals → violation
+            (fake progress)
+          - "return\s+None\s*$" or bare "pass" as the ONLY body of a public
+            method in runtime/ → violation
+          - "subprocess.run\|subprocess.Popen" outside runtime/server_runner.py
+            and runtime/playwright_runner.py and bootstrap/ → violation
+            (all subprocess goes through engine)
+
+
+  T08.5 audit/repair_engine.py:
+        attempt_repair(error, file) -> bool
+        MAX_REPAIR_CYCLES = 3
+        On exhaustion: write MAYDAY_ERROR_REPORT_{ts}.txt, raise
+
+
+ACCEPTANCE TESTS:
+  AT08.1 pytest tests/test_audit.py — all pass
+  AT08.2 audit/execution_gate.py importable
+  AT08.3 self_auditor runs against repo and produces a report
+         (run: python -c "from audit.self_auditor import SelfAuditor; \
+         print(SelfAuditor().audit_dir('runtime'))")
+  AT08.4 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 09a — UI PANEL SPLIT (move existing 5 panels)
+--------------------------------------------------------------------------------
+
+
+GOAL: Pure refactor. Move existing panels from panels.py into individual files.
+
+
+BRANCH: phase-09a-ui-split
+
+
+ALLOWED_WRITES:
+  - ui/chat_panel.py
+  - ui/model_panel.py
+  - ui/api_panel.py
+  - ui/log_panel.py
+  - ui/lora_panel.py
+
+
+ALLOWED_MODIFIES:
+  - panels.py            (compat shim re-exporting from ui/*.py)
+  - ui/main_window.py
+
+
+TASKS:
+
+
+  T09a.1 For each panel class in panels.py (chat/model/api/log/lora):
+         - Cut the class out, paste into ui/<name>_panel.py
+         - Keep EXACT same class name and API
+         - Replace any inline hex color with import from ui.theme
+         - Replace any path string with Path(__file__) anchored construction
+
+
+  T09a.2 Rewrite panels.py as a backwards-compat shim:
+         from ui.chat_panel import ChatPanel
+         from ui.model_panel import ModelPanel
+         from ui.api_panel import ApiPanel
+         from ui.log_panel import LogPanel
+         from ui.lora_panel import LoraPanel
+         __all__ = ['ChatPanel','ModelPanel','ApiPanel','LogPanel','LoraPanel']
+
+
+  T09a.3 Update ui/main_window.py imports.
+
+
+ACCEPTANCE TESTS:
+  AT09a.1 python main.py launches GUI without import errors
+  AT09a.2 All 5 existing panels render (manual visual check)
+  AT09a.3 grep -rE "#[0-9a-fA-F]{6}" ui/ --exclude=theme.py → empty
+  AT09a.4 grep -rE "C:\\\\|/home/|/Users/" ui/ → empty
+  AT09a.5 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 09b — UI NEW PANELS (project, web, automation, monitor, browser, memory)
+--------------------------------------------------------------------------------
+
+
+GOAL: Build the 6 missing panels. Each wires to runtime built in Phases 01–08.
+      Every UI button maps to a real backend capability (R12).
+
+
+BRANCH: phase-09b-ui-new
+
+
+ALLOWED_WRITES:
+  - ui/project_panel.py
+  - ui/web_panel.py
+  - ui/automation_panel.py
+  - ui/monitor_panel.py
+  - ui/browser_panel.py        ★ NEW (Phase 06b feature) ★
+  - ui/memory_panel.py         ★ NEW (Phase 07b feature) ★
+  - ui/cli_dashboard.py
+
+
+ALLOWED_MODIFIES:
+  - ui/main_window.py
+
+
+TASKS:
+
+
+  T09b.1 ui/project_panel.py:
+         - QListWidget showing entries from projects/ (read manifests)
+         - Run button → runtime.server_runner.ServerRunner().launch(...)
+         - Stop button → ServerRunner().stop(project_dir)
+         - Open in browser button → live_preview.open_browser(url)
+         - All operations on QThread (>100ms rule)
+
+
+  T09b.2 ui/web_panel.py:
+         - Enable/disable toggle → runtime.web_access.set_web_enabled
+         - Provider dropdown (SearXNG/Brave/Serper)
+         - Query box, results table
+         - Shows WebAccessDisabledError gracefully
+
+
+  T09b.3 ui/automation_panel.py:
+         - Command input + working_dir picker
+         - Calls engine.execute('shell_run', {...}) — NEVER raw subprocess
+         - Streams stdout/stderr into a QPlainTextEdit (real bytes from proc)
+
+
+  T09b.4 ui/monitor_panel.py:
+         - QTimer every 10s → runtime.runtime_monitor.get_stats()
+         - QProgressBars for RAM/CPU (driven by REAL psutil values, R12)
+         - Labels for active_model, active_port, browser_sessions, memory_mb
+
+
+  T09b.5 ui/browser_panel.py  ★ NEW ★ :
+         - URL bar + Go button → engine.execute('browser_open', {url})
+         - Action recipe builder (list of step dicts: click/type/wait_for...)
+         - Run Recipe button → engine.execute('browser_act', {session_id, steps})
+         - Permission dialog handler:
+             listens for 'browser_permission_requested' signal
+             shows preview of action + Approve / Cancel
+             writes decision to PermissionGate flag
+         - Sessions list: shows active SessionRegistry sessions
+         - Audit log viewer: tails logs/browser_audit.jsonl (last 50 entries)
+         - Cancel button per running recipe (sets cancellation flag)
+
+
+  T09b.6 ui/memory_panel.py  ★ NEW ★ :
+         - Three tabs: Short / Mid / Long
+         - Short tab: shows current session turns (read-only)
+         - Mid tab: shows summaries (read-only)
+         - Long tab: search box + results (calls memory_store.query_long)
+         - "Compress now" button → triggers session_memory.summarize_and_promote
+         - Goal/Task tree view (from goal_tracker + task_memory)
+         - Memory size indicator (MB)
+
+
+  T09b.7 ui/cli_dashboard.py:
+         - Read-only QPlainTextEdit
+         - Shows last N log lines + health score from audit.health_monitor
+         - Refresh every 5s
+
+
+  T09b.8 Modify ui/main_window.py:
+         Add tabs/dock widgets for the 6 new panels. Layout:
+           Left dock: ChatPanel, MemoryPanel
+           Center: ProjectPanel + tab(BrowserPanel, AutomationPanel, WebPanel)
+           Right dock: ModelPanel, MonitorPanel, ApiPanel, LoraPanel
+           Bottom: LogPanel, CliDashboard
+
+
+  Common rules for ALL T09b.* panels:
+    * QThread for any operation > 100ms
+    * Signals for cross-panel updates
+    * No inline hex colors (use ui.theme)
+    * All paths derived from Path(__file__) or runtime singletons
+    * Every button connects to a real runtime call (R12)
+    * No QProgressBar driven by setValue(i) in a tight sleep loop —
+      progress must come from a real worker signal
+
+
+ACCEPTANCE TESTS:
+  AT09b.1 python main.py launches; all 11 panels visible (5 from 09a +
+          project, web, automation, monitor, browser, memory, cli_dashboard)
+  AT09b.2 Project panel: scaffold a project, it appears in list within 2s,
+          Run launches server, Stop kills it
+  AT09b.3 Web panel: toggle off → search button disabled / shows error inline
+  AT09b.4 Automation panel: run `echo hello` → "hello" appears in output
+          (real subprocess output, not a hardcoded string)
+  AT09b.5 Monitor panel: numbers update at least once within 15s and CPU
+          value matches an independent psutil call within ±5%
+  AT09b.6 Browser panel: Go button on https://example.com triggers
+          permission dialog → approve → page loads → screenshot appears
+  AT09b.7 Memory panel: typing in long-term search triggers a real
+          memory_store.query_long call (verify via log line)
+  AT09b.8 grep -rE "#[0-9a-fA-F]{6}" ui/ --exclude=theme.py → empty
+  AT09b.9 grep -rE "C:\\\\|/home/|/Users/" ui/ → empty
+  AT09b.10 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 10 — SELF-HEALING BOOTSTRAP REBUILD
+--------------------------------------------------------------------------------
+
+
+GOAL: bootstrap_ui.py with REAL install steps and FULL self-healing logic.
+      No fake time.sleep cosmetic. Plug-and-play guaranteed.
+
+
+BRANCH: phase-10-bootstrap
+
+
+ALLOWED_WRITES:
+  - bootstrap/python_installer.py
+  - bootstrap/runtime_checker.py
+  - bootstrap/model_installer.py
+  - tests/test_bootstrap.py
+
+
+ALLOWED_MODIFIES:
+  - bootstrap/bootstrap_ui.py        (full rewrite, remove fake sleeps)
+  - scripts/models_downloader.py     (full impl — was stub in Phase 00)
+
+
+TASKS:
+
+
+  T10.1 bootstrap/bootstrap_ui.py — real BootstrapWorker(QThread):
+        Steps (each emits progress signal carrying REAL bytes/percent):
+          _check_python()         — verify >= 3.10
+          _check_disk()           — verify 10GB free (shutil.disk_usage)
+          _ensure_runtime()       — bootstrap_check.py --install-runtime
+                                    if runtime/python missing
+          _create_venv()          — subprocess venv if missing
+          _install_deps()         — pip install -r requirements.txt
+                                    PARSE pip stdout for "Downloading X (Y/Z)"
+                                    and emit real progress
+          _install_playwright()   — playwright install chromium (first run only)
+          _ensure_models()        — call models_downloader.py if models/ empty;
+                                    parse hf snapshot_download tqdm output for
+                                    real progress
+          _verify_install()       — import torch, PyQt6, peft, playwright,
+                                    huggingface_hub (assert versions)
+          _ensure_memory_db()     — touch runtime/memory_store/memory.db via
+                                    MemoryStore.connect()
+          _prepare_launch()       — write ready.flag
+
+
+        On error: emit error signal, show retry button.
+        ALL paths derive from MAYDAY_ROOT = Path(__file__).resolve().parent.parent
+        NO time.sleep except inside polling loops with real exit conditions.
+
+
+  T10.2 bootstrap/python_installer.py:
+        check_python_version() -> tuple
+        install_if_needed() — downloads portable Python 3.10 + SHA256 verify
+                              into runtime/python/
+        get_python_path() -> str
+
+
+  T10.3 bootstrap/runtime_checker.py:
+        check_all() -> {component: ok|missing|error}
+        Components: PyQt6, torch, transformers, peft, playwright chromium,
+                    huggingface_hub, cryptography, httpx, psutil
+
+
+  T10.4 bootstrap/model_installer.py:
+        - Thin Qt wrapper around scripts/models_downloader.py
+        - Emits progress per model (REAL bytes downloaded / total from
+          huggingface_hub callback)
+        - Reads MAYDAY_ROOT/models_manifest.json if present
+
+
+  T10.5 Expand scripts/models_downloader.py:
+        - resume_download=True
+        - SHA256 verify after download (manifest may include expected_sha256)
+        - Disk-space precheck: refuse if free < 1.5x sum(model sizes)
+        - Logs to MAYDAY_ROOT/logs/models_downloader.log
+        - Exit 0 on success, 1 on any failure
+
+
+ACCEPTANCE TESTS:
+  AT10.1 grep -n "time.sleep" bootstrap/bootstrap_ui.py — only inside polling
+         loops with real exit conditions (no cosmetic sleeps)
+  AT10.2 Run bootstrap on clean venv → all real steps execute, ready.flag
+         created
+  AT10.3 Bootstrap with disk full simulated → fails at _check_disk with
+         red status
+  AT10.4 SELF-HEAL TEST (manual, paste output in CHECKPOINT_REPORT):
+         - Move folder to a different drive
+         - Delete runtime/python, venv, models, runtime/memory_store
+         - Run build.bat
+         - All four restored, app launches
+  AT10.5 PORTABILITY GREP:
+         grep -rnE "C:\\\\|/home/|/Users/" bootstrap/ scripts/ build.bat
+         → zero matches (excluding comments/docs)
+  AT10.6 NO-FAKE-PROGRESS CHECK (R12):
+         grep -nE "for.*range\(.*\).*:\s*$" bootstrap/bootstrap_ui.py | \
+           xargs -I{} grep -A3 "{}" | grep -c "time.sleep" → 0
+  AT10.7 Protection check passes
+
+
+CHECKPOINT_REPORT (Phase 10):
+  Must include screenshot/log of self-heal test (AT10.4).
+
+
+--------------------------------------------------------------------------------
+PHASE 11 — GATE TESTS + PORTABILITY + R10/R11/R12 LINT
+--------------------------------------------------------------------------------
+
+
+GOAL: Make ZIP gate enforceable. Cover every critical surface.
+      Lint catches all R10/R11/R12 violations.
+
+
+BRANCH: phase-11-tests
+
+
+ALLOWED_WRITES:
+  - tests/test_imports.py        (EX01)
+  - tests/test_tool_registry.py  (EX02)
+  - tests/test_browser.py        (EX03)
+  - tests/test_file_io.py        (EX06)
+  - tests/test_model_routing.py  (EX10)
+  - tests/test_portability.py
+  - tests/test_no_mock.py        ★ NEW (R12) ★
+  - tests/test_intent_coverage.py ★ NEW (R11) ★
+  - scripts/manual_runner.py     (EX05)
+  - scripts/static_linter.py
+
+
+  (EX04, EX07, EX08, EX09, browser, memory created in earlier phases)
+
+
+TASKS:
+
+
+  T11.1 EX01 tests/test_imports.py:
+        Import every module under runtime/, audit/, ui/, core/, model/,
+        tools/, bootstrap/. Any ImportError = FAIL.
+
+
+  T11.2 EX02 tests/test_tool_registry.py:
+        ExecutionEngine().register_tools(...) with full tool dict.
+        Assert every action in ACTION_SCHEMA has a registered tool.
+        Assert engine.execute('unknown_tool', {}) returns error dict.
+
+
+  T11.3 EX03 tests/test_browser.py:
+        playwright launch chromium headless, about:blank, get title, close.
+        Skip if PLAYWRIGHT_SKIP env var set.
+
+
+  T11.4 EX06 tests/test_file_io.py:
+        FileTools().execute({...'_tool_name':'file_write', 'path':<tmp>,
+                            'content':'hi'}).
+        Assert file exists, content matches. Read back via file_read action.
+
+
+  T11.5 EX10 tests/test_model_routing.py:
+        Mock model.loader to return canned responses.
+        Send a message through orchestrator → router → engine.
+        Assert routing chose the right provider per priority order.
+
+
+  T11.6 tests/test_portability.py:
+        Walk repo (excluding .git, venv, runtime/python, models,
+        runtime/memory_store, runtime/browser_profile).
+        Assert NO line matches:
+          r'C:\\\\Users\\\\'
+          r'/home/[a-z]'
+          r'/Users/[A-Z]'
+          r'D:\\\\' followed by path-like
+        Assert build.bat uses %~dp0 anchor.
+
+
+  T11.7 tests/test_no_mock.py  ★ R12 ★ :
+        - Walk runtime/ (excluding tests/)
+        - Assert no occurrences of: MagicMock, Mock(), unittest.mock,
+          'pytest.fixture' (mocks belong in tests)
+        - Assert no function in runtime/ ends with literal
+            return {'status': 'success'}
+          unless preceded within 25 lines by a verification:
+            assert <something>.exists()
+              or .status_code == 200
+              or sha256(...)
+        - Assert no QProgressBar usage outside Qt threads driven by signals
+
+
+  T11.8 tests/test_intent_coverage.py  ★ R11 ★ :
+        For each entry in TRIGGERS dict:
+          for trigger phrase:
+            classify(trigger_phrase) == family
+            required_tools_for(trigger_phrase) == REQUIRED_TOOLS[family]
+        Then run orchestrator on a sample prompt for each family with a
+        mocked router that returns 'respond' on first turn → assert
+        ChatOnlyOutputError raised for executable families.
+
+
+  T11.9 scripts/manual_runner.py (click CLI):
+        --test all              run every EX + portability + no_mock + intent
+        --test EX01..EX10       single
+        --test portability      single
+        --test no_mock          single
+        --test intent           single
+        --test browser          test_browser_automation
+        --test memory           test_memory
+        Exits 0 only if every selected test PASSES (SKIP allowed for EX07/EX08
+        and browser when chromium absent).
+
+
+  T11.10 scripts/static_linter.py:
+        Scans .py files for spec violations:
+          * inline hex colors outside ui/theme.py
+          * exception classes outside core/exceptions.py
+          * unpinned packages in requirements.txt
+          * direct tool.execute outside engine.py
+          * hardcoded absolute paths
+          * time.sleep > 1 in PyQt main-thread context
+          * R10: chat-only return for executable family code paths
+          * R12: bare `return {'status':'success'}` without preceding verify
+          * R12: subprocess.* outside whitelisted files
+        Exits 0 = clean, 1 = violations (prints them).
+
+
+ACCEPTANCE TESTS:
+  AT11.1 python scripts/manual_runner.py --test all → every test PASS
+         (EX07/EX08/browser may SKIP — SKIP is acceptable)
+  AT11.2 python scripts/static_linter.py → zero violations
+  AT11.3 pytest tests/test_portability.py → PASS
+  AT11.4 pytest tests/test_no_mock.py → PASS
+  AT11.5 pytest tests/test_intent_coverage.py → PASS
+  AT11.6 Protection check passes
+
+
+--------------------------------------------------------------------------------
+PHASE 12 — PACKAGER + FINAL VERIFICATION
+--------------------------------------------------------------------------------
+
+
+GOAL: ZIP gate. End-to-end demo proves real file creation, real browser, real
+      memory all work. Definition of done.
+
+
+BRANCH: phase-12-packager
+
+
+ALLOWED_WRITES:
+  - packaging/__init__.py
+  - packaging/packager.py
+  - tests/test_end_to_end.py
+  - DEMO.md
+
+
+ALLOWED_MODIFIES:
+  - panels.py    (DELETE — replaced by Phase 09a/09b ui/*.py panels)
+
+
+TASKS:
+
+
+  T12.1 packaging/packager.py — Packager class:
+        def package(self, output_path: str):
+            # First lines — non-negotiable gate:
+            if not ExecutionGate().all_passed():
+                raise ZipBlockedError()       # E011
+            if not StabilityTracker().is_stable():
+                raise StabilityWindowError()  # E012
+            if HealthMonitor().compute_score() < 85:
+                raise HealthScoreBelowThreshold()
+            # Then build zip excluding:
+            #   venv/, runtime/python/, models/, runtime/browser_profile/,
+            #   runtime/memory_store/, __pycache__/, .git/, projects/,
+            #   logs/, .mayday_salt
+            # Include: build.bat, scripts/, requirements.txt, all source
+
+
+        Output ZIP must be RE-PORTABLE: extract anywhere, run build.bat,
+        full self-heal triggers, app launches.
+
+
+  T12.2 tests/test_end_to_end.py — THE PROOF (3 scenarios):
+
+
+        Scenario A — Real file creation:
+          - Start app
+          - Send prompt: "Build a Flask app with /hello endpoint"
+          - Wait up to 60s for projects/ to populate
+          - Assert projects/{name}/app.py exists with real route content
+          - Launch via ServerRunner
+          - curl /hello returns 200
+          - Stop server, cleanup
+
+
+        Scenario B — Real browser action (skip if chromium absent):
+          - Send prompt: "Open https://example.com and screenshot it"
+          - Auto-approve via env var
+          - Assert browser_audit.jsonl gained an 'open' entry
+          - Assert screenshot file exists > 1KB
+
+
+        Scenario C — Real memory persistence:
+          - Send prompt: "Remember that the project codename is FALCON"
+          - Assert long_term row inserted
+          - Restart memory store
+          - Send prompt: "What is the project codename?"
+          - Assert response contains 'FALCON' (recall hit)
+
+
+        ALL THREE PASS = DEFINITION OF DONE.
+
+
+  T12.3 DEMO.md — one-page proof:
+        - Screenshot of UI after scaffold
+        - Terminal output of end-to-end test (all 3 scenarios)
+        - File listing of projects/ after demo
+        - Self-heal test transcript
+
+
+  T12.4 Delete panels.py.
+        Verify: grep -rn "from panels import\|^import panels" .
+
+
+ACCEPTANCE TESTS:
+  AT12.1 pytest tests/test_end_to_end.py PASSES (all 3 scenarios; B may SKIP)
+  AT12.2 packager.py raises if ExecutionGate fails
+  AT12.3 PORTABILITY ZIP TEST:
+         Run packager → mayday.zip
+         Extract to a fresh empty folder on a different drive
+         Run build.bat → app launches, scaffold prompt creates real file,
+         browser open works, memory recall works
+  AT12.4 Protection check passes
+  AT12.5 grep -rn "from panels import\|^import panels" . → zero matches
+
+
+FINAL CHECKPOINT_REPORT:
+  - All 15 phases complete: yes/no
+  - End-to-end (Scenarios A/B/C): PASS/FAIL each
+  - Self-heal test: PASS/FAIL
+  - Files created total: <count>
+  - Bugs fixed (B11–B21 + L1–L10 + C1–C7): <count>
+  - Protection violations during build: should be 0
+  - Hardcoded path violations: 0
+  - R10/R11/R12 lint violations: 0
+  - Ready for ZIP export: yes/no
+
+
+================================================================================
+3. CHECKPOINT_REPORT TEMPLATE (USE EVERY PHASE)
+================================================================================
+
+
+------------------------ CHECKPOINT_REPORT ------------------------
+Phase:                  <NN — name>
+Branch:                 phase-NN-shortname
+Status:                 COMPLETE | BLOCKED | PARTIAL
+
+
+Files created:
+  - <path>
+
+
+Files modified:
+  - <path> (reason)
+
+
+Acceptance tests:
+  ATNN.1: PASS  (command: ...; output: ...)
+  ATNN.2: PASS
+  ATNN.3: FAIL  (reason: ...)
+
+
+Protection check (scripts/protection_check.py):
+  Exit code: 0
+  Files outside allow-list: none
+
+
+Portability check (Phase 11+):
+  grep for hardcoded paths: 0 matches
+  build.bat anchored to %~dp0: yes
+
+
+R10/R11/R12 check (Phase 11+):
+  static_linter violations: 0
+  no_mock test: PASS
+  intent_coverage test: PASS
+
+
+Real-execution evidence (where applicable):
+  - File written: <path> (sha256: <hash>)
+  - Server launched: <url> (HTTP 200 confirmed)
+  - Browser action: <screenshot path>
+  - Memory write: <key> (level: <short|mid|long>)
+
+
+Git:
+  Commit sha:           <sha>
+  Files in commit:      <count>
+  Lines added/removed:  +X / -Y
+
+
+Blockers / open questions:
+  - <none | description>
+
+
+API_FALLBACK_REQUEST:   <none | reason>
+NEW_DEP_REQUEST:        <none | package + reason>
+
+
+Next phase:             Phase NN+1 — <name>
+Suggested next session: start fresh, read this report first
+-------------------------------------------------------------------
+
+
+================================================================================
+4. EMERGENCY PROTOCOLS
+================================================================================
+
+
+E1. RUNNING LOW ON TOKENS MID-PHASE:
+    Stop at next clean task boundary (Tnn.x). Commit on phase-NN-partial-A.
+    Output PARTIAL CHECKPOINT_REPORT with done/remaining/resume point.
+    Do NOT cram. Do NOT leave broken code.
+
+
+E2. ACCEPTANCE TEST FAILS AND YOU CAN'T FIX IT:
+    Do not patch tests. Do not swallow errors with try/except.
+    Output BLOCKED CHECKPOINT_REPORT: which AT failed, last 30 lines of
+    error output, hypothesis, what was tried (max 3 attempts). Wait for user.
+
+
+E3. PROTECTION CHECK BLOCKS YOUR COMMIT:
+    Read which file triggered it.
+    If genuinely needed: STOP, ask user to update allowlist.json. No bypass.
+    If accidental: git checkout HEAD -- <file>, recommit.
+
+
+E4. INFINITE LOOP DETECTED (same fix > 3 times):
+    Stop. Output: "LOOP_DETECTED at <task>: tried <fix> 3+ times, error: <err>".
+    Wait for user.
+
+
+E5. DEPENDENCY YOU NEED IS NOT IN requirements.txt:
+    Do not pip install silently. Output: "NEW_DEP_REQUEST: <pkg> for <reason>".
+    Wait for user approval. Add to requirements.txt only after approval.
+
+
+E6. PORTABILITY VIOLATION DETECTED:
+    Replace hardcoded path with Path(__file__) anchor or env var.
+    Re-run lint until clean. Do not whitelist the violation.
+
+
+E7. SELF-HEAL TEST FAILS:
+    Find which step in build.bat / bootstrap_check.py errored.
+    Fix the recovery logic (do NOT just re-add the missing files).
+    Re-run the full delete-and-rebuild test.
+
+
+E8. R10 VIOLATION DETECTED (chat-only output for executable intent):
+    The model returned 'respond' on first step for a build/run/edit prompt.
+    Investigate: is intent_router classifying correctly? Is system prompt
+    instructing the model to use tools? Patch BOTH if needed.
+    Re-run test_intent_coverage.py until green.
+
+
+E9. R12 VIOLATION DETECTED (mock found in runtime, fake success returned):
+    Replace mock with real implementation. If real is not feasible in this
+    phase, output BLOCKED with NEW_DEP_REQUEST or design question. Never
+    leave a mock in runtime/.
+
+
+E10. BROWSER PERMISSION DEADLOCK:
+     If browser_act blocks waiting for user approval and tests require
+     non-interactive runs, set MAYDAY_AUTO_APPROVE_BROWSER=1 ONLY in test
+     env. NEVER default-on in production code paths.
+
+
+================================================================================
+5. ABSOLUTE DO-NOT LIST
+================================================================================
+
+
+- Do not call Claude/Gemini/OpenAI APIs autonomously.
+- Do not modify files outside the phase's allow-list.
+- Do not write `pass`, `return None`, `...` as placeholders.
+- Do not write `# TODO: implement` and call it done.
+- Do not add `time.sleep()` to fake progress.
+- Do not delete files unless the phase explicitly says so.
+- Do not bypass protection_check.py with --no-verify.
+- Do not skip the CHECKPOINT_REPORT.
+- Do not start the next phase without user approval.
+- Do not invent paths, log lines, or test outputs.
+- Do not declare success without showing evidence.
+- Do not write absolute paths (C:\..., /home/..., /Users/...) anywhere.
+- Do not assume runtime/, models/, venv/, memory_store/, browser_profile/
+  exist — always self-heal.
+- Do not merge phases. One phase per branch per session.
+- Do not return source code blocks in chat for executable intents (R10).
+- Do not use Mock/MagicMock outside tests/ (R12).
+- Do not drive QProgressBar from a sleep loop (R12).
+- Do not call subprocess.* outside engine.py / server_runner.py /
+  playwright_runner.py / bootstrap/.
+- Do not run browser actions without PermissionGate approval (R5/06b).
+
+
+================================================================================
+6. WHAT "DONE" LOOKS LIKE (END STATE AFTER ALL 15 PHASES)
+================================================================================
+
+
+PORTABILITY CONTRACT:
+  User extracts mayday.zip to ANY folder on ANY drive.
+  Runs build.bat.
+  - If runtime/python/ missing → auto-downloaded.
+  - If venv/ missing → auto-created, deps auto-installed.
+  - If models/ missing → auto-fetched via models_downloader.py.
+  - If memory_store/ or browser_profile/ missing → created on first use.
+  - App launches.
+  Zero manual steps. Zero hardcoded paths.
+
+
+AGENTIC CONTRACT (all of these must hold):
+
+
+  Scenario A — "Build a Flask app with /users endpoint."
+    Within 60 seconds:
+      - Real files appear at projects/users_app/
+      - app.py contains a working Flask route (verify by HTTP 200 to /users)
+      - Click Run → server on localhost:50xx → /users returns 200
+    NOT chat-only output of code blocks. (R10)
+
+
+  Scenario B — "Open Gmail and search for 'invoice'."
+    - PermissionGate dialog shows: action=open + act-steps preview.
+    - User approves.
+    - Real Chromium opens with persistent profile.
+    - Search runs. Screenshot saved. Audit log appended.
+    - User can cancel mid-sequence.
+
+
+  Scenario C — "Remember the project codename is FALCON."
+    - long_term row inserted.
+    - 30 days later, "What is the codename?" → response includes FALCON,
+      retrieved from memory_store, not invented.
+
+
+  Scenario D — Local model timeout at 90s.
+    - User sees: "API_FALLBACK_REQUEST: local model exceeded 90s on this
+      task. Approve external API call? (Y/N)"
+    - No autonomous escalation.
+
+
+  Quality gates:
+    - All 10 EX tests pass.
+    - test_browser_automation: PASS (or SKIP if chromium absent).
+    - test_memory: PASS.
+    - test_portability / test_no_mock / test_intent_coverage: PASS.
+    - Health score >= 85.
+    - ZIP export unlocks.
+
+
+This is the difference between a chatbot and an agent.
+Build it phase by phase. Stop between phases. Verify everything.
+Never break the portability contract. Never fake execution.
+
+
+================================================================================
+7. KICKOFF MESSAGE FOR CODEX / ANTIGRAVITY (PASTE FIRST, BEFORE THIS BRIEF)
+================================================================================
+
+
+You are about to receive a file called MAYDAY_Codex_Handoff.txt (v4.3.0).
+Before you do anything else:
+
+
+  1. Read the entire file end to end.
+  2. Confirm in one line: "Read brief v4.3.0. Starting Phase 00 on branch
+     phase-00-protection."
+  3. Execute ONLY Phase 00. Do not touch any other phase.
+  4. When Phase 00 acceptance tests all pass, output the CHECKPOINT_REPORT.
+  5. STOP. Do not start Phase 01. Wait for me to review and say "go".
+
+
+Rules you must obey for the entire project:
+  - Never edit files outside the current phase's ALLOWED_WRITES /
+    ALLOWED_MODIFIES.
+  - Never call external APIs (Claude/Gemini/OpenAI) without my explicit "yes".
+  - Never write hardcoded absolute paths. Use Path(__file__) anchors.
+  - Never claim a test passes without showing the actual command output.
+  - Never bypass scripts/protection_check.py.
+  - Never return source-code-only chat output for executable intents (R10).
+  - Never use Mock/MagicMock outside tests/ (R12).
+  - Never drive a progress bar from a sleep loop (R12).
+  - Never run a browser action without PermissionGate approval.
+  - If you run low on tokens, stop cleanly and report your exact resume point.
+
+
+Begin by reading the brief now.
+
+
+================================================================================
+END OF HANDOFF BRIEF — M.A.Y.D.A.Y v4.3.0
+================================================================================
+
+
+=== END MAYDAY_Codex_Handoff.txt ===
+```
+
+
+.

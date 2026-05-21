@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-05-15T14:51:43.884305+00:00",
+  "files": [
+    "config.json"
+  ],
+  "name": "phase4_json_cfg",
+  "sha256_per_file": {
+    "config.json": "327d9530dc3b67f994c796400db960f79ecb410f643563228c072e30c1636def"
+  },
+  "stack": "static"
+}

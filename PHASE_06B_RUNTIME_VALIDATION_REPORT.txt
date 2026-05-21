@@ -1,0 +1,820 @@
+PHASE 06B REAL RUNTIME VALIDATION REPORT
+Generated: 2026-05-16
+Commit SHA at validation start: a368662da9c7465692b2b7bc18544c5eb88fe735
+
+Runtime path used:
+QApplication -> MainWindow -> InferenceThread -> Orchestrator -> ModelRouter -> local/API model -> ExecutionEngine -> gateway -> real tools
+
+Gateway / execution / visible side-effect matrix:
+- persistent_session: gateway popup shown=YES; tool executed=YES; visible side effect observed=YES; gateway_count=2; tools=['browser_open', 'browser_navigate']; statuses=['success', 'success']
+- multi_step_browser: gateway popup shown=YES; tool executed=YES; visible side effect observed=YES; gateway_count=3; tools=['browser_open', 'browser_click', 'browser_type']; statuses=['success', 'success', 'success']
+- browser_close: gateway popup shown=YES; tool executed=YES; visible side effect observed=YES; gateway_count=1; tools=['browser_close']; statuses=['success']
+- browser_audit_logging: gateway popup shown=NO; tool executed=NO; visible side effect observed=YES; gateway_count=0; tools=[]; statuses=[]
+- persistent_profile: gateway popup shown=NO; tool executed=NO; visible side effect observed=YES; gateway_count=0; tools=[]; statuses=[]
+- tool_gateway_validation: gateway popup shown=YES; tool executed=YES; visible side effect observed=YES; gateway_count=4; tools=['browser_open', 'browser_click', 'browser_type', 'browser_close']; statuses=['success', 'success', 'success', 'success']
+- failure_handling: gateway popup shown=YES; tool executed=YES; visible side effect observed=YES; gateway_count=2; tools=['browser_open', 'browser_click']; statuses=['success', 'error']
+- api_assisted_browser_automation: gateway popup shown=YES; tool executed=YES; visible side effect observed=YES; gateway_count=3; tools=['browser_open', 'browser_click', 'browser_type']; statuses=['success', 'success', 'success']
+
+Exact prompts and structured execution outputs:
+
+[persistent_session]
+Prompt: Open visible browser to google.com, keep session alive, navigate again without reopening browser.
+Process result:
+{
+  "response": "multi_tool_call executed: browser_open(status=success; session_id=763eec3f-9cf2-41b3-b467-cf014baccd6e; url=https://www.google.com/?zx=1779043387147; title=Google; screenshot=E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_open.png; headless=False; active_sessions=1) | browser_navigate(status=success; session_id=763eec3f-9cf2-41b3-b467-cf014baccd6e; url=https://www.google.com/search?q=MAYDAY+Phase+6B+session; title=MAYDAY Phase 6B session - Google Search; screenshot=E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_navigate.png; headless=False; active_sessions=1)",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_open",
+      "status": "success"
+    },
+    {
+      "tool": "browser_navigate",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_open",
+    "parameters": {
+      "url": "https://www.google.com",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "url": "https://www.google.com/?zx=1779043387147",
+      "title": "Google",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_open.png",
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "persistent": true,
+      "headless": false,
+      "login_state": "login_required",
+      "validation": {
+        "opened": true,
+        "screenshot_exists": true,
+        "http_status": 200
+      },
+      "active_sessions": 1,
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_navigate",
+    "parameters": {
+      "url": "https://www.google.com/search?q=MAYDAY+Phase+6B+session",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "url": "https://www.google.com/search?q=MAYDAY+Phase+6B+session",
+      "title": "MAYDAY Phase 6B session - Google Search",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_navigate.png",
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "persistent": true,
+      "headless": false,
+      "login_state": "login_required",
+      "validation": {
+        "navigated": true,
+        "screenshot_exists": true,
+        "http_status": 200
+      },
+      "active_sessions": 1,
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{
+  "same_session_reused": true,
+  "browser_remains_open": true,
+  "active_sessions": 1,
+  "headless": false
+}
+
+[multi_step_browser]
+Prompt: Open visible browser, go to google.com, click search box, type exactly:
+MAYDAY Phase 6B alive
+- do not press enter
+Process result:
+{
+  "response": "multi_tool_call executed: browser_open(status=success; session_id=763eec3f-9cf2-41b3-b467-cf014baccd6e; url=https://www.google.com/?zx=1779043395131; title=Google; screenshot=E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_open.png; headless=False; active_sessions=1) | browser_click(status=success; session_id=763eec3f-9cf2-41b3-b467-cf014baccd6e; selector=textarea[name='q'], input[name='q']; screenshot=E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_step_1.png; headless=False) | browser_type(status=success; session_id=763eec3f-9cf2-41b3-b467-cf014baccd6e; selector=textarea[name='q'], input[name='q']; screenshot=E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_step_1.png; text=MAYDAY Phase 6B alive; value=MAYDAY Phase 6B alive; headless=False)",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_open",
+      "status": "success"
+    },
+    {
+      "tool": "browser_click",
+      "status": "success"
+    },
+    {
+      "tool": "browser_type",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_open",
+    "parameters": {
+      "url": "https://www.google.com",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "url": "https://www.google.com/?zx=1779043395131",
+      "title": "Google",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_open.png",
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "persistent": true,
+      "headless": false,
+      "login_state": "login_required",
+      "validation": {
+        "opened": true,
+        "screenshot_exists": true,
+        "http_status": 200
+      },
+      "active_sessions": 1,
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_click",
+    "parameters": {
+      "selector": "textarea[name='q'], input[name='q']",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "selector": "textarea[name='q'], input[name='q']",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_step_1.png",
+      "headless": false,
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_type",
+    "parameters": {
+      "selector": "textarea[name='q'], input[name='q']",
+      "text": "MAYDAY Phase 6B alive",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "selector": "textarea[name='q'], input[name='q']",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_step_1.png",
+      "text": "MAYDAY Phase 6B alive",
+      "value": "MAYDAY Phase 6B alive",
+      "headless": false,
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{
+  "typed_value": "MAYDAY Phase 6B alive",
+  "exact_text_typed": true,
+  "not_headless": true
+}
+
+[browser_close]
+Prompt: Close active browser session.
+Process result:
+{
+  "response": "browser_close executed: {\"status\": \"success\", \"session_id\": \"763eec3f-9cf2-41b3-b467-cf014baccd6e\", \"closed\": true, \"active_sessions\": 0, \"attempts\": 1}",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_close",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_close",
+    "parameters": {
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "closed": true,
+      "active_sessions": 0,
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{
+  "active_sessions_after_close": 0,
+  "registry_cleanup": true,
+  "close_result": {
+    "status": "success",
+    "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+    "closed": true,
+    "active_sessions": 0,
+    "attempts": 1
+  }
+}
+
+[browser_audit_logging]
+Prompt: Artifact verification: read browser audit log after runtime browser actions.
+Verification:
+{
+  "audit_path": "E:\\MAYDAY\\logs\\browser_audit.jsonl",
+  "audit_file_exists": true,
+  "recent_count": 200,
+  "recent_actions": [
+    {
+      "action": "open",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_89030f3a-77df-4e66-934c-65b007d5353d_open.png",
+      "session_id": "89030f3a-77df-4e66-934c-65b007d5353d",
+      "target": "data:text/html,<title>Persist 2</title>",
+      "timestamp": "2026-05-17T18:42:19.781142+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "open",
+      "screenshot": null,
+      "session_id": null,
+      "target": "https://www.google.com",
+      "timestamp": "2026-05-17T18:42:29.693136+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "open",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_open.png",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "target": "https://www.google.com",
+      "timestamp": "2026-05-17T18:43:07.981279+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "navigate",
+      "screenshot": null,
+      "session_id": null,
+      "target": "https://www.google.com/search?q=MAYDAY+Phase+6B+session",
+      "timestamp": "2026-05-17T18:43:08.384189+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "navigate",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_navigate.png",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "target": "https://www.google.com/search?q=MAYDAY+Phase+6B+session",
+      "timestamp": "2026-05-17T18:43:14.194443+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "open",
+      "screenshot": null,
+      "session_id": null,
+      "target": "https://www.google.com",
+      "timestamp": "2026-05-17T18:43:14.721662+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "open",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_open.png",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "target": "https://www.google.com",
+      "timestamp": "2026-05-17T18:43:15.883910+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "act",
+      "screenshot": null,
+      "session_id": null,
+      "target": [
+        {
+          "action": "click",
+          "selector": "textarea[name='q'], input[name='q']"
+        }
+      ],
+      "timestamp": "2026-05-17T18:43:16.261273+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "click",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_step_1.png",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "target": {
+        "action": "click",
+        "selector": "textarea[name='q'], input[name='q']"
+      },
+      "timestamp": "2026-05-17T18:43:16.481753+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "act",
+      "screenshot": null,
+      "session_id": null,
+      "target": [
+        {
+          "action": "type",
+          "selector": "textarea[name='q'], input[name='q']",
+          "value": "MAYDAY Phase 6B alive"
+        }
+      ],
+      "timestamp": "2026-05-17T18:43:16.835333+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "type",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_763eec3f-9cf2-41b3-b467-cf014baccd6e_step_1.png",
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "target": {
+        "action": "type",
+        "selector": "textarea[name='q'], input[name='q']",
+        "value": "MAYDAY Phase 6B alive"
+      },
+      "timestamp": "2026-05-17T18:43:17.744619+00:00",
+      "user_approved": true
+    },
+    {
+      "action": "close",
+      "screenshot": null,
+      "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+      "target": null,
+      "timestamp": "2026-05-17T18:43:21.051375+00:00",
+      "user_approved": true
+    }
+  ],
+  "timestamps_present": true,
+  "session_ids_present": true
+}
+
+[persistent_profile]
+Prompt: Artifact verification: inspect persistent Playwright profile after runtime browser actions.
+Verification:
+{
+  "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+  "profile_dir_exists": true,
+  "profile_file_sample": [
+    "CrashpadMetrics-active.pma",
+    "Last Browser",
+    "Last Version",
+    "Local State",
+    "Variations",
+    "component_crx_cache\\metadata.json",
+    "Crashpad\\metadata",
+    "Crashpad\\settings.dat",
+    "Default\\Account Web Data",
+    "Default\\Account Web Data-journal",
+    "Default\\Affiliation Database",
+    "Default\\Affiliation Database-journal",
+    "Default\\BookmarkMergedSurfaceOrdering",
+    "Default\\DIPS",
+    "Default\\Favicons",
+    "Default\\Favicons-journal",
+    "Default\\heavy_ad_intervention_opt_out.db",
+    "Default\\heavy_ad_intervention_opt_out.db-journal",
+    "Default\\History",
+    "Default\\History-journal",
+    "Default\\LOCK",
+    "Default\\LOG",
+    "Default\\LOG.old",
+    "Default\\Login Data",
+    "Default\\Login Data For Account",
+    "Default\\Login Data For Account-journal",
+    "Default\\Login Data-journal",
+    "Default\\MediaDeviceSalts",
+    "Default\\MediaDeviceSalts-journal",
+    "Default\\Network Action Predictor",
+    "Default\\Network Action Predictor-journal",
+    "Default\\Preferences",
+    "Default\\PreferredApps",
+    "Default\\README",
+    "Default\\Secure Preferences",
+    "Default\\ServerCertificate",
+    "Default\\ServerCertificate-journal",
+    "Default\\Shortcuts",
+    "Default\\Shortcuts-journal",
+    "Default\\Top Sites"
+  ],
+  "profile_reused_across_actions": true,
+  "persistent_context_returned": true
+}
+
+[tool_gateway_validation]
+Prompt: Run browser_open, browser_click, browser_type, browser_close as a gateway chain and type exactly MAYDAY gateway chain.
+Process result:
+{
+  "response": "multi_tool_call executed: browser_open(status=success; session_id=a0702410-ad76-4921-a803-553579701885; url=data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EGateway%20Chain%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E; title=Gateway Chain; screenshot=E:\\MAYDAY\\logs\\browser_a0702410-ad76-4921-a803-553579701885_open.png; headless=False; active_sessions=1) | browser_click(status=success; session_id=a0702410-ad76-4921-a803-553579701885; selector=input[name='q']; screenshot=E:\\MAYDAY\\logs\\browser_a0702410-ad76-4921-a803-553579701885_step_1.png; headless=False) | browser_type(status=success; session_id=a0702410-ad76-4921-a803-553579701885; selector=input[name='q']; screenshot=E:\\MAYDAY\\logs\\browser_a0702410-ad76-4921-a803-553579701885_step_1.png; text=MAYDAY gateway chain; value=MAYDAY gateway chain; headless=False) | browser_close(status=success; session_id=a0702410-ad76-4921-a803-553579701885; active_sessions=0)",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_open",
+      "status": "success"
+    },
+    {
+      "tool": "browser_click",
+      "status": "success"
+    },
+    {
+      "tool": "browser_type",
+      "status": "success"
+    },
+    {
+      "tool": "browser_close",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_open",
+    "parameters": {
+      "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EGateway%20Chain%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a0702410-ad76-4921-a803-553579701885",
+      "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EGateway%20Chain%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
+      "title": "Gateway Chain",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_a0702410-ad76-4921-a803-553579701885_open.png",
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "persistent": true,
+      "headless": false,
+      "login_state": "unknown",
+      "validation": {
+        "opened": true,
+        "screenshot_exists": true,
+        "http_status": null
+      },
+      "active_sessions": 1,
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_click",
+    "parameters": {
+      "selector": "input[name='q']",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a0702410-ad76-4921-a803-553579701885",
+      "selector": "input[name='q']",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_a0702410-ad76-4921-a803-553579701885_step_1.png",
+      "headless": false,
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_type",
+    "parameters": {
+      "selector": "input[name='q']",
+      "text": "MAYDAY gateway chain",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a0702410-ad76-4921-a803-553579701885",
+      "selector": "input[name='q']",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_a0702410-ad76-4921-a803-553579701885_step_1.png",
+      "text": "MAYDAY gateway chain",
+      "value": "MAYDAY gateway chain",
+      "headless": false,
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_close",
+    "parameters": {
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a0702410-ad76-4921-a803-553579701885",
+      "closed": true,
+      "active_sessions": 0,
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{
+  "gateway_events_by_tool": [
+    "Browser Open",
+    "Browser Click",
+    "Browser Type",
+    "Browser Close"
+  ],
+  "every_executable_flow_reached_gateway": true,
+  "typed_value": "MAYDAY gateway chain",
+  "active_sessions_after_close": 0
+}
+
+[failure_handling]
+Prompt: Open visible browser to the validation page and click missing selector #does-not-exist.
+Process result:
+{
+  "response": "multi_tool_call failed: {\"status\": \"error\", \"results\": [{\"tool\": \"browser_open\", \"result\": {\"status\": \"success\", \"session_id\": \"dbaaad4f-8557-4514-9e85-49980439d8ec\", \"url\": \"data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EFailure%20Handling%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E\", \"title\": \"Failure Handling\", \"screenshot\": \"E:\\\\MAYDAY\\\\logs\\\\browser_dbaaad4f-8557-4514-9e85-49980439d8ec_open.png\", \"profile_dir\": \"E:\\\\MAYDAY\\\\runtime\\\\browser_profile\", \"persistent\": true, \"headless\": false, \"login_state\": \"unknown\", \"validation\": {\"opened\": true, \"screenshot_exists\": true, \"http_status\": null}, \"active_sessions\": 1, \"attempts\": 1}, \"node_id\": \"node_1\"}, {\"tool\": \"browser_click\", \"result\": {\"status\": \"error\", \"error\": \"Could not resolve browser target '#does-not-exist' for click: Locator.wait_for: Timeout 2500ms exceeded.\\nCall log:\\nwaiting for locator(\\\"#does-not-exist\\\").first to be visible\\n\", \"attempts\": 1, \"classification\": \"terminal_failure\"}, \"node_id\": \"node_2\"}], \"task_graph\": [{\"id\": \"node_1\", \"tool_name\": \"browser_open\", \"status\": \"success\", \"started_at\": \"2026-05-17T18:43:32.794802+00:00\", \"finished_at\": \"2026-05-17T18:43:36.325842+00:00\"}, {\"id\": \"node_2\", \"tool_name\": \"browser_click\", \"status\": \"error\", \"started_at\": \"2026-05-17T18:43:36.325842+00:00\", \"finished_at\": \"2026-05-17T18:43:39.585054+00:00\"}]}",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_open",
+      "status": "success"
+    },
+    {
+      "tool": "browser_click",
+      "status": "error"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_open",
+    "parameters": {
+      "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EFailure%20Handling%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "dbaaad4f-8557-4514-9e85-49980439d8ec",
+      "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EFailure%20Handling%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
+      "title": "Failure Handling",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_dbaaad4f-8557-4514-9e85-49980439d8ec_open.png",
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "persistent": true,
+      "headless": false,
+      "login_state": "unknown",
+      "validation": {
+        "opened": true,
+        "screenshot_exists": true,
+        "http_status": null
+      },
+      "active_sessions": 1,
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_click",
+    "parameters": {
+      "selector": "#does-not-exist",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "error",
+      "error": "Could not resolve browser target '#does-not-exist' for click: Locator.wait_for: Timeout 2500ms exceeded.\nCall log:\nwaiting for locator(\"#does-not-exist\").first to be visible\n",
+      "attempts": 1,
+      "classification": "terminal_failure"
+    }
+  }
+]
+Verification:
+{
+  "structured_error_returned": {
+    "status": "error",
+    "error": "Could not resolve browser target '#does-not-exist' for click: Locator.wait_for: Timeout 2500ms exceeded.\nCall log:\nwaiting for locator(\"#does-not-exist\").first to be visible\n",
+    "attempts": 1,
+    "classification": "terminal_failure"
+  },
+  "session_not_corrupted": true,
+  "active_sessions_after_failure": 1,
+  "orchestrator_crashed": false
+}
+
+[failure_cleanup]
+Prompt: Close active browser session.
+Process result:
+{
+  "response": "browser_close executed: {\"status\": \"success\", \"session_id\": \"dbaaad4f-8557-4514-9e85-49980439d8ec\", \"closed\": true, \"active_sessions\": 0, \"attempts\": 1}",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_close",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_close",
+    "parameters": {
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "dbaaad4f-8557-4514-9e85-49980439d8ec",
+      "closed": true,
+      "active_sessions": 0,
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{}
+
+[api_assisted_browser_automation]
+Prompt: Build a complex project app browser automation task through the API path: open visible browser to google.com, click the search box, type exactly MAYDAY API Phase 6B alive, and do not press enter.
+Process result:
+{
+  "response": "multi_tool_call executed: browser_open(status=success; session_id=a4a88d7a-7824-44c7-aa87-91ccfe5f65fb; url=https://www.google.com/?zx=1779043427662; title=Google; screenshot=E:\\MAYDAY\\logs\\browser_a4a88d7a-7824-44c7-aa87-91ccfe5f65fb_open.png; headless=False; active_sessions=1) | browser_click(status=success; session_id=a4a88d7a-7824-44c7-aa87-91ccfe5f65fb; selector=textarea[name='q'], input[name='q']; screenshot=E:\\MAYDAY\\logs\\browser_a4a88d7a-7824-44c7-aa87-91ccfe5f65fb_step_1.png; headless=False) | browser_type(status=success; session_id=a4a88d7a-7824-44c7-aa87-91ccfe5f65fb; selector=textarea[name='q'], input[name='q']; screenshot=E:\\MAYDAY\\logs\\browser_a4a88d7a-7824-44c7-aa87-91ccfe5f65fb_step_1.png; text=MAYDAY API Phase 6B alive; value=MAYDAY API Phase 6B alive; headless=False)",
+  "provider": "openai",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_open",
+      "status": "success"
+    },
+    {
+      "tool": "browser_click",
+      "status": "success"
+    },
+    {
+      "tool": "browser_type",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_open",
+    "parameters": {
+      "url": "https://www.google.com",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb",
+      "url": "https://www.google.com/?zx=1779043427662",
+      "title": "Google",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_a4a88d7a-7824-44c7-aa87-91ccfe5f65fb_open.png",
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "persistent": true,
+      "headless": false,
+      "login_state": "login_required",
+      "validation": {
+        "opened": true,
+        "screenshot_exists": true,
+        "http_status": 200
+      },
+      "active_sessions": 1,
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_click",
+    "parameters": {
+      "selector": "textarea[name='q'], input[name='q']",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb",
+      "selector": "textarea[name='q'], input[name='q']",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_a4a88d7a-7824-44c7-aa87-91ccfe5f65fb_step_1.png",
+      "headless": false,
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "attempts": 1
+    }
+  },
+  {
+    "tool_name": "browser_type",
+    "parameters": {
+      "selector": "textarea[name='q'], input[name='q']",
+      "text": "MAYDAY API Phase 6B alive",
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb",
+      "selector": "textarea[name='q'], input[name='q']",
+      "screenshot": "E:\\MAYDAY\\logs\\browser_a4a88d7a-7824-44c7-aa87-91ccfe5f65fb_step_1.png",
+      "text": "MAYDAY API Phase 6B alive",
+      "value": "MAYDAY API Phase 6B alive",
+      "headless": false,
+      "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{
+  "provider": "openai",
+  "api_model_returned_valid_tool_json": true,
+  "api_raw_tool_json": {
+    "action": "multi_tool_call",
+    "tools": [
+      {
+        "tool_name": "browser_open",
+        "parameters": {
+          "url": "https://www.google.com"
+        }
+      },
+      {
+        "tool_name": "browser_click",
+        "parameters": {
+          "selector": "textarea[name='q'], input[name='q']"
+        }
+      },
+      {
+        "tool_name": "browser_type",
+        "parameters": {
+          "selector": "textarea[name='q'], input[name='q']",
+          "text": "MAYDAY API Phase 6B alive"
+        }
+      }
+    ],
+    "_finalize_after_tool": true
+  },
+  "typed_value": "MAYDAY API Phase 6B alive",
+  "gateway_preserved": true
+}
+
+[api_cleanup]
+Prompt: Close active browser session.
+Process result:
+{
+  "response": "browser_close executed: {\"status\": \"success\", \"session_id\": \"a4a88d7a-7824-44c7-aa87-91ccfe5f65fb\", \"closed\": true, \"active_sessions\": 0, \"attempts\": 1}",
+  "provider": "local",
+  "steps": 0,
+  "tools_used": [
+    {
+      "tool": "browser_close",
+      "status": "success"
+    }
+  ],
+  "continuation_rounds": 0
+}
+Engine executions:
+[
+  {
+    "tool_name": "browser_close",
+    "parameters": {
+      "_sandbox_mode": false,
+      "_intent_family": "AUTOMATION"
+    },
+    "result": {
+      "status": "success",
+      "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb",
+      "closed": true,
+      "active_sessions": 0,
+      "attempts": 1
+    }
+  }
+]
+Verification:
+{}
+
+Cleanup verification:
+{
+  "active_sessions_after_final_cleanup": 0,
+  "direct_close_all_error": "",
+  "temporary_api_keys_deleted": true,
+  "temporary_api_salt_deleted": true
+}
+
+Remaining blockers:
+None.

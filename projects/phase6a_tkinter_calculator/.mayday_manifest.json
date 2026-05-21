@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-05-16T17:24:34.771640+00:00",
+  "files": [
+    "calculator.py"
+  ],
+  "name": "phase6a_tkinter_calculator",
+  "sha256_per_file": {
+    "calculator.py": "0def14355d231881246c5db664d8d905ffe11ed0d0f0b108095799764c6208cd"
+  },
+  "stack": "python-tkinter"
+}

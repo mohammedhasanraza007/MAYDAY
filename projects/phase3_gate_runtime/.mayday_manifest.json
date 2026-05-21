@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-05-15T14:13:45.788413+00:00",
+  "files": [
+    "app.py"
+  ],
+  "name": "phase3_gate_runtime",
+  "sha256_per_file": {
+    "app.py": "8f2e36c18a810c1e236e37454c680ab4419d7f03863a1ecda0b192905d05a0ad"
+  },
+  "stack": "flask"
+}

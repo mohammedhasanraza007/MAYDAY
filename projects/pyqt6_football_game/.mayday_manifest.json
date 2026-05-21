@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-05-17T17:55:21.905967+00:00",
+  "files": [
+    "main.py",
+    "requirements.txt"
+  ],
+  "name": "pyqt6_football_game",
+  "sha256_per_file": {
+    "main.py": "b102288b513684636e9b429e84d29c1b9ba5536232cdc5de31cfbb70063c7cec",
+    "requirements.txt": "a2be72779a3959fcaec372285234c7fb553917bb6ef9a8562f96e699b7d3dbb5"
+  },
+  "stack": "python-pyqt6"
+}

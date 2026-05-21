@@ -1,0 +1,1198 @@
+{
+  "browser": {
+    "active": true,
+    "active_sessions": 1,
+    "current_url": "https://www.youtube.com/",
+    "headless": false,
+    "login_state": "unknown",
+    "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
+    "session_id": "99b7ddd4-d8c1-479e-bf06-42ecd3083d47",
+    "tabs": [
+      {
+        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787",
+        "timestamp": "2026-05-21T09:59:55.740943+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787",
+        "timestamp": "2026-05-21T09:59:58.279746+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
+        "timestamp": "2026-05-21T10:00:11.321296+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
+        "timestamp": "2026-05-21T10:00:12.141462+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
+        "timestamp": "2026-05-21T10:00:15.025864+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
+        "timestamp": "2026-05-21T10:00:50.356132+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
+        "timestamp": "2026-05-21T10:00:51.603291+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
+        "timestamp": "2026-05-21T10:00:54.021589+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "timestamp": "2026-05-21T10:01:33.091874+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "timestamp": "2026-05-21T10:01:33.486442+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "timestamp": "2026-05-21T10:01:34.455225+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "timestamp": "2026-05-21T10:01:44.876117+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      {
+        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c",
+        "timestamp": "2026-05-21T10:02:32.051363+00:00",
+        "title": "bad blood on youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+      },
+      {
+        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c",
+        "timestamp": "2026-05-21T10:02:33.113196+00:00",
+        "title": "bad blood on youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+      },
+      {
+        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946",
+        "timestamp": "2026-05-21T10:03:13.383775+00:00",
+        "title": "bad blood on youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+      },
+      {
+        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946",
+        "timestamp": "2026-05-21T10:03:14.145565+00:00",
+        "title": "bad blood on youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+      },
+      {
+        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
+        "timestamp": "2026-05-21T10:10:38.264249+00:00",
+        "title": "suraj bobah hai - YouTube",
+        "url": "https://www.youtube.com/results?search_query=suraj+bobah+hai"
+      },
+      {
+        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
+        "timestamp": "2026-05-21T10:13:29.075342+00:00",
+        "title": "play an english song - YouTube",
+        "url": "https://www.youtube.com/results?search_query=play+an+english+song"
+      },
+      {
+        "session_id": "6775291d-a0c0-4770-a8a7-6d04d1d17504",
+        "timestamp": "2026-05-21T15:46:51.834928+00:00",
+        "title": "Best Gaming PC 2026: Top Picks for Every Budget | Hyper Cyber",
+        "url": "https://hypercyber.com/blogs/news/best-gaming-pc"
+      },
+      {
+        "session_id": "99b7ddd4-d8c1-479e-bf06-42ecd3083d47",
+        "timestamp": "2026-05-21T17:10:29.623154+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      }
+    ],
+    "title": "YouTube"
+  },
+  "created_at": "2026-05-17T18:33:21.725869+00:00",
+  "desktop": {
+    "focused_window": "",
+    "last_process": {}
+  },
+  "filesystem": {
+    "current_project_path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-59\\test_simple_file_prompt_recove0",
+    "verified_files": [
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-17T18:33:21.725869+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-17T18:33:50.817388+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-17T18:35:58.909968+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-17T18:41:40.483777+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-21T09:47:35.042112+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-56\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-21T09:48:14.047656+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py",
+        "sha256": "30b034e4bb08fc1279fc504534d9b9b96185d37558ac995e11c820b8efc68d55",
+        "timestamp": "2026-05-21T09:59:58.312908+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt",
+        "sha256": "a2be72779a3959fcaec372285234c7fb553917bb6ef9a8562f96e699b7d3dbb5",
+        "timestamp": "2026-05-21T09:59:58.356222+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py",
+        "sha256": "30b034e4bb08fc1279fc504534d9b9b96185d37558ac995e11c820b8efc68d55",
+        "timestamp": "2026-05-21T10:00:15.062468+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt",
+        "sha256": "a2be72779a3959fcaec372285234c7fb553917bb6ef9a8562f96e699b7d3dbb5",
+        "timestamp": "2026-05-21T10:00:15.157070+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py",
+        "sha256": "30b034e4bb08fc1279fc504534d9b9b96185d37558ac995e11c820b8efc68d55",
+        "timestamp": "2026-05-21T10:00:54.048779+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt",
+        "sha256": "a2be72779a3959fcaec372285234c7fb553917bb6ef9a8562f96e699b7d3dbb5",
+        "timestamp": "2026-05-21T10:00:54.106509+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\flappy_test\\main.py",
+        "sha256": "8e1dd1598f415411d4fccfaa6e6dcbbbc06dfe8bb753c720b2f8741772034cb6",
+        "timestamp": "2026-05-21T10:00:54.422489+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\projects\\flappy_test\\requirements.txt",
+        "sha256": "a2be72779a3959fcaec372285234c7fb553917bb6ef9a8562f96e699b7d3dbb5",
+        "timestamp": "2026-05-21T10:00:55.056610+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\tool_test_workspace\\pingpong_game\\pong.py",
+        "sha256": "ae0b450b89a82fde15d8364bc3ad80791e4065b4c5977427a0a53837209b3f2b",
+        "timestamp": "2026-05-21T10:01:48.887151+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\tool_test_workspace\\pingpong_game\\requirements.txt",
+        "sha256": "a2be72779a3959fcaec372285234c7fb553917bb6ef9a8562f96e699b7d3dbb5",
+        "timestamp": "2026-05-21T10:01:48.950607+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\tool_test_workspace\\n8n_workflow\\workflow.json",
+        "sha256": "80cedb23ab6871ac302e93d314defd5af3154ca38755eed8b9ab34f29d894371",
+        "timestamp": "2026-05-21T10:01:52.893994+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\test_success.txt",
+        "sha256": "c38d6f9980c0864168b2b1f2ed51ad551814b41f4e3e5c92511d9bd8f1264406",
+        "timestamp": "2026-05-21T10:02:39.318904+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\test_success.txt",
+        "sha256": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+        "timestamp": "2026-05-21T10:03:20.637802+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-57\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-21T16:26:24.098742+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-21T16:26:27.716308+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-21T16:26:34.601676+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-21T16:27:11.864990+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-59\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-21T16:27:34.369200+00:00"
+      }
+    ]
+  },
+  "last_tool": {
+    "status": "success",
+    "timestamp": "2026-05-21T17:19:13.619918+00:00",
+    "tool_name": "shell_run"
+  },
+  "permissions": {
+    "blocked": {}
+  },
+  "task_progress": [
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "8a07c908-b586-4de4-9d7d-f9f4a68008cb"
+      },
+      "timestamp": "2026-05-17T18:35:16.109320+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "8a07c908-b586-4de4-9d7d-f9f4a68008cb"
+      },
+      "timestamp": "2026-05-17T18:35:19.461352+00:00",
+      "tool_name": "browser_close"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:35:58.163122+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:35:58.172347+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:35:58.204428+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-17T18:35:58.909968+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:41:39.693955+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:41:39.703076+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:41:39.734216+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-17T18:41:40.483777+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+        "title": "Google",
+        "url": "https://www.google.com/?zx=1779043387147",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-17T18:43:08.055791+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+        "title": "MAYDAY Phase 6B session - Google Search",
+        "url": "https://www.google.com/search?q=MAYDAY+Phase+6B+session",
+        "validation": {
+          "http_status": 200,
+          "navigated": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-17T18:43:14.283266+00:00",
+      "tool_name": "browser_navigate"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
+        "title": "Google",
+        "url": "https://www.google.com/?zx=1779043395131",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-17T18:43:15.941646+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e"
+      },
+      "timestamp": "2026-05-17T18:43:16.555565+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e"
+      },
+      "timestamp": "2026-05-17T18:43:17.869281+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e"
+      },
+      "timestamp": "2026-05-17T18:43:21.062530+00:00",
+      "tool_name": "browser_close"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a0702410-ad76-4921-a803-553579701885",
+        "title": "Gateway Chain",
+        "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EGateway%20Chain%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
+        "validation": {
+          "http_status": null,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-17T18:43:24.896837+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a0702410-ad76-4921-a803-553579701885"
+      },
+      "timestamp": "2026-05-17T18:43:26.466321+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a0702410-ad76-4921-a803-553579701885"
+      },
+      "timestamp": "2026-05-17T18:43:28.484982+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a0702410-ad76-4921-a803-553579701885"
+      },
+      "timestamp": "2026-05-17T18:43:32.689403+00:00",
+      "tool_name": "browser_close"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "dbaaad4f-8557-4514-9e85-49980439d8ec",
+        "title": "Failure Handling",
+        "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EFailure%20Handling%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
+        "validation": {
+          "http_status": null,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-17T18:43:36.276231+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Could not resolve browser target '#does-not-exist' for click: Locator.wait_for: Timeout 2500ms exceeded.\nCall log:\nwaiting for locator(\"#does-not-exist\").first to be visible\n"
+      },
+      "timestamp": "2026-05-17T18:43:39.582052+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "dbaaad4f-8557-4514-9e85-49980439d8ec"
+      },
+      "timestamp": "2026-05-17T18:43:43.657732+00:00",
+      "tool_name": "browser_close"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb",
+        "title": "Google",
+        "url": "https://www.google.com/?zx=1779043427662",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-17T18:43:48.836138+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb"
+      },
+      "timestamp": "2026-05-17T18:43:49.786262+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb"
+      },
+      "timestamp": "2026-05-17T18:43:52.401625+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb"
+      },
+      "timestamp": "2026-05-17T18:43:57.188797+00:00",
+      "tool_name": "browser_close"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:44:26.535280+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:44:26.546303+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-17T18:44:26.655141+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-21T09:47:35.042112+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-56\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-21T09:48:14.047656+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T09:48:14.077858+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T09:48:14.088877+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T09:48:14.121118+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787",
+        "title": "Google",
+        "url": "https://www.google.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T09:59:55.114378+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787"
+      },
+      "timestamp": "2026-05-21T09:59:55.740943+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787"
+      },
+      "timestamp": "2026-05-21T09:59:58.279746+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py"
+      },
+      "timestamp": "2026-05-21T09:59:58.312908+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt"
+      },
+      "timestamp": "2026-05-21T09:59:58.356222+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T09:59:58.675745+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "[Errno 13] Permission denied: 'E:\\\\MAYDAY\\\\projects\\\\flappy_test'"
+      },
+      "timestamp": "2026-05-21T09:59:58.704459+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
+        "title": "Google",
+        "url": "https://www.google.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T10:00:11.321296+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64"
+      },
+      "timestamp": "2026-05-21T10:00:12.141462+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64"
+      },
+      "timestamp": "2026-05-21T10:00:15.025864+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py"
+      },
+      "timestamp": "2026-05-21T10:00:15.062468+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt"
+      },
+      "timestamp": "2026-05-21T10:00:15.156070+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T10:00:15.448424+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "[Errno 13] Permission denied: 'E:\\\\MAYDAY\\\\projects\\\\flappy_test'"
+      },
+      "timestamp": "2026-05-21T10:00:15.479898+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
+        "title": "Google",
+        "url": "https://www.google.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T10:00:50.356132+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235"
+      },
+      "timestamp": "2026-05-21T10:00:51.603291+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235"
+      },
+      "timestamp": "2026-05-21T10:00:54.021589+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py"
+      },
+      "timestamp": "2026-05-21T10:00:54.048779+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt"
+      },
+      "timestamp": "2026-05-21T10:00:54.106509+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T10:00:54.393338+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\flappy_test\\main.py"
+      },
+      "timestamp": "2026-05-21T10:00:54.422489+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\flappy_test\\requirements.txt"
+      },
+      "timestamp": "2026-05-21T10:00:55.056610+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T10:00:55.364200+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "title": "Google",
+        "url": "https://www.google.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T10:01:33.091874+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404"
+      },
+      "timestamp": "2026-05-21T10:01:33.486442+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404"
+      },
+      "timestamp": "2026-05-21T10:01:34.455225+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T10:01:44.876117+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\tool_test_workspace\\pingpong_game\\pong.py"
+      },
+      "timestamp": "2026-05-21T10:01:48.887151+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\tool_test_workspace\\pingpong_game\\requirements.txt"
+      },
+      "timestamp": "2026-05-21T10:01:48.950607+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T10:01:49.234423+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\tool_test_workspace\\n8n_workflow\\workflow.json"
+      },
+      "timestamp": "2026-05-21T10:01:52.893994+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T10:02:15.514375+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c",
+        "title": "bad blood on youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T10:02:32.051363+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c"
+      },
+      "timestamp": "2026-05-21T10:02:33.113196+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\phase05_audit_file.txt"
+      },
+      "timestamp": "2026-05-21T10:02:36.166263+00:00",
+      "tool_name": "file_read"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\test_success.txt"
+      },
+      "timestamp": "2026-05-21T10:02:39.318904+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-21T10:02:42.502456+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T10:02:57.389143+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946",
+        "title": "bad blood on youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T10:03:13.383775+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946"
+      },
+      "timestamp": "2026-05-21T10:03:14.145565+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\projects\\phase05_audit_file.txt"
+      },
+      "timestamp": "2026-05-21T10:03:17.255573+00:00",
+      "tool_name": "file_read"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\test_success.txt"
+      },
+      "timestamp": "2026-05-21T10:03:20.637802+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-21T10:03:24.512789+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "final_url": "https://www.youtube.com/results?search_query=suraj+bobah+hai",
+        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
+        "title": "suraj bobah hai - YouTube"
+      },
+      "timestamp": "2026-05-21T10:10:38.264249+00:00",
+      "tool_name": "browser_act"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "final_url": "https://www.youtube.com/results?search_query=play+an+english+song",
+        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
+        "title": "play an english song - YouTube"
+      },
+      "timestamp": "2026-05-21T10:13:29.075342+00:00",
+      "tool_name": "browser_act"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-21T15:46:02.735046+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "final_url": "https://hypercyber.com/blogs/news/best-gaming-pc",
+        "session_id": "6775291d-a0c0-4770-a8a7-6d04d1d17504",
+        "title": "Best Gaming PC 2026: Top Picks for Every Budget | Hyper Cyber"
+      },
+      "timestamp": "2026-05-21T15:46:51.834928+00:00",
+      "tool_name": "browser_act"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-21T15:49:18.792552+00:00",
+      "tool_name": "browser_act"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-21T15:49:58.107188+00:00",
+      "tool_name": "browser_act"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T15:54:51.786137+00:00",
+      "tool_name": "shell_run"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-21T15:56:21.399299+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-57\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-21T16:26:24.098742+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T16:26:24.215149+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T16:26:24.227359+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T16:26:24.306684+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-21T16:26:27.716308+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-21T16:26:34.601676+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-21T16:27:11.864425+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-59\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-21T16:27:34.369200+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T16:27:34.404281+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T16:27:34.416392+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-21T16:27:34.455784+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "99b7ddd4-d8c1-479e-bf06-42ecd3083d47",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-21T17:10:29.623154+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-21T17:14:48.577681+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "error": "",
+        "returncode": 0
+      },
+      "timestamp": "2026-05-21T17:19:13.619918+00:00",
+      "tool_name": "shell_run"
+    }
+  ],
+  "updated_at": "2026-05-21T17:19:13.619918+00:00"
+}

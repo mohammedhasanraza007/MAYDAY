@@ -1,0 +1,2 @@
+# M.A.Y.D.A.Y v5.0 — Build constraints
+# No torch. No numpy version constraints needed without torch.

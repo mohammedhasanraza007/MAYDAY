@@ -1,0 +1,33 @@
+{
+  "phase": "06a",
+  "allowed_writes": [
+    "core/tool_recovery.py",
+    "runtime/web_access.py",
+    "runtime/search_router.py",
+    "runtime/page_fetcher.py",
+    "tests/test_web_access.py",
+    "PHASE_06A_RUNTIME_VALIDATION_REPORT.txt"
+  ],
+  "allowed_modifies": [
+    "core/intent_router.py",
+    "core/json_parser.py",
+    "core/model_router.py",
+    "core/orchestrator.py",
+    "main.py",
+    "model/inference.py",
+    "runtime/action_schema.py",
+    "runtime/engine.py",
+    "runtime/search_router.py",
+    "runtime/page_fetcher.py",
+    "runtime/web_access.py",
+    "scripts/allowlist.json",
+    "tests/test_intent_router.py",
+    "tests/test_web_access.py"
+  ],
+  "protected": [
+    "core/exceptions.py",
+    "ui/theme.py",
+    "model/loader.py",
+    "tools/file_tools.py"
+  ]
+}

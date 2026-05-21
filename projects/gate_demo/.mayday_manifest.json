@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-05-15T14:00:08.184507+00:00",
+  "files": [
+    "app.py",
+    "src/main.py"
+  ],
+  "name": "gate_demo",
+  "sha256_per_file": {
+    "app.py": "ed184cd86330a34f70c28369d55448f06eef89b75609169ff678d8f152eb73eb",
+    "src/main.py": "91daf634f3eb0d5eef0f15eb778a2b02776d6357e8194c9ce4497ae826915b01"
+  },
+  "stack": "flask"
+}
