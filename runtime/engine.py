@@ -1,4 +1,6 @@
 import concurrent.futures
+from datetime import datetime
+from pathlib import Path
 
 from core.gateway import GatewayPermissionDenied, SafetyViolationError
 from core.exceptions import ToolTimeoutError
@@ -10,15 +12,21 @@ from runtime.retry_policy import retry_policy
 from runtime.scaffold_engine import ScaffoldEngine
 from runtime.web_access import WebAccessTool
 from runtime.world_state import world_state
+from tools.excel_tools import ExcelTools
+from tools.calendar_tools import CalendarTools
+from tools.gmail_tools import GmailTools
 
 
 class ExecutionEngine:
     def __init__(self):
         self._tools = {
             "browser": BrowserAutomation(),
+            "excel": ExcelTools(),
             "scaffold": ScaffoldEngine(),
             "web_access": WebAccessTool(),
             "page_fetcher": PageFetchTool(),
+            "calendar": CalendarTools(),
+            "gmail": GmailTools(),
         }
         self.gateway = ToolGatewayCore()
 
@@ -71,7 +79,7 @@ class ExecutionEngine:
             return result
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
             fut = ex.submit(tool.execute, params)
-            timeout_seconds = 120 if tool_name == "browser_act" else 30
+            timeout_seconds = 30
             try:
                 result = fut.result(timeout=timeout_seconds)
             except concurrent.futures.TimeoutError as exc:
@@ -132,24 +140,37 @@ class ExecutionEngine:
             return
 
     def get_system_prompt(self) -> str:
-        registered = ", ".join(sorted(self._tools.keys()))
+        from runtime.execution_registry import KNOWN_TOOLS
+
+        registered = ", ".join(sorted(KNOWN_TOOLS))
+        current_time = datetime.now().astimezone().isoformat(timespec="seconds")
+        scripts_dir = Path(__file__).resolve().parent.parent / "scripts"
         return (
             "You are M.A.Y.D.A.Y Phase 6a. For executable requests, return exactly one "
             "raw JSON object and no markdown. Use this shape: "
             '{"action":"tool_call","tool_name":"file_write","parameters":{"path":"relative/or/absolute/path","content":"text"}}. '
+            f"Current local datetime: {current_time}. Use explicit ISO datetimes for Calendar. "
+            f"Python helper scripts should live under {scripts_dir}. "
             "Available browser tools: \n"
             "1) browser_open(url: str) - Opens the visible browser to a URL.\n"
             "2) browser_click(selector: str) - Clicks an element by selector.\n"
             "3) browser_type(selector: str, text: str) - Clicks, clears, and types text into a selector field.\n"
-            "4) browser_act(steps: list[dict]) - Runs sequential steps like: [{'action': 'open', 'url': '...'}, {'action': 'wait_for', 'selector': '...'}, {'action': 'click', 'selector': '...'}, {'action': 'type', 'selector': '...', 'value': '...'}]\n"
-            "5) browser_get_text(selector: str='body') extracts visible text and links; browser_screenshot captures the active tab.\n"
+            "4) browser_wait(selector: str, timeout_ms: int=10000) - Waits for a visible element.\n"
+            "5) browser_wait_for_element(selector: str, timeout_ms: int=10000) - Alias for waiting on a visible element.\n"
+            "6) browser_get_text(selector: str='body') - Extracts text and links from the current page.\n"
+            "7) browser_get_page_content(url: str, selector: str='body') - Opens a URL and extracts readable page content in one atomic step.\n"
+            "8) browser_screenshot(path: str optional) - Saves a screenshot of the current page.\n"
+            "9) browser_verify(condition: str) - Verifies current page URL/title/text/selector state.\n"
+            "10) browser_scroll(amount: int=600) - Scrolls the active page.\n"
+            "11) browser_close() - Closes the active browser session.\n"
             "Browser selectors may be CSS selectors or semantic targets such as 'search bar', 'email field', 'first result', or 'New meeting'; the browser tool will resolve dynamic DOM targets adaptively.\n"
-            "For Google Meet, use browser_act steps for New meeting/Create a meeting for later, then a get_text or extract_meet_link step and return only a verified meet.google.com URL.\n"
+            "Never output browser_act, browser_chain, browser_multi, or semantic pseudo-actions; only registered atomic tools are executable.\n"
             "When typing, put only the intended field contents in text/value. Do not include instructions like 'in the search bar', 'then click', or 'press enter' inside the typed text.\n"
-            "Use shell_run for commands, web_search for search queries, web_fetch for URLs, and scaffold_engine for projects.\n"
-            "To perform multiple sequential actions (e.g., writing files/projects and then executing/running them with shell_run), always return a single 'multi_tool_call' containing all the required tool calls in sequence so they can execute together.\n"
+            "Use shell_run for commands, web_search for search queries, web_fetch for URLs, file_write with non-empty content or explicit blank_* template, excel_create for tabular .xlsx files, calendar_create_event/calendar_list_events for Calendar, gmail_get_unread/gmail_get_email_body for Gmail, and scaffold_engine for projects.\n"
+            "Return one atomic tool_call per step, then wait for the tool result before deciding the next action. Do not produce multi-tool plans unless the executor explicitly requests a compatibility fallback.\n"
+            "For calendar_create_event, title and start_datetime are required; end_datetime is optional and defaults to one hour after start when omitted.\n"
             "When creating applications that require images or assets (like games), write Python code that programmatically draws or generates placeholders (e.g., using QPainter, solid colors, or QImage) inside the script. NEVER output large base64 strings or binary contents in your response, as it will exceed output token limits and truncate your response.\n"
-            "Registered tool bases: "
+            "Registered atomic tools: "
             f"{registered}. Do not repeat an identical tool action after a tool result."
         )
 
@@ -163,4 +184,8 @@ class ExecutionEngine:
             return "web_access"
         if tool_name == "web_fetch":
             return "page_fetcher"
+        if tool_name.startswith("calendar_"):
+            return "calendar"
+        if tool_name.startswith("gmail_"):
+            return "gmail"
         return base

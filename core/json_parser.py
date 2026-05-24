@@ -16,6 +16,7 @@ import re
 from typing import Any
 
 from runtime import action_schema
+from runtime.execution_registry import structural_validate
 
 
 CODEBLOCK_PATTERN = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL | re.IGNORECASE)
@@ -88,8 +89,10 @@ def parse_model_output(raw: str) -> dict[str, Any]:
 
     if parsed is None:
         # Only log after ALL repair strategies are exhausted
+        reason = "truncated" if _looks_truncated_json(text) else "invalid"
         _parser_logger.warning(
-            "JSON PARSING FAILED after all repair attempts for text: %r",
+            "JSON output %s after all repair attempts for text: %r",
+            reason,
             text[:200],
         )
         return safe_response_object(text)
@@ -183,6 +186,17 @@ def _repair_json_text(text: str) -> str:
     return candidate
 
 
+def _looks_truncated_json(text: str) -> bool:
+    stripped = text.strip()
+    if not stripped:
+        return False
+    opens = stripped.count("{") + stripped.count("[")
+    closes = stripped.count("}") + stripped.count("]")
+    if opens > closes:
+        return True
+    return stripped.endswith((",", ":", "{", "["))
+
+
 def _try_literal_eval(text: str) -> Any | None:
     try:
         return ast.literal_eval(text)
@@ -216,7 +230,7 @@ def _normalize_action_object(parsed: Any, raw_text: str) -> dict[str, Any]:
             normalized["action"] = "tool_call"
         elif {"project_name", "stack", "files"}.issubset(normalized.keys()):
             normalized["action"] = "scaffold"
-        elif "text" in normalized or "response" in normalized:
+        elif "text" in normalized or "response" in normalized or "content" in normalized:
             normalized["action"] = "respond"
         else:
             return safe_response_object(raw_text)
@@ -260,7 +274,7 @@ def _repair_multi_tool_call_alias(action: dict[str, Any]) -> dict[str, Any]:
                         })
             tools = extracted_tools
         except Exception as e:
-            logger.warning("AST-based tool_code parsing failed: %s", e)
+            _parser_logger.warning("AST-based tool_code parsing failed: %s", e)
 
     if not isinstance(tools, list):
         return action
@@ -310,7 +324,7 @@ def _repair_tool_call_alias(action: dict[str, Any]) -> dict[str, Any]:
                         parameters = action["parameters"]
                         break
         except Exception as e:
-            logger.warning("AST-based tool_code parsing failed in single tool_call: %s", e)
+            _parser_logger.warning("AST-based tool_code parsing failed in single tool_call: %s", e)
 
     if not isinstance(tool_name, str) or not isinstance(parameters, dict):
         return action
@@ -341,30 +355,17 @@ def _repair_tool_call_alias(action: dict[str, Any]) -> dict[str, Any]:
 
 
 def _ensure_respond_keys(action: dict[str, Any]) -> dict[str, Any]:
-    text = action.get("text", action.get("response", ""))
+    text = action.get("text", action.get("response", action.get("content", "")))
     if not isinstance(text, str):
         text = str(text)
     action["text"] = text
     action["response"] = text
+    action["content"] = text
     return action
 
 
 def _is_valid_action_object(parsed: dict[str, Any]) -> bool:
     action = parsed.get("action", "")
 
-    validator = getattr(action_schema, "validate", None)
-    if callable(validator):
-        valid, reason = validator(parsed)
-        if not valid:
-            return False
-        return True
-
-    validator = getattr(action_schema, "validate_action", None)
-    if callable(validator):
-        params = {k: v for k, v in parsed.items() if k != "action"}
-        valid, reason = validator(action, params)
-        if not valid:
-            return False
-        return True
-
-    return isinstance(action, str) and bool(action.strip())
+    valid, _reason = structural_validate(parsed)
+    return valid

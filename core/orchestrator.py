@@ -8,6 +8,8 @@ from __future__ import annotations
 import gc
 import json
 import logging
+import re
+from collections import deque
 from typing import Any, Callable
 
 from core.exceptions import (
@@ -22,16 +24,47 @@ from core.session import SessionManager
 from core.tool_recovery import FINALIZE_AFTER_TOOL, recover_action_from_prompt
 from core.context_compressor import ContextCompressor
 from runtime.task_graph import TaskGraphExecutor
+from runtime.action_schema import validate
+from runtime.execution_budget import ExecutionBudget, MAX_STEPS_PER_TASK
+from runtime.execution_registry import validate_capability, structural_validate
+from runtime.health_monitor import runtime_health_monitor
+from runtime.state_snapshot import StateSnapshotManager
+from runtime.task_lock import route_mutex
 
 logger = logging.getLogger("mayday.orchestrator")
 
-MAX_STEPS = 50
+MAX_STEPS = MAX_STEPS_PER_TASK
 MAX_INFERENCE_DEPTH = 1
 MAX_IDENTICAL_ACTION_REPEATS = 2
+MAX_SCHEMA_FAILURES_PER_TASK = 3
+MAX_SEMANTIC_FAILURE_REPEATS = 2
 ChatOnlyOutputError = HardRuleViolationError
 
 
 import threading
+
+
+class LoopGuard:
+    def __init__(self, maxlen: int = 5) -> None:
+        self.recent_actions = deque(maxlen=maxlen)
+        self.semantic_counts: dict[str, int] = {}
+
+    def record_and_check(self, action_signature: str, last_result: dict[str, Any] | None) -> bool:
+        repeats = self.recent_actions.count(action_signature)
+        self.recent_actions.append(action_signature)
+        if repeats <= 0:
+            return False
+        if isinstance(last_result, dict) and last_result.get("status") == "error":
+            return repeats >= 2
+        return True
+
+    def record_semantic_pattern(self, pattern: str) -> bool:
+        if not pattern:
+            return False
+        count = self.semantic_counts.get(pattern, 0) + 1
+        self.semantic_counts[pattern] = count
+        return count >= MAX_SEMANTIC_FAILURE_REPEATS
+
 
 class Orchestrator:
     def __init__(self, router: Any, engine: Any, session: SessionManager | None = None):
@@ -46,6 +79,7 @@ class Orchestrator:
         self._last_provider = "unknown"
         self._tools_used: list[dict[str, Any]] = []
         self._lock = threading.Lock()
+        self._snapshot_manager = StateSnapshotManager()
 
     def set_callbacks(
         self,
@@ -70,6 +104,9 @@ class Orchestrator:
         last_action_fingerprint = ""
         repeated_action_count = 0
         last_tool_result: dict[str, Any] | None = None
+        loop_guard = LoopGuard()
+        budget = ExecutionBudget()
+        schema_failures = 0
 
         messages = [
             {"role": "system", "content": system_prompt},
@@ -78,6 +115,7 @@ class Orchestrator:
         self.session.add_to_history("user", user_prompt)
 
         for step in range(MAX_STEPS):
+            budget.consume_step()
             if self._cancelled:
                 return "[Cancelled by user]"
 
@@ -94,23 +132,57 @@ class Orchestrator:
             try:
                 # E101: Compress messages to stay within token context window
                 compressed_messages = ContextCompressor.compress_messages(messages)
+                runtime_health_monitor.record("context_chars", sum(len(m.get("content", "")) for m in compressed_messages))
                 raw, provider = self._route(compressed_messages, user_prompt)
                 self._last_provider = provider
             finally:
                 self._inference_depth -= 1
 
-            action = parse_model_output(raw)
-            from core.composite_translator import CompositeActionTranslator
-            enforce_micro = (provider in ("local", "local_fallback"))
-            action = CompositeActionTranslator.translate(action, enforce_microstep=enforce_micro)
+            if not executable:
+                return raw.strip()
+
+            try:
+                action = self._prepare_action(raw, provider, user_prompt, messages)
+            except SchemaValidationError as exc:
+                schema_failures += 1
+                reason = str(exc)
+                logger.warning(
+                    "Planner schema failure %d/%d: %s",
+                    schema_failures,
+                    MAX_SCHEMA_FAILURES_PER_TASK,
+                    reason,
+                )
+                self._append_schema_failure_feedback(messages, raw, reason, schema_failures)
+                if schema_failures >= MAX_SCHEMA_FAILURES_PER_TASK:
+                    return self._build_schema_failure_response(reason)
+                continue
             action_name = action.get("action")
             if executable:
                 recovered = recover_action_from_prompt(user_prompt, intent, action)
                 if recovered is not None:
-                    action = recovered
+                    try:
+                        action = self._prepare_action(
+                            json.dumps(recovered),
+                            "prompt_recovery",
+                            user_prompt,
+                            messages,
+                        )
+                    except SchemaValidationError as exc:
+                        schema_failures += 1
+                        reason = str(exc)
+                        logger.warning(
+                            "Prompt recovery schema failure %d/%d: %s",
+                            schema_failures,
+                            MAX_SCHEMA_FAILURES_PER_TASK,
+                            reason,
+                        )
+                        self._append_schema_failure_feedback(messages, json.dumps(recovered), reason, schema_failures)
+                        if schema_failures >= MAX_SCHEMA_FAILURES_PER_TASK:
+                            return self._build_schema_failure_response(reason)
+                        continue
                     action_name = action.get("action")
 
-            if executable and step == 0 and action_name == "respond":
+            if executable and step == 0 and action_name == "respond" and provider not in {"exhausted", "circuit_breaker"}:
                 raise ChatOnlyOutputError(
                     "Executable intent detected but model returned respond — required tools were: "
                     + ", ".join(required)
@@ -128,6 +200,17 @@ class Orchestrator:
                 )
 
             action_fingerprint = self._action_fingerprint(action)
+            if loop_guard.record_and_check(action_fingerprint, last_tool_result):
+                logger.warning("Loop repetition detected - forcing termination for repeated action: %s", action_fingerprint)
+                return self._build_final_response(
+                    {
+                        "action": "respond",
+                        "text": (
+                            "Execution stopped after repeated identical actions "
+                            "to prevent a routing loop."
+                        ),
+                    }
+                )
             if action_fingerprint == last_action_fingerprint:
                 repeated_action_count += 1
             else:
@@ -147,9 +230,45 @@ class Orchestrator:
                     }
                 )
 
+            budget.set_chain_lengths(*self._chain_lengths(action))
+            snapshot = self._snapshot_manager.capture(self)
             result = self._execute_action(action, intent)
             last_tool_result = result
+            if result.get("status") == "error" and self._is_catastrophic_failure(result):
+                budget.enter_recovery()
+                self._snapshot_manager.rollback(self, snapshot)
+                budget.exit_recovery()
             self._assert_real_execution(result)
+            assert "status" in result and len(result) > 1, (
+                "Tool result must include status plus evidence; bare status is a fake success"
+            )
+            self._append_execution_feedback(messages, action, result)
+
+            schema_pattern = self._schema_failure_pattern(action, result)
+            if schema_pattern:
+                schema_failures += 1
+                logger.warning(
+                    "Tool schema-like failure %d/%d: %s",
+                    schema_failures,
+                    MAX_SCHEMA_FAILURES_PER_TASK,
+                    schema_pattern,
+                )
+                if schema_failures >= MAX_SCHEMA_FAILURES_PER_TASK:
+                    return self._build_schema_failure_response(str(result.get("error", schema_pattern)))
+
+            semantic_pattern = self._semantic_loop_pattern(action, result)
+            if semantic_pattern and loop_guard.record_semantic_pattern(semantic_pattern):
+                logger.warning("Semantic repetition detected - terminating: %s", semantic_pattern)
+                return self._build_final_response(
+                    {
+                        "action": "respond",
+                        "text": (
+                            "Execution stopped after repeated near-identical tool outcomes. "
+                            "The agent has preserved the latest tool result and needs a clearer next step or corrected inputs."
+                        ),
+                    }
+                )
+
             if result.get("status") == "cancelled":
                 return self._build_final_response(
                     {
@@ -160,24 +279,21 @@ class Orchestrator:
                         ),
                     }
                 )
-            if self._should_return_tool_evidence(action, result):
+            if self._should_return_tool_evidence(action, result, user_prompt):
                 return self._build_tool_evidence_response(action, result)
 
-            # E101/E106: Compress assistant output and tool results to maintain token discipline
-            compressed_raw = ContextCompressor.compress_assistant_output(raw)
-            compressed_result = ContextCompressor.compress_tool_result(result)
-            
-            messages.append({"role": "assistant", "content": compressed_raw})
-            messages.append({"role": "tool", "content": compressed_result})
-            
-            self.session.add_to_history("tool", compressed_result)
-
-        raise SessionLimitError(f"Session exceeded {self.session.max_steps} agent loop steps")
+        return self._build_max_steps_response()
 
     def process_prompt(self, user_prompt: str) -> dict[str, Any]:
-        with self._lock:
+        with route_mutex.acquire(user_prompt), self._lock:
             try:
                 text = self.run(user_prompt)
+                if text is None or str(text).strip() == "":
+                    logger.error("All paths exhausted. Returning fallback message to user.")
+                    text = (
+                        "I was unable to generate a valid response for this task. "
+                        "Try rephrasing the request or breaking it into smaller steps."
+                    )
                 if self._on_response:
                     self._on_response(text, self._last_provider)
                 self.session.add_to_history("assistant", text)
@@ -189,7 +305,11 @@ class Orchestrator:
                     "continuation_rounds": self.session.step_count,
                 }
             except Exception as exc:
-                self._emergency_cleanup()
+                runtime_health_monitor.record("failure")
+                if self._exception_requires_cleanup(exc):
+                    self._emergency_cleanup()
+                else:
+                    logger.warning("Soft planning failure - preserving loaded model: %s", exc)
                 safe = safe_response_object(str(exc))
                 text = safe.get("text", "")
                 self.session.add_to_history("assistant", text)
@@ -204,6 +324,360 @@ class Orchestrator:
                 }
             finally:
                 gc.collect()
+
+    def _prepare_action(
+        self,
+        raw: str,
+        provider: str,
+        user_prompt: str = "",
+        messages: list[dict[str, str]] | None = None,
+    ) -> dict[str, Any]:
+        action = parse_model_output(raw)
+        valid, reason = structural_validate(action)
+        if not valid:
+            raise SchemaValidationError(f"Planner output failed structural validation: {reason}")
+        from core.composite_translator import CompositeActionTranslator
+
+        translated = CompositeActionTranslator.translate(
+            action,
+            enforce_microstep=(provider in ("local", "local_fallback")),
+        )
+        if translated is None:
+            raise SchemaValidationError("Planner output could not be translated into atomic registered tools")
+        if user_prompt:
+            translated = self._hydrate_generated_content(translated, user_prompt, messages or [])
+        valid, reason = validate(translated)
+        if not valid:
+            raise SchemaValidationError(f"Translated action failed atomic validation: {reason}")
+        return translated
+
+    def _append_execution_feedback(
+        self,
+        messages: list[dict[str, str]],
+        action: dict[str, Any],
+        result: dict[str, Any],
+    ) -> None:
+        """Inject both the assistant tool action and structured result into loop state."""
+        action_json = json.dumps(action, sort_keys=True, default=str)
+        compressed_action = ContextCompressor.compress_assistant_output(action_json)
+        tool_context = self._format_tool_result_context(action, result)
+        compressed_result = ContextCompressor.compress_tool_result(tool_context)
+        messages.append({"role": "assistant", "content": compressed_action})
+        messages.append({"role": "tool", "content": compressed_result})
+        self.session.add_to_history("assistant", compressed_action, {"kind": "tool_action"})
+        self.session.add_to_history("tool", compressed_result, {"kind": "tool_result"})
+
+    def _append_schema_failure_feedback(
+        self,
+        messages: list[dict[str, str]],
+        raw: str,
+        reason: str,
+        count: int,
+    ) -> None:
+        compressed_raw = ContextCompressor.compress_assistant_output(str(raw or ""))
+        result = {
+            "status": "error",
+            "tool_name": "planner",
+            "error": reason,
+            "schema_failures": count,
+            "next_step": (
+                "Return one valid JSON tool_call using a registered tool and valid parameters. "
+                "Do not repeat the rejected schema."
+            ),
+        }
+        messages.append({"role": "assistant", "content": compressed_raw})
+        messages.append({"role": "tool", "content": ContextCompressor.compress_tool_result(result)})
+
+    def _format_tool_result_context(self, action: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
+        context = dict(result)
+        tool_names = self._tool_names_for_action(action)
+        if len(tool_names) == 1:
+            context.setdefault("tool_name", tool_names[0])
+        elif tool_names:
+            context.setdefault("tools", tool_names)
+        context.setdefault("status", result.get("status", "unknown"))
+        context.setdefault("next_step", self._next_step_guidance(action, result))
+        context.setdefault("actionable", result.get("status") == "success")
+        return context
+
+    def _next_step_guidance(self, action: dict[str, Any], result: dict[str, Any]) -> str:
+        status = result.get("status")
+        tool_names = self._tool_names_for_action(action)
+        primary = tool_names[0] if tool_names else str(action.get("action", "tool"))
+        if status == "success":
+            if primary == "browser_open":
+                return "Use browser_get_text or browser_get_page_content to inspect the page; do not open the same URL again."
+            if primary == "gmail_get_unread":
+                return "Use an email id from emails with gmail_get_email_body, or answer from the listed unread messages."
+            if primary == "file_write":
+                return "Report the written path and byte/character count; do not write the same empty file again."
+            if primary.startswith("calendar_"):
+                return "Use the returned event/list details to answer; do not repeat the same calendar action."
+            return "Use this tool result to decide the next single atomic action or final answer."
+        if status == "cancelled":
+            return "Stop and explain that permission was denied."
+        return "Correct the parameters before retrying; do not repeat the same failing schema."
+
+    def _tool_names_for_action(self, action: dict[str, Any]) -> list[str]:
+        action_name = str(action.get("action", ""))
+        if action_name == "tool_call":
+            return [str(action.get("tool_name", ""))]
+        if action_name == "multi_tool_call":
+            names: list[str] = []
+            for entry in action.get("tools", []):
+                if isinstance(entry, dict):
+                    names.append(str(entry.get("tool_name", "")))
+            return [name for name in names if name]
+        return [action_name] if action_name else []
+
+    def _schema_failure_pattern(self, action: dict[str, Any], result: dict[str, Any]) -> str:
+        if not isinstance(result, dict) or result.get("status") != "error":
+            return ""
+        error = self._first_error_text(result)
+        if not self._is_schema_like_error(error):
+            return ""
+        tools = ",".join(self._tool_names_for_action(action)) or "tool"
+        return f"{tools}:schema:{self._normalize_error_pattern(error)}"
+
+    def _semantic_loop_pattern(self, action: dict[str, Any], result: dict[str, Any]) -> str:
+        if not isinstance(result, dict):
+            return ""
+        tools = ",".join(self._tool_names_for_action(action)) or "tool"
+        status = str(result.get("status", "unknown"))
+        if status == "error":
+            error = self._normalize_error_pattern(self._first_error_text(result))
+            classification = str(result.get("classification", ""))
+            return f"{tools}:error:{classification}:{error}"
+        if status == "success":
+            target = self._primary_target(action, result)
+            if target:
+                return f"{tools}:success:{target}"
+        return ""
+
+    def _first_error_text(self, result: dict[str, Any]) -> str:
+        error = result.get("error")
+        if isinstance(error, str) and error:
+            return error
+        results = result.get("results")
+        if isinstance(results, list):
+            for entry in results:
+                if not isinstance(entry, dict):
+                    continue
+                nested = entry.get("result")
+                if isinstance(nested, dict):
+                    nested_error = nested.get("error")
+                    if isinstance(nested_error, str) and nested_error:
+                        return nested_error
+        return ""
+
+    def _is_schema_like_error(self, error: str) -> bool:
+        text = (error or "").lower()
+        return any(
+            marker in text
+            for marker in (
+                "schema",
+                "validation",
+                "required",
+                "must be",
+                "unknown or uncontracted",
+                "invalid",
+                "missing",
+                "empty string",
+                "content is empty",
+            )
+        )
+
+    def _normalize_error_pattern(self, error: str) -> str:
+        text = (error or "").lower()
+        text = re.sub(r"https?://\S+", "<url>", text)
+        text = re.sub(r"[a-z]:\\[^\s]+", "<path>", text)
+        text = re.sub(r"['\"][^'\"]{1,120}['\"]", "<value>", text)
+        text = re.sub(r"\d{1,4}", "<n>", text)
+        text = re.sub(r"\s+", " ", text)
+        return text.strip()[:180]
+
+    def _primary_target(self, action: dict[str, Any], result: dict[str, Any]) -> str:
+        for container in (result, action.get("parameters", {})):
+            if isinstance(container, dict):
+                for key in ("path", "file_path", "url", "query", "selector", "email_id", "event_id", "title"):
+                    value = container.get(key)
+                    if isinstance(value, str) and value.strip():
+                        return f"{key}={value.strip().lower()[:160]}"
+        if action.get("action") == "multi_tool_call":
+            tools = []
+            for entry in action.get("tools", []):
+                if not isinstance(entry, dict):
+                    continue
+                params = entry.get("parameters", {})
+                target = self._primary_target({"parameters": params}, {})
+                if target:
+                    tools.append(f"{entry.get('tool_name', '')}:{target}")
+            if tools:
+                return "|".join(tools)[:220]
+        return ""
+
+    def _build_schema_failure_response(self, reason: str) -> str:
+        return (
+            "Execution stopped after repeated invalid tool schemas. "
+            f"Last validation error: {reason}. "
+            "Please retry with the missing tool fields stated explicitly."
+        )
+
+    def _build_max_steps_response(self) -> str:
+        return (
+            f"Execution stopped after reaching the {MAX_STEPS}-step safety ceiling. "
+            "The latest tool result was preserved in the agent context, but the task did not converge cleanly."
+        )
+
+    def _hydrate_generated_content(
+        self,
+        action: dict[str, Any],
+        user_prompt: str,
+        messages: list[dict[str, str]],
+    ) -> dict[str, Any]:
+        action_name = action.get("action")
+        if action_name == "tool_call" and action.get("tool_name") == "file_write":
+            updated = dict(action)
+            updated["parameters"] = self._hydrate_file_write_parameters(
+                dict(action.get("parameters", {}) or {}),
+                user_prompt,
+                messages,
+            )
+            return updated
+        if action_name == "multi_tool_call":
+            updated_tools = []
+            changed = False
+            for entry in action.get("tools", []):
+                if not isinstance(entry, dict):
+                    updated_tools.append(entry)
+                    continue
+                updated_entry = dict(entry)
+                if updated_entry.get("tool_name") == "file_write":
+                    updated_entry["parameters"] = self._hydrate_file_write_parameters(
+                        dict(updated_entry.get("parameters", {}) or {}),
+                        user_prompt,
+                        messages,
+                    )
+                    changed = True
+                updated_tools.append(updated_entry)
+            if changed:
+                updated = dict(action)
+                updated["tools"] = updated_tools
+                return updated
+        return action
+
+    def _hydrate_file_write_parameters(
+        self,
+        params: dict[str, Any],
+        user_prompt: str,
+        messages: list[dict[str, str]],
+    ) -> dict[str, Any]:
+        if params.get("template"):
+            return params
+        content = params.get("content", "")
+        if not isinstance(content, str):
+            return params
+        threshold = self._minimum_content_length(user_prompt, str(params.get("path", params.get("file_path", ""))))
+        if content.strip() and (threshold <= 0 or len(content.strip()) >= threshold):
+            return params
+        if threshold <= 0 and content.strip():
+            return params
+        if threshold <= 0:
+            raise SchemaValidationError(
+                "file_write content is empty; provide non-empty content or use an explicit blank_* template"
+            )
+
+        generator = self._content_generator()
+        if not callable(generator):
+            raise SchemaValidationError("file_write content is empty and no content generator is available")
+
+        path = str(params.get("path", params.get("file_path", ""))).strip()
+        minimum = max(threshold, 80)
+        generation_prompt = self._content_generation_prompt(user_prompt, path, minimum)
+        context = self._content_generation_context(messages)
+        best = content.strip()
+        max_tokens = self._content_token_budget(user_prompt, path)
+        for attempt in range(3):
+            generated = generator(
+                generation_prompt,
+                context=context,
+                temp=0.25,
+                max_tokens=max_tokens,
+            )
+            text = self._clean_generated_content(str(generated or ""))
+            if text and not text.lower().startswith("error:") and len(text) > len(best):
+                best = text
+            if len(best.strip()) >= minimum:
+                updated = dict(params)
+                updated["content"] = best.strip()
+                updated["generated_content"] = True
+                updated["minimum_chars"] = minimum
+                updated["generation_attempts"] = attempt + 1
+                return updated
+            generation_prompt = (
+                f"{generation_prompt}\n\nPrevious output was too short "
+                f"({len(best.strip())} chars). Regenerate at least {minimum} useful characters."
+            )
+
+        raise SchemaValidationError(
+            f"file_write content generation produced {len(best.strip())} chars; minimum is {minimum}"
+        )
+
+    def _content_generator(self) -> Callable[..., str] | None:
+        inference = getattr(self.router, "inference", None)
+        generator = getattr(inference, "generate_content", None)
+        return generator if callable(generator) else None
+
+    def _minimum_content_length(self, user_prompt: str, path: str) -> int:
+        text = f"{user_prompt} {path}".lower()
+        if any(marker in text for marker in ("report", "article", "guide", "essay", "research")):
+            return 600
+        if any(marker in text for marker in ("comparison", "compare", "versus", "vs.")):
+            return 350
+        if any(marker in text for marker in ("summary", "summarize", "summarise")):
+            return 400
+        if any(marker in text for marker in ("email draft", "draft email", "write an email")):
+            return 120
+        if any(marker in text for marker in ("notes", "note", "write about", " about ", "document", "overview")):
+            return 180
+        return 0
+
+    def _content_token_budget(self, user_prompt: str, path: str) -> int:
+        minimum = self._minimum_content_length(user_prompt, path)
+        if minimum >= 600:
+            return 1800
+        if minimum >= 350:
+            return 1200
+        return 900
+
+    def _content_generation_prompt(self, user_prompt: str, path: str, minimum: int) -> str:
+        return (
+            "Generate only the file content for the requested document. "
+            "Do not include markdown fences, tool JSON, explanations, or prefaces.\n"
+            f"Target path: {path or 'unspecified'}\n"
+            f"Minimum useful characters: {minimum}\n"
+            f"User request: {user_prompt}"
+        )
+
+    def _content_generation_context(self, messages: list[dict[str, str]]) -> str:
+        parts = []
+        for message in messages[-6:]:
+            role = message.get("role", "")
+            content = message.get("content", "")
+            if content:
+                parts.append(f"{role}: {content}")
+        return "\n".join(parts)[-3000:]
+
+    def _clean_generated_content(self, content: str) -> str:
+        text = (content or "").strip()
+        if text.startswith("```"):
+            lines = text.splitlines()
+            if lines and lines[0].startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            text = "\n".join(lines).strip()
+        return text
 
     def _route(self, messages: list[dict[str, str]], user_prompt: str) -> tuple[str, str]:
         try:
@@ -257,6 +731,9 @@ class Orchestrator:
         safe_params = dict(parameters or {})
         safe_params.setdefault("_sandbox_mode", False)
         safe_params.setdefault("_intent_family", intent["family"])
+        valid, reason = validate_capability(tool_name, intent["family"])
+        if not valid:
+            return {"status": "error", "error": reason, "classification": "capability_violation"}
 
         try:
             if hasattr(self.engine, "execute"):
@@ -271,6 +748,37 @@ class Orchestrator:
         if isinstance(result, dict):
             return result
         return {"status": "error", "error": f"Engine returned non-dict result: {type(result).__name__}"}
+
+    def _chain_lengths(self, action: dict[str, Any]) -> tuple[int, int]:
+        if action.get("action") == "multi_tool_call":
+            tools = [entry.get("tool_name", "") for entry in action.get("tools", []) if isinstance(entry, dict)]
+        elif action.get("action") == "tool_call":
+            tools = [str(action.get("tool_name", ""))]
+        else:
+            tools = [str(action.get("action", ""))]
+        return len(tools), sum(1 for name in tools if name.startswith("browser_"))
+
+    def _is_catastrophic_failure(self, result: dict[str, Any]) -> bool:
+        error = str(result.get("error", "")).lower()
+        classification = str(result.get("classification", "")).lower()
+        return any(
+            marker in f"{error} {classification}"
+            for marker in ("corrupt", "deadlock", "recursive", "worker timed out", "invalid argument", "context or browser has been closed")
+        )
+
+    def _exception_requires_cleanup(self, exc: Exception) -> bool:
+        text = f"{type(exc).__name__}: {exc}".lower()
+        return any(
+            marker in text
+            for marker in (
+                "worker timed out",
+                "out of memory",
+                "memoryerror",
+                "deadlock",
+                "corrupt",
+                "context or browser has been closed",
+            )
+        )
 
     def _assert_real_execution(self, result: dict[str, Any]) -> None:
         checker = getattr(self.engine, "assert_real_execution", None)
@@ -338,20 +846,30 @@ class Orchestrator:
                 "scaffold_engine",
                 "file_write",
                 "file_read",
+                "excel_create",
+                "excel_write",
+                "excel_read",
             },
             "AUTOMATION": {
                 "tool_call",
                 "multi_tool_call",
                 "browser_open",
-                "browser_navigate",
                 "browser_click",
                 "browser_type",
-                "browser_act",
-                "browser_screenshot",
+                "browser_wait",
+                "browser_wait_for_element",
                 "browser_get_text",
+                "browser_get_page_content",
+                "browser_screenshot",
+                "browser_verify",
                 "browser_close",
+                "browser_scroll",
+                "calendar_create_event",
+                "calendar_list_events",
+                "gmail_get_unread",
+                "gmail_get_email_body",
             },
-            "FILE_OPS": {"tool_call", "multi_tool_call", "file_read", "file_write"},
+            "FILE_OPS": {"tool_call", "multi_tool_call", "file_read", "file_write", "excel_create", "excel_write", "excel_read"},
         }
         allowed = allowed_actions_by_family.get(family)
         if not allowed or action_name not in allowed:
@@ -368,16 +886,8 @@ class Orchestrator:
         return True
 
     def _tool_allowed_for_intent(self, tool_name: str, family: str) -> bool:
-        base = (tool_name or "").split(".", 1)[0].split("_", 1)[0].lower()
-        allowed_tool_bases_by_family: dict[str, set[str]] = {
-            "WEB_ACCESS": {"web", "page", "browser", "playwright"},
-            "PROJECT_CREATION": {"scaffold", "file", "project", "shell", "powershell", "browser", "playwright", "server"},
-            "EXECUTION": {"shell", "server", "system", "powershell", "scaffold", "file", "project", "browser", "playwright"},
-            "AUTOMATION": {"browser", "playwright", "shell", "powershell", "file", "web", "page"},
-            "FILE_OPS": {"file", "shell", "powershell"},
-        }
-        allowed = allowed_tool_bases_by_family.get(family, set())
-        return base in allowed
+        valid, _reason = validate_capability(tool_name, family)
+        return valid
 
     def _action_fingerprint(self, action: dict[str, Any]) -> str:
         try:
@@ -415,15 +925,42 @@ class Orchestrator:
         return transient and any(name.startswith(("browser_", "playwright_")) for name in tool_names)
 
     def _build_final_response(self, action: dict[str, Any]) -> str:
-        text = action.get("text", action.get("response", ""))
+        text = action.get("text", action.get("response", action.get("content", "")))
         if not isinstance(text, str):
             text = str(text)
         return text
 
-    def _should_return_tool_evidence(self, action: dict[str, Any], result: dict[str, Any]) -> bool:
+    def _should_return_tool_evidence(self, action: dict[str, Any], result: dict[str, Any], user_prompt: str = "") -> bool:
         if action.get(FINALIZE_AFTER_TOOL) is True:
             return True
+        if result.get("status") == "success" and self._simple_browser_open_completed(action, user_prompt):
+            return True
         return False
+
+    def _simple_browser_open_completed(self, action: dict[str, Any], user_prompt: str) -> bool:
+        if action.get("action") != "tool_call" or action.get("tool_name") != "browser_open":
+            return False
+        text = (user_prompt or "").lower()
+        if "open" not in text:
+            return False
+        follow_up_markers = (
+            "tell",
+            "what",
+            "which",
+            "read",
+            "summarize",
+            "summary",
+            "first",
+            "title",
+            "search",
+            "find",
+            "click",
+            "type",
+            "send",
+            "play",
+            "message",
+        )
+        return not any(marker in text for marker in follow_up_markers)
 
     def _build_tool_evidence_response(self, action: dict[str, Any], result: dict[str, Any]) -> str:
         tool_name = action.get("tool_name", action.get("action", "tool"))

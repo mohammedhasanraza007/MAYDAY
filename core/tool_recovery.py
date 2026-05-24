@@ -31,18 +31,26 @@ def recover_action_from_prompt(
     intent: dict[str, Any],
     parsed_action: dict[str, Any],
 ) -> dict[str, Any] | None:
-    if isinstance(parsed_action, dict):
-        action_name = parsed_action.get("action")
-        if action_name in {"tool_call", "multi_tool_call"}:
-            return NO_ACTION
-
     family = intent.get("family", "")
     text = (prompt or "").strip()
     lower = text.lower()
 
+    if isinstance(parsed_action, dict):
+        action_name = parsed_action.get("action")
+        if action_name in {"tool_call", "multi_tool_call"}:
+            for recover in (_recover_file_write, _recover_excel_create, _recover_browser_chain):
+                recovered = recover(text)
+                if recovered is not NO_ACTION:
+                    return recovered
+            return NO_ACTION
+
     file_action = _recover_file_write(text)
     if file_action is not NO_ACTION:
         return file_action
+
+    excel_action = _recover_excel_create(text)
+    if excel_action is not NO_ACTION:
+        return excel_action
 
     flappy_action = _recover_pyqt6_flappy_bird(text)
     if flappy_action is not NO_ACTION:
@@ -136,6 +144,31 @@ def _recover_file_write(prompt: str) -> dict[str, Any] | None:
     )
 
 
+def _recover_excel_create(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if not any(marker in lower for marker in ("excel", ".xlsx", "spreadsheet", "workbook")):
+        return NO_ACTION
+    if not any(verb in lower for verb in ("create", "make", "generate", "write")):
+        return NO_ACTION
+
+    path_match = re.search(r"(?:called|named|as|file)\s+['\"]?([^'\"\s]+\.xlsx)['\"]?", prompt, re.IGNORECASE)
+    path = path_match.group(1) if path_match else "output.xlsx"
+    if " with " not in lower and "containing" not in lower and "data" not in lower:
+        return _finalized_tool_call(
+            "file_write",
+            {"path": path, "template": "blank_xlsx"},
+            "prompt_blank_xlsx_file_write",
+        )
+    data = [["Employee"], ["Ava"], ["Noah"], ["Mia"]]
+    if "employee" not in lower:
+        data = [["Name"], ["Item 1"], ["Item 2"], ["Item 3"]]
+    return _finalized_tool_call(
+        "excel_create",
+        {"path": path, "data": data},
+        "prompt_excel_create",
+    )
+
+
 def _recover_shell_command(prompt: str) -> dict[str, Any] | None:
     lower = prompt.lower()
     if "current directory" in lower or "working directory" in lower or "pwd" in lower:
@@ -207,14 +240,7 @@ def _recover_browser_open(prompt: str) -> dict[str, Any] | None:
 
 
 def _recover_browser_close(prompt: str) -> dict[str, Any] | None:
-    lower = prompt.lower()
-    if "browser" not in lower or "close" not in lower:
-        return NO_ACTION
-    return _finalized_tool_call(
-        "browser_close",
-        {},
-        "prompt_browser_close",
-    )
+    return NO_ACTION
 
 
 def _recover_browser_chain(prompt: str) -> dict[str, Any] | None:
@@ -1057,7 +1083,14 @@ def _extract_type_text(prompt: str) -> str:
             return _strip_wrapping_quotes(lines[0])
     match = re.search(r"\btype\s+(?P<text>.+?)\s*$", prompt, flags=re.IGNORECASE | re.DOTALL)
     if match is None:
-        return ""
+        search_match = re.search(
+            r"\bsearch\s+(?:for\s+)?(?P<text>.+?)\s*$",
+            prompt,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        if search_match is None:
+            return ""
+        return _strip_wrapping_quotes(search_match.group("text").strip(" :"))
     value = match.group("text").strip()
     value = re.split(
         r"\s+(?:in|into|inside|on)\s+(?:the\s+)?(?:search\s+bar|search\s+box|email\s+field|email\s+box|text\s+field|input|field|box)\b",

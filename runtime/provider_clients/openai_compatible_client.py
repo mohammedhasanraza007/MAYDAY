@@ -34,7 +34,8 @@ class OpenAICompatibleClient:
             "model": self.model,
             "messages": messages,
             "max_tokens": max_tokens,
-            "temperature": 0.3,
+            "temperature": 0.1,
+            "top_p": 0.2,
         }
         try:
             with httpx.Client(timeout=120.0) as client:

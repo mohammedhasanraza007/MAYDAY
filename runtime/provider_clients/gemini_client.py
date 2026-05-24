@@ -14,7 +14,7 @@ class GeminiClient:
         text = "\n\n".join(m.get("content", "") for m in messages)
         payload = {
             "contents": [{"role": "user", "parts": [{"text": text}]}],
-            "generationConfig": {"maxOutputTokens": max_tokens, "temperature": 0.3},
+            "generationConfig": {"maxOutputTokens": max_tokens, "temperature": 0.1, "topP": 0.2},
         }
         url = (
             "https://generativelanguage.googleapis.com/v1beta/models/"

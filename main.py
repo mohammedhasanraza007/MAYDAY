@@ -31,13 +31,18 @@ except Exception:
 LOG_DIR = MAYDAY_ROOT / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 STARTUP_LOG = LOG_DIR / "startup_trace.log"
+MAYDAY_LOG = LOG_DIR / "mayday.log"
 logging.basicConfig(
     level=logging.DEBUG,
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-    filename=str(STARTUP_LOG),
-    filemode='w'
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler(str(STARTUP_LOG), mode="w", encoding="utf-8"),
+        logging.FileHandler(str(MAYDAY_LOG), mode="w", encoding="utf-8"),
+    ],
 )
 logger = logging.getLogger("mayday.main")
+for noisy_logger in ("httpcore", "httpx"):
+    logging.getLogger(noisy_logger).setLevel(logging.WARNING)
 
 def run_verification():
     """Run a headless verification of the model backend."""
@@ -52,11 +57,10 @@ def run_verification():
             print("VERIFY: FAILED - No models found.")
             return False
             
-        best = min(available, key=lambda t: t["tier"])
-        print(f"VERIFY: Attempting to load {best['name']}...")
-        
-        if not loader.load_tier(best['tier']):
-            print(f"VERIFY: FAILED - Could not load Tier {best['tier']}.")
+        print("VERIFY: Selecting best viable local tier...")
+
+        if not loader.load_best_available():
+            print("VERIFY: FAILED - Could not load any viable local tier.")
             return False
             
         inference = InferenceEngine(loader)
@@ -122,6 +126,7 @@ def initialize_application():
             from runtime.server_runner import ServerRunner
             from runtime import web_access
             from tools.file_tools import FileTools
+            from tools.excel_tools import ExcelTools
             from tools.browser_tools import BrowserTools
             from tools.system_tools import SystemTools
             from tools.project_tools import ProjectTools
@@ -144,6 +149,7 @@ def initialize_application():
                 powershell_tool = PowerShellTools()
                 engine.register_tools({
                     "file": FileTools(),
+                    "excel": ExcelTools(),
                     "browser": BrowserTools(),
                     "system": SystemTools(),
                     "project": ProjectTools(),
@@ -168,7 +174,8 @@ def initialize_application():
                 wire_orchestrator()
                 return
 
-            best = min(available, key=lambda t: t["tier"])
+            candidates = loader._select_load_candidates(available)
+            best = candidates[0] if candidates else min(available, key=lambda t: t["tier"])
             quant = best.get("quantization", "Q4_K_M")
             window.update_model_status(
                 f"Loading {best['name']} ({quant}) in background..."

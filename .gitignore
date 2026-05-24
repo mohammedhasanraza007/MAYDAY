@@ -9,3 +9,5 @@ install_logs/
 scratch/ 
 tool_test_workspace/ 
 .mayday_salt 
+runtime/python/ 
+**/site-packages/ 

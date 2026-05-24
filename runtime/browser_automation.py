@@ -36,13 +36,16 @@ class BrowserAutomation(BaseTool):
     def get_capabilities(self) -> list[str]:
         return [
             "browser_open",
-            "browser_navigate",
-            "browser_act",
             "browser_click",
             "browser_type",
-            "browser_screenshot",
+            "browser_wait",
+            "browser_wait_for_element",
             "browser_get_text",
+            "browser_get_page_content",
+            "browser_screenshot",
+            "browser_verify",
             "browser_close",
+            "browser_scroll",
         ]
 
     def execute(self, parameters: dict) -> dict:
@@ -52,11 +55,11 @@ class BrowserAutomation(BaseTool):
         tool_name = parameters.get("_tool_name", "")
         if tool_name == "browser_open":
             return self._open(parameters)
-        if tool_name == "browser_navigate":
-            return self._navigate(parameters)
-        if tool_name == "browser_act":
-            return self._act(parameters)
         if tool_name == "browser_click":
+            if parameters.get("selector"):
+                return self._single_step(parameters, {"action": "click", "selector": parameters.get("selector", "")})
+            if isinstance(parameters.get("x"), int) and isinstance(parameters.get("y"), int):
+                return self._click_coordinates(parameters)
             return self._single_step(parameters, {"action": "click", "selector": parameters.get("selector", "")})
         if tool_name == "browser_type":
             return self._single_step(
@@ -67,12 +70,27 @@ class BrowserAutomation(BaseTool):
                     "value": parameters.get("text", parameters.get("value", "")),
                 },
             )
-        if tool_name == "browser_screenshot":
-            return self._screenshot(parameters)
+        if tool_name in {"browser_wait", "browser_wait_for_element"}:
+            return self._single_step(
+                parameters,
+                {
+                    "action": "wait_for",
+                    "selector": parameters.get("selector", ""),
+                    "timeout": parameters.get("timeout_ms", parameters.get("timeout", 10000)),
+                },
+            )
         if tool_name == "browser_get_text":
             return self._get_text(parameters)
+        if tool_name == "browser_get_page_content":
+            return self._get_page_content(parameters)
+        if tool_name == "browser_screenshot":
+            return self._screenshot(parameters)
+        if tool_name == "browser_verify":
+            return self._verify(parameters)
         if tool_name == "browser_close":
             return self._close(parameters)
+        if tool_name == "browser_scroll":
+            return self._scroll(parameters)
         return {"status": "error", "error": f"Unknown browser automation action: {tool_name}"}
 
     def _open(self, params: dict) -> dict:
@@ -97,9 +115,14 @@ class BrowserAutomation(BaseTool):
         browser_audit_log.record("open", url, session.id, screenshot_path)
         return {
             "status": "success",
+            "state": "opened",
             "session_id": session.id,
             "url": page.url,
             "title": page.title(),
+            "ready": True,
+            "note": "Page loaded. Use browser_get_text to read visible content.",
+            "next_step": "Use browser_get_text or browser_get_page_content to inspect page content; do not open the same URL again.",
+            "actionable": True,
             "screenshot": str(screenshot_path),
             "profile_dir": str(PROFILE_DIR),
             "persistent": True,
@@ -134,9 +157,14 @@ class BrowserAutomation(BaseTool):
         browser_audit_log.record("navigate", url, session.id, screenshot_path)
         return {
             "status": "success",
+            "state": "opened",
             "session_id": session.id,
             "url": page.url,
             "title": page.title(),
+            "ready": True,
+            "note": "Page loaded. Use browser_get_text to read visible content.",
+            "next_step": "Use browser_get_text or browser_get_page_content to inspect page content; do not navigate to the same URL again.",
+            "actionable": True,
             "screenshot": str(screenshot_path),
             "profile_dir": str(PROFILE_DIR),
             "persistent": True,
@@ -276,6 +304,9 @@ class BrowserAutomation(BaseTool):
             "headless": headless_requested(),
             "login_state": self._detect_login_state(page),
             "active_sessions": SessionRegistry.active_count(),
+            "ready": True,
+            "actionable": True,
+            "next_step": "Use step_results/final_url/title to continue with one atomic browser action or answer.",
         }
 
     def _single_step(self, params: dict, step: dict[str, Any]) -> dict:
@@ -296,16 +327,78 @@ class BrowserAutomation(BaseTool):
             last_step = step_results[-1] if isinstance(step_results[-1], dict) else {}
         result = {
             "status": "success",
+            "state": self._state_for_step(step.get("action", "")),
             "session_id": session.id,
             "selector": last_step.get("selector", step.get("selector", "")),
+            "element": last_step.get("selector", step.get("selector", "")),
             "screenshot": action_result.get("screenshots", [""])[-1],
+            "url": page.url,
+            "title": self._safe_title(page),
+            "page_changed": bool(last_step.get("validation", {}).get("url_changed") or last_step.get("validation", {}).get("body_changed")),
         }
         if step.get("action") == "type":
             result["text"] = step.get("value", "")
             result["value"] = self._read_input_value(page, result["selector"])
+            result["field"] = result["selector"]
+        if step.get("action") == "wait_for":
+            result["waited_ms"] = int(step.get("timeout", 10000))
         result["headless"] = headless_requested()
         result["profile_dir"] = str(PROFILE_DIR)
+        result["ready"] = True
+        result["actionable"] = True
+        result["next_step"] = "Use this browser state to choose the next single browser action or final answer."
         return result
+
+    def _scroll(self, params: dict) -> dict:
+        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
+        page = self._page_for_session(session)
+        amount = int(params.get("amount", params.get("delta_y", 600)))
+        page.mouse.wheel(0, amount)
+        self._wait_for_page_settle(page)
+        screenshot_path = self._screenshot_path(session.id, "scroll")
+        page.screenshot(path=str(screenshot_path), full_page=False)
+        if not screenshot_path.exists():
+            raise BrowserActionError("browser_scroll did not create a screenshot")
+        browser_audit_log.record("scroll", {"amount": amount}, session.id, screenshot_path)
+        return {
+            "status": "success",
+            "session_id": session.id,
+            "amount": amount,
+            "url": page.url,
+            "title": self._safe_title(page),
+            "screenshot": str(screenshot_path),
+            "headless": headless_requested(),
+            "profile_dir": str(PROFILE_DIR),
+            "ready": True,
+            "actionable": True,
+            "next_step": "Use this scrolled page state to inspect text, click a visible target, or answer.",
+        }
+
+    def _click_coordinates(self, params: dict) -> dict:
+        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
+        page = self._page_for_session(session)
+        before = self._page_snapshot(page)
+        x = int(params.get("x"))
+        y = int(params.get("y"))
+        page.mouse.click(x, y)
+        self._wait_for_page_settle(page)
+        screenshot_path = self._screenshot_path(session.id, "click")
+        page.screenshot(path=str(screenshot_path), full_page=False)
+        validation = self._validate_step(page, "click", {}, before, f"{x},{y}", "coordinates", screenshot_path, {})
+        return {
+            "status": "success",
+            "state": "clicked",
+            "session_id": session.id,
+            "coordinates": f"{x},{y}",
+            "page_changed": bool(validation.get("url_changed") or validation.get("body_changed")),
+            "url": page.url,
+            "title": self._safe_title(page),
+            "screenshot": str(screenshot_path),
+            "validation": validation,
+            "ready": True,
+            "actionable": True,
+            "next_step": "Use the updated browser state to continue with one atomic action or answer.",
+        }
 
     def _resolve_locator(self, page: Any, selector: str, action: str):
         candidates = self._selector_candidates(page, selector, action)
@@ -462,6 +555,7 @@ class BrowserAutomation(BaseTool):
         browser_audit_log.record("screenshot", str(screenshot_path), session.id, screenshot_path)
         return {
             "status": "success",
+            "state": "screenshot",
             "session_id": session.id,
             "path": str(screenshot_path),
             "screenshot": str(screenshot_path),
@@ -469,6 +563,9 @@ class BrowserAutomation(BaseTool):
             "title": page.title(),
             "active_sessions": SessionRegistry.active_count(),
             "validation": {"screenshot_exists": True, "bytes": screenshot_path.stat().st_size},
+            "ready": True,
+            "actionable": True,
+            "next_step": "Use this screenshot path as visual evidence or continue with one browser action.",
         }
 
     def _get_text(self, params: dict) -> dict:
@@ -484,17 +581,138 @@ class BrowserAutomation(BaseTool):
         browser_audit_log.record("get_text", resolved_selector, session.id, None)
         return {
             "status": "success",
+            "state": "ok",
             "session_id": session.id,
             "selector": resolved_selector,
             "selector_strategy": strategy,
-            "text": text[:20000],
+            "text": text[:3000],
+            "truncated": len(text) > 3000,
+            "total_chars": len(text),
             "links": links,
             "meet_link": self._extract_meet_link(page),
             "url": page.url,
             "title": page.title(),
+            "ready": True,
+            "next_step": "Use this extracted text/links to answer or choose the next single browser action.",
+            "actionable": True,
             "active_sessions": SessionRegistry.active_count(),
             "validation": {"text_extracted": text_extracted},
         }
+
+    def _get_page_content(self, params: dict) -> dict:
+        selector = params.get("selector", "body") or "body"
+        opened = self._open(params)
+        if opened.get("status") != "success":
+            return opened
+        text_result = self._get_text(
+            {
+                **params,
+                "session_id": opened.get("session_id", ""),
+                "selector": selector,
+                "_gateway_approved": True,
+            }
+        )
+        if text_result.get("status") != "success":
+            return text_result
+        return {
+            **text_result,
+            "state": "content",
+            "url": text_result.get("url", opened.get("url", "")),
+            "title": text_result.get("title", opened.get("title", "")),
+            "screenshot": opened.get("screenshot", ""),
+            "content": text_result.get("text", ""),
+            "ready": True,
+            "next_step": "Use this page content to answer. Do not reopen the same URL unless navigation failed.",
+            "actionable": True,
+            "validation": {
+                **(text_result.get("validation", {}) if isinstance(text_result.get("validation"), dict) else {}),
+                "opened": opened.get("validation", {}).get("opened", True) if isinstance(opened.get("validation"), dict) else True,
+            },
+        }
+
+    def _verify(self, params: dict) -> dict:
+        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
+        page = self._page_for_session(session)
+        condition = str(params.get("condition", "")).strip()
+        if not condition:
+            return {"status": "error", "error": "condition is required"}
+        ok, reason = self._evaluate_condition(page, condition)
+        browser_audit_log.record("verify", {"condition": condition, "ok": ok}, session.id, None)
+        return {
+            "status": "success",
+            "state": "ok",
+            "session_id": session.id,
+            "condition": condition,
+            "ok": ok,
+            "reason": reason,
+            "url": page.url,
+            "title": self._safe_title(page),
+            "active_sessions": SessionRegistry.active_count(),
+            "validation": {"verified": ok},
+            "ready": True,
+            "actionable": True,
+            "next_step": "Use ok/reason to answer or choose a corrected atomic browser action.",
+        }
+
+    def _state_for_step(self, action: str) -> str:
+        return {
+            "click": "clicked",
+            "type": "typed",
+            "wait_for": "found",
+        }.get(action, "ok")
+
+    def _evaluate_condition(self, page: Any, condition: str) -> tuple[bool, str]:
+        lowered = condition.lower()
+        body_text = self._body_text(page)
+        haystack = f"{page.url}\n{self._safe_title(page)}\n{body_text}".lower()
+
+        if lowered == "page_loaded":
+            state = self._ready_state(page)
+            return state == "complete", f"document ready_state={state}"
+        if lowered.startswith("url_contains:"):
+            expected = condition.split(":", 1)[1].strip()
+            return expected.lower() in page.url.lower(), f"url_contains: {expected}"
+        if lowered.startswith("text_contains:"):
+            expected = condition.split(":", 1)[1].strip()
+            return expected.lower() in body_text.lower(), f"text_contains: {expected}"
+        if lowered.startswith("element_visible:"):
+            selector = condition.split(":", 1)[1].strip()
+            try:
+                visible = page.locator(selector).first.is_visible(timeout=3000)
+                return bool(visible), f"element_visible: {selector}"
+            except Exception as exc:
+                return False, f"element not visible: {selector} ({exc})"
+
+        for marker, source in (
+            ("url contains", page.url),
+            ("title contains", self._safe_title(page)),
+            ("text contains", body_text),
+            ("page contains", body_text),
+        ):
+            if marker in lowered:
+                expected = condition.lower().split(marker, 1)[1].strip(" :\"'")
+                if not expected:
+                    return False, f"{marker} needs a value"
+                return expected in source.lower(), f"{marker}: {expected}"
+
+        selector_match = re.search(r"(?:selector|element)\s+(?:exists|visible|present)?\s*:?\s*([#.\[\]=\"'a-zA-Z0-9_ >:\-]+)", condition)
+        if selector_match:
+            selector = selector_match.group(1).strip()
+            try:
+                page.locator(selector).first.wait_for(timeout=3000)
+                return True, f"selector visible: {selector}"
+            except Exception as exc:
+                return False, f"selector not visible: {selector} ({exc})"
+
+        meaningful_words = [
+            token for token in re.findall(r"[a-z0-9]{3,}", lowered)
+            if token not in {"page", "loaded", "visible", "verify", "that", "the", "and", "contains", "should"}
+        ]
+        if not meaningful_words:
+            ready = self._ready_state(page) in {"interactive", "complete"}
+            return ready, f"document ready_state={self._ready_state(page)}"
+        hits = [word for word in meaningful_words if word in haystack]
+        return bool(hits), f"matched words: {', '.join(hits[:5])}" if hits else "no condition words matched page state"
 
     def _normalize_url(self, raw_url: str) -> str:
         url = (raw_url or "").strip()
@@ -693,15 +911,22 @@ class BrowserAutomation(BaseTool):
             return "unknown"
 
     def _close(self, params: dict) -> dict:
-        session_id = params.get("session_id", "")
-        session = SessionRegistry.close(session_id or None)
-        browser_audit_log.record("close", None, session.id, None)
-        return {
-            "status": "success",
-            "session_id": session.id,
-            "closed": True,
-            "active_sessions": SessionRegistry.active_count(),
-        }
+        try:
+            session_id = params.get("session_id", "")
+            session = SessionRegistry.close(session_id or None)
+            browser_audit_log.record("close", None, session.id, None)
+            return {
+                "status": "success",
+                "state": "closed",
+                "session_id": session.id,
+                "closed": True,
+                "active_sessions": SessionRegistry.active_count(),
+                "ready": True,
+                "actionable": True,
+                "next_step": "Browser session is closed; answer the user or open a new URL only if required.",
+            }
+        except Exception as exc:
+            return {"status": "error", "error": str(exc), "recoverable": True}
 
     def _screenshot_path(self, session_id: str, label: str) -> Path:
         LOGS_DIR.mkdir(parents=True, exist_ok=True)

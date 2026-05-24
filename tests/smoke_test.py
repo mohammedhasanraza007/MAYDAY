@@ -31,7 +31,7 @@ class TestMaydayFoundation(unittest.TestCase):
 
     def test_session_limit(self):
         session = SessionManager()
-        for _ in range(50): session.increment_step()
+        for _ in range(session.max_steps): session.increment_step()
         with self.assertRaises(SessionLimitError):
             session.increment_step()
 

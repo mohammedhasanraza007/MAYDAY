@@ -176,7 +176,8 @@ class MainWindow(QMainWindow):
         if not self.loader or not self.loader.is_loaded():
             status = "SAFE MODE"
         elif self.orchestrator and hasattr(self.orchestrator.router, "inference"):
-            if not self.orchestrator.router.inference.verify_health():
+            inference = self.orchestrator.router.inference
+            if getattr(inference, "_active_model_path", None) is not None and not inference.verify_health():
                 status = "BACKEND ERROR"
 
         # Routing State

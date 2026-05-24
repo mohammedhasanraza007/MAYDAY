@@ -89,6 +89,7 @@ if errorlevel 1 (
 )
 
 REM --- 5. Launch app ---
+set MAYDAY_FORCE_GPU_OFFLOAD=1
 echo [MAYDAY] Launching app...
 "%VENV_PY%" "%MAYDAY_ROOT%\main.py"
 endlocal

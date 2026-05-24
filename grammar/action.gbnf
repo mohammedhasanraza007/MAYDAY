@@ -1,0 +1,64 @@
+root ::= ws action ws
+ws ::= [ \t\n\r]*
+
+action ::= tool-call | multi-call | respond-action
+
+tool-call ::= "{" ws "\"action\"" ws ":" ws "\"tool_call\"" ws "," ws "\"tool_name\"" ws ":" ws tool-name ws "," ws "\"parameters\"" ws ":" ws object ws "}"
+
+multi-call ::= "{" ws "\"action\"" ws ":" ws "\"multi_tool_call\"" ws "," ws "\"tools\"" ws ":" ws "[" ws tool-call-list ws "]" ws "}"
+
+respond-action ::= "{" ws "\"action\"" ws ":" ws "\"respond\"" ws "," ws respond-key ws ":" ws string ws "}"
+respond-key ::= "\"text\"" | "\"content\""
+
+tool-call-list ::= tool-entry | tool-entry ws "," ws tool-call-list
+tool-entry ::= "{" ws "\"tool_name\"" ws ":" ws tool-name ws "," ws "\"parameters\"" ws ":" ws object ws "}"
+
+tool-name ::=
+  "\"browser_open\"" |
+  "\"browser_click\"" |
+  "\"browser_type\"" |
+  "\"browser_wait\"" |
+  "\"browser_wait_for_element\"" |
+  "\"browser_get_text\"" |
+  "\"browser_get_page_content\"" |
+  "\"browser_screenshot\"" |
+  "\"browser_verify\"" |
+  "\"browser_close\"" |
+  "\"browser_scroll\"" |
+  "\"calendar_create_event\"" |
+  "\"calendar_list_events\"" |
+  "\"excel_create\"" |
+  "\"excel_read\"" |
+  "\"excel_write\"" |
+  "\"file_delete\"" |
+  "\"file_list\"" |
+  "\"file_read\"" |
+  "\"file_write\"" |
+  "\"gmail_get_unread\"" |
+  "\"gmail_get_email_body\"" |
+  "\"powershell_python_script\"" |
+  "\"powershell_run\"" |
+  "\"project\"" |
+  "\"scaffold\"" |
+  "\"scaffold_engine\"" |
+  "\"server_launch\"" |
+  "\"server_runner\"" |
+  "\"server_status\"" |
+  "\"server_stop\"" |
+  "\"shell_run\"" |
+  "\"system_click\"" |
+  "\"system_hotkey\"" |
+  "\"system_info\"" |
+  "\"system_screenshot\"" |
+  "\"system_type\"" |
+  "\"web_fetch\"" |
+  "\"web_search\""
+
+object ::= "{" ws "}" | "{" ws pair (ws "," ws pair)* ws "}"
+pair ::= string ws ":" ws value
+array ::= "[" ws "]" | "[" ws value (ws "," ws value)* ws "]"
+value ::= string | number | "true" | "false" | "null" | object | array
+
+string ::= "\"" char* "\""
+char ::= [^"\\\x7F\x00-\x1F] | "\\" (["\\/bfnrt] | "u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])
+number ::= "-"? ([0-9] | [1-9] [0-9]*) ("." [0-9]+)? ([eE] [-+]? [0-9]+)?

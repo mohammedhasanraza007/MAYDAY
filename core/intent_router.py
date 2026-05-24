@@ -78,6 +78,9 @@ TRIGGERS = {
         "read it",
         "make a new file",
         "make file",
+        "excel file",
+        "spreadsheet",
+        ".xlsx",
     ],
 }
 
@@ -113,7 +116,7 @@ SEMANTIC_KEYWORDS = {
     },
     "FILE_OPS": {
         "verbs": {"fix", "edit", "modify", "patch", "rewrite", "refactor", "update", "create", "write"},
-        "nouns": {"bug", "file", "code", "module", "script"},
+        "nouns": {"bug", "file", "code", "module", "script", "excel", "spreadsheet", "workbook", "xlsx"},
     },
 }
 
@@ -138,6 +141,10 @@ def classify(prompt: str) -> str | None:
 
     if re.search(r"\b(?:create|write|make)\s+(?:a\s+)?file\b", text):
         return "FILE_OPS"
+    if re.search(r"\bopen\b", text) and re.search(r"\bsearch\b", text) and (
+        "google" in text or re.search(r"https?://|(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}", text)
+    ):
+        return "AUTOMATION"
     if re.search(r"\bfetch\b", text) and (
         re.search(r"https?://|(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}", text) or "title" in text
     ):
@@ -181,6 +188,10 @@ def classify(prompt: str) -> str | None:
         return None
     if best_family == "FILE_OPS":
         noun_hits = len(tokens & SEMANTIC_KEYWORDS["FILE_OPS"]["nouns"])
+        if noun_hits == 0:
+            return None
+    if best_family == "PROJECT_CREATION":
+        noun_hits = len(tokens & SEMANTIC_KEYWORDS["PROJECT_CREATION"]["nouns"])
         if noun_hits == 0:
             return None
     return best_family

@@ -104,6 +104,7 @@ class WorldState:
         default = self._default()
         for key, value in default.items():
             data.setdefault(key, value)
+        self._sanitize_task_progress(data)
         return data
 
     def _write(self, state: dict[str, Any]) -> None:
@@ -192,6 +193,21 @@ class WorldState:
             "validation",
         )
         return {key: result[key] for key in keys if key in result}
+
+    def _sanitize_task_progress(self, state: dict[str, Any]) -> None:
+        try:
+            from runtime.execution_registry import KNOWN_TOOLS
+        except Exception:
+            return
+        progress = state.get("task_progress")
+        if not isinstance(progress, list):
+            state["task_progress"] = []
+            return
+        state["task_progress"] = [
+            entry
+            for entry in progress[-100:]
+            if isinstance(entry, dict) and entry.get("tool_name") in KNOWN_TOOLS
+        ]
 
 
 world_state = WorldState()

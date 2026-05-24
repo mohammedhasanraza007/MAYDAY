@@ -39,8 +39,11 @@ class BrowserTools(BaseTool):
             "browser_act",
             "browser_click",
             "browser_type",
+            "browser_wait",
+            "browser_wait_for_element",
             "browser_screenshot",
             "browser_get_text",
+            "browser_verify",
             "browser_close",
         ]
 
@@ -54,10 +57,14 @@ class BrowserTools(BaseTool):
             return self._click(parameters)
         if "type" in name:
             return self._type(parameters)
+        if "wait_for_element" in name or name.endswith("browser_wait"):
+            return self._wait(parameters)
         if "screenshot" in name:
             return self._screenshot(parameters)
         if "get_text" in name:
             return self._get_text(parameters)
+        if "verify" in name:
+            return self._verify(parameters)
         if "close" in name:
             return self._close(parameters)
         return {"status": "error", "error": f"Unknown browser action: {name}"}
@@ -189,6 +196,18 @@ class BrowserTools(BaseTool):
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
 
+    def _wait(self, params: dict) -> dict:
+        err = self._ensure_browser()
+        if err:
+            return err
+        selector = params.get("selector", "")
+        timeout_ms = int(params.get("timeout_ms", params.get("timeout", 10000)))
+        try:
+            self._page.locator(selector).first.wait_for(timeout=timeout_ms)
+            return {"status": "success", "selector": selector}
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+
     def _act(self, params: dict) -> dict:
         steps = params.get("steps", [])
         results: list[dict[str, Any]] = []
@@ -231,6 +250,19 @@ class BrowserTools(BaseTool):
         try:
             text = self._page.inner_text(selector)
             return {"status": "success", "text": text[:5000]}
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+
+    def _verify(self, params: dict) -> dict:
+        err = self._ensure_browser()
+        if err:
+            return err
+        condition = str(params.get("condition", "")).strip()
+        try:
+            haystack = f"{self._page.url}\n{self._page.title()}\n{self._page.inner_text('body')}".lower()
+            words = [word for word in condition.lower().split() if len(word) > 2]
+            ok = any(word in haystack for word in words) if words else bool(self._page.url)
+            return {"status": "success", "condition": condition, "ok": ok, "url": self._page.url, "title": self._page.title()}
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
 

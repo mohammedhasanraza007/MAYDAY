@@ -48,15 +48,18 @@ class ExcelTools(BaseTool):
 
     def _create(self, params: dict) -> dict:
         import openpyxl
+        from pathlib import Path
         path = params.get('path', 'output.xlsx')
         data = params.get('data', [])
         try:
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
             wb = openpyxl.Workbook()
             ws = wb.active
             for r, row in enumerate(data, 1):
                 for c, val in enumerate(row, 1):
                     ws.cell(row=r, column=c, value=val)
             wb.save(path); wb.close()
-            return {'status': 'success', 'path': path}
+            file_path = Path(path)
+            return {'status': 'success', 'path': str(file_path.resolve()), 'bytes': file_path.stat().st_size, 'exists': file_path.exists()}
         except Exception as e:
             return {'status': 'error', 'error': str(e)}

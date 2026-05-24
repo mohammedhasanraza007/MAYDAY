@@ -73,11 +73,11 @@ class GPUDetector:
         if "AMD" in gpu_name_upper or "RADEON" in gpu_name_upper:
             vendor = "AMD"
             backend = "DIRECTML"
-            suggested_layers = 20  # Safe partial offloading for RX 6600
+            suggested_layers = 36
         elif "NVIDIA" in gpu_name_upper or "GEFORCE" in gpu_name_upper:
             vendor = "NVIDIA"
             backend = "CUDA"
-            suggested_layers = 24
+            suggested_layers = 36
         elif "INTEL" in gpu_name_upper:
             vendor = "INTEL"
             # Intel can use Vulkan or CPU fallback
@@ -93,16 +93,25 @@ class GPUDetector:
         if env_backend:
             backend = env_backend.upper()
             if backend in ("DIRECTML", "VULKAN", "CUDA"):
-                suggested_layers = 20
+                suggested_layers = 36
             else:
                 suggested_layers = 0
+        if vendor == "AMD" and backend == "CUDA":
+            logger.warning("AMD GPU detected with CUDA backend request; falling back to DIRECTML")
+            backend = "DIRECTML"
+            suggested_layers = 36
 
+        adapter_ram_gb = round(adapter_ram / (1024**3), 2) if adapter_ram else 0.0
         cls._cached_info = {
             "gpu_name": gpu_name or "Standard Video Controller",
             "vendor": vendor,
             "backend": backend,
-            "adapter_ram_gb": round(adapter_ram / (1024**3), 2) if adapter_ram else 0.0,
+            "adapter_ram_gb": adapter_ram_gb,
             "suggested_layers": suggested_layers,
+            "gpu_active_percent": 0.0,
+            "vram_usage_mb": 0.0,
+            "tokens_per_second": 0.0,
+            "backend_name": backend,
         }
 
         logger.info(
@@ -113,3 +122,59 @@ class GPUDetector:
             cls._cached_info["adapter_ram_gb"],
         )
         return cls._cached_info
+
+    @staticmethod
+    def effective_backend_name(backend: str, gpu_percent: float | None, vram_mb: float | None) -> str:
+        """Return the backend name users can trust from observed telemetry."""
+        backend_name = (backend or "CPU").upper()
+        gpu_value = float(gpu_percent or 0.0)
+        vram_value = float(vram_mb or 0.0)
+        if backend_name in {"DIRECTML", "VULKAN", "CUDA"} and gpu_value < 1.0 and vram_value < 50.0:
+            return f"CPU ({backend_name} offload not confirmed)"
+        return backend_name
+
+    @classmethod
+    def record_inference_telemetry(cls, tokens_per_sec: float = 0.0) -> Dict[str, Any]:
+        info = dict(cls.get_info())
+        utilization = cls._query_gpu_utilization_percent()
+        if utilization is not None:
+            info["gpu_active_percent"] = utilization
+        info["vram_usage_mb"] = cls._query_vram_usage_mb()
+        info["tokens_per_second"] = round(float(tokens_per_sec), 2)
+        info["backend_name"] = info.get("backend", "CPU")
+        cls._cached_info = {**cls.get_info(), **info}
+        return info
+
+    @staticmethod
+    def _query_gpu_utilization_percent() -> float | None:
+        if sys.platform != "win32":
+            return None
+        try:
+            cmd = (
+                "powershell -NoProfile -Command "
+                '"$c=(Get-Counter ''\\GPU Engine(*)\\Utilization Percentage'' -ErrorAction SilentlyContinue).CounterSamples | '
+                'Measure-Object CookedValue -Sum; [math]::Round($c.Sum,2)"'
+            )
+            res = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3)
+            if res.returncode == 0 and res.stdout.strip():
+                return max(0.0, min(float(res.stdout.strip()), 100.0))
+        except Exception:
+            return None
+        return None
+
+    @staticmethod
+    def _query_vram_usage_mb() -> float:
+        if sys.platform != "win32":
+            return 0.0
+        try:
+            cmd = (
+                "powershell -NoProfile -Command "
+                '"$p=(Get-Counter ''\\GPU Adapter Memory(*)\\Dedicated Usage'' -ErrorAction SilentlyContinue).CounterSamples | '
+                'Measure-Object CookedValue -Sum; [math]::Round($p.Sum/1MB,2)"'
+            )
+            res = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3)
+            if res.returncode == 0 and res.stdout.strip():
+                return max(0.0, float(res.stdout.strip()))
+        except Exception:
+            return 0.0
+        return 0.0

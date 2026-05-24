@@ -2,134 +2,134 @@
   "browser": {
     "active": true,
     "active_sessions": 1,
-    "current_url": "https://www.youtube.com/",
+    "current_url": "https://www.amazon.com/",
     "headless": false,
     "login_state": "unknown",
     "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
-    "session_id": "99b7ddd4-d8c1-479e-bf06-42ecd3083d47",
+    "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
     "tabs": [
       {
-        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787",
-        "timestamp": "2026-05-21T09:59:55.740943+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787",
-        "timestamp": "2026-05-21T09:59:58.279746+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
-        "timestamp": "2026-05-21T10:00:11.321296+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
-        "timestamp": "2026-05-21T10:00:12.141462+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
-        "timestamp": "2026-05-21T10:00:15.025864+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
-        "timestamp": "2026-05-21T10:00:50.356132+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
-        "timestamp": "2026-05-21T10:00:51.603291+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
-        "timestamp": "2026-05-21T10:00:54.021589+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
-        "timestamp": "2026-05-21T10:01:33.091874+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
-        "timestamp": "2026-05-21T10:01:33.486442+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
-        "timestamp": "2026-05-21T10:01:34.455225+00:00",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
-        "timestamp": "2026-05-21T10:01:44.876117+00:00",
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:41:35.965936+00:00",
         "title": "YouTube",
         "url": "https://www.youtube.com/"
       },
       {
-        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c",
-        "timestamp": "2026-05-21T10:02:32.051363+00:00",
-        "title": "bad blood on youtube - YouTube",
-        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:42:38.166381+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=your_video_"
       },
       {
-        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c",
-        "timestamp": "2026-05-21T10:02:33.113196+00:00",
-        "title": "bad blood on youtube - YouTube",
-        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:42:59.694601+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=your_video_"
       },
       {
-        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946",
-        "timestamp": "2026-05-21T10:03:13.383775+00:00",
-        "title": "bad blood on youtube - YouTube",
-        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:44:18.896300+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
       },
       {
-        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946",
-        "timestamp": "2026-05-21T10:03:14.145565+00:00",
-        "title": "bad blood on youtube - YouTube",
-        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube"
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:44:20.650181+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
       },
       {
-        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
-        "timestamp": "2026-05-21T10:10:38.264249+00:00",
-        "title": "suraj bobah hai - YouTube",
-        "url": "https://www.youtube.com/results?search_query=suraj+bobah+hai"
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:44:25.662890+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
       },
       {
-        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
-        "timestamp": "2026-05-21T10:13:29.075342+00:00",
-        "title": "play an english song - YouTube",
-        "url": "https://www.youtube.com/results?search_query=play+an+english+song"
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "timestamp": "2026-05-24T03:45:14.254926+00:00",
+        "title": "Gmail: Secure, AI-Powered Email for Everyone | Google Workspace",
+        "url": "https://workspace.google.com/intl/en-US/gmail/"
       },
       {
-        "session_id": "6775291d-a0c0-4770-a8a7-6d04d1d17504",
-        "timestamp": "2026-05-21T15:46:51.834928+00:00",
-        "title": "Best Gaming PC 2026: Top Picks for Every Budget | Hyper Cyber",
-        "url": "https://hypercyber.com/blogs/news/best-gaming-pc"
-      },
-      {
-        "session_id": "99b7ddd4-d8c1-479e-bf06-42ecd3083d47",
-        "timestamp": "2026-05-21T17:10:29.623154+00:00",
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:09:37.220644+00:00",
         "title": "YouTube",
         "url": "https://www.youtube.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:09:42.158663+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:11:47.038988+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=YOUR_SONG_V"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:13:14.295783+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:13:28.548537+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:14:17.866208+00:00",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:15:21.065801+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:15:22.653059+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:15:25.484105+00:00",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:16:29.402827+00:00",
+        "title": "Reddit - The heart of the internet",
+        "url": "https://www.reddit.com/r/ai/?solution=eba62c6c58023546eba62c6c58023546&js_challenge=1&token=bbbe4bf1c9a2b5160829c4be34da58616517edb0413cdc2a944f02f704a5107a&jsc_orig_r="
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:17:08.951526+00:00",
+        "title": "Reddit - The heart of the internet",
+        "url": "https://www.reddit.com/r/ai/?solution=eba62c6c58023546eba62c6c58023546&js_challenge=1&token=bbbe4bf1c9a2b5160829c4be34da58616517edb0413cdc2a944f02f704a5107a&jsc_orig_r="
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:18:12.394483+00:00",
+        "title": "Amazon.com. Spend less. Smile more.",
+        "url": "https://www.amazon.com/"
+      },
+      {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "timestamp": "2026-05-24T04:19:25.284161+00:00",
+        "title": "Amazon.com. Spend less. Smile more.",
+        "url": "https://www.amazon.com/"
       }
     ],
-    "title": "YouTube"
+    "title": "Amazon.com. Spend less. Smile more."
   },
   "created_at": "2026-05-17T18:33:21.725869+00:00",
   "desktop": {
@@ -137,7 +137,7 @@
     "last_process": {}
   },
   "filesystem": {
-    "current_project_path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-59\\test_simple_file_prompt_recove0",
+    "current_project_path": "E:\\MAYDAY\\AI Experiments",
     "verified_files": [
       {
         "path": "app.py",
@@ -258,13 +258,108 @@
         "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-59\\test_simple_file_prompt_recove0\\hello.txt",
         "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
         "timestamp": "2026-05-21T16:27:34.369200+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-60\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-23T07:51:59.983318+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-23T07:52:00.115428+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-61\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-23T07:52:37.659699+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-23T07:52:37.800741+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-23T07:53:14.416055+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-62\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-23T07:53:25.769989+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-23T07:53:52.374363+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-63\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-23T07:54:03.778744+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-23T07:55:23.681940+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-64\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-23T07:55:36.035680+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-23T08:01:21.437321+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-65\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-23T08:01:32.863164+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\ping_5.txt",
+        "sha256": "0349de65801543e2e6890c3aae2f6b77f03a8731ffc39dac48564c7b80bf64bf",
+        "timestamp": "2026-05-23T09:42:06.507935+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\ping_6.txt",
+        "sha256": "0349de65801543e2e6890c3aae2f6b77f03a8731ffc39dac48564c7b80bf64bf",
+        "timestamp": "2026-05-23T09:42:15.129416+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\ping_7.txt",
+        "sha256": "0349de65801543e2e6890c3aae2f6b77f03a8731ffc39dac48564c7b80bf64bf",
+        "timestamp": "2026-05-23T09:42:24.453826+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\ping_8.txt",
+        "sha256": "0349de65801543e2e6890c3aae2f6b77f03a8731ffc39dac48564c7b80bf64bf",
+        "timestamp": "2026-05-23T09:42:33.644165+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\ping_9.txt",
+        "sha256": "0349de65801543e2e6890c3aae2f6b77f03a8731ffc39dac48564c7b80bf64bf",
+        "timestamp": "2026-05-23T09:42:43.329696+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\ping_10.txt",
+        "sha256": "0349de65801543e2e6890c3aae2f6b77f03a8731ffc39dac48564c7b80bf64bf",
+        "timestamp": "2026-05-23T09:42:52.757401+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\AI Experiments\\notes.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timestamp": "2026-05-23T18:21:25.482632+00:00"
       }
     ]
   },
   "last_tool": {
     "status": "success",
-    "timestamp": "2026-05-21T17:19:13.619918+00:00",
-    "tool_name": "shell_run"
+    "timestamp": "2026-05-24T04:54:49.347100+00:00",
+    "tool_name": "web_fetch"
   },
   "permissions": {
     "blocked": {}
@@ -273,581 +368,15 @@
     {
       "status": "success",
       "summary": {
-        "session_id": "8a07c908-b586-4de4-9d7d-f9f4a68008cb"
+        "path": "output.xlsx"
       },
-      "timestamp": "2026-05-17T18:35:16.109320+00:00",
-      "tool_name": "browser_type"
+      "timestamp": "2026-05-23T12:22:05.712349+00:00",
+      "tool_name": "excel_create"
     },
     {
       "status": "success",
       "summary": {
-        "session_id": "8a07c908-b586-4de4-9d7d-f9f4a68008cb"
-      },
-      "timestamp": "2026-05-17T18:35:19.461352+00:00",
-      "tool_name": "browser_close"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:35:58.163122+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:35:58.172347+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:35:58.204428+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "project_dir": "E:\\MAYDAY\\projects\\test_app"
-      },
-      "timestamp": "2026-05-17T18:35:58.909968+00:00",
-      "tool_name": "scaffold"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:41:39.693955+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:41:39.703076+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:41:39.734216+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "project_dir": "E:\\MAYDAY\\projects\\test_app"
-      },
-      "timestamp": "2026-05-17T18:41:40.483777+00:00",
-      "tool_name": "scaffold"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
-        "title": "Google",
-        "url": "https://www.google.com/?zx=1779043387147",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-17T18:43:08.055791+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
-        "title": "MAYDAY Phase 6B session - Google Search",
-        "url": "https://www.google.com/search?q=MAYDAY+Phase+6B+session",
-        "validation": {
-          "http_status": 200,
-          "navigated": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-17T18:43:14.283266+00:00",
-      "tool_name": "browser_navigate"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e",
-        "title": "Google",
-        "url": "https://www.google.com/?zx=1779043395131",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-17T18:43:15.941646+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e"
-      },
-      "timestamp": "2026-05-17T18:43:16.555565+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e"
-      },
-      "timestamp": "2026-05-17T18:43:17.869281+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "763eec3f-9cf2-41b3-b467-cf014baccd6e"
-      },
-      "timestamp": "2026-05-17T18:43:21.062530+00:00",
-      "tool_name": "browser_close"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a0702410-ad76-4921-a803-553579701885",
-        "title": "Gateway Chain",
-        "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EGateway%20Chain%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
-        "validation": {
-          "http_status": null,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-17T18:43:24.896837+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a0702410-ad76-4921-a803-553579701885"
-      },
-      "timestamp": "2026-05-17T18:43:26.466321+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a0702410-ad76-4921-a803-553579701885"
-      },
-      "timestamp": "2026-05-17T18:43:28.484982+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a0702410-ad76-4921-a803-553579701885"
-      },
-      "timestamp": "2026-05-17T18:43:32.689403+00:00",
-      "tool_name": "browser_close"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "dbaaad4f-8557-4514-9e85-49980439d8ec",
-        "title": "Failure Handling",
-        "url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EFailure%20Handling%3C/title%3E%3Cstyle%3Ebody%7Bfont-family%3AArial%2Csans-serif%3Bpadding%3A48px%7Dinput%7Bfont-size%3A24px%3Bwidth%3Amin%28720px%2C90vw%29%3Bpadding%3A14px%7D%3C/style%3E%3C/head%3E%3Cbody%3E%3Cinput%20name%3D%27q%27%20aria-label%3D%27Search%27%20placeholder%3D%27Search%27%3E%3C/body%3E%3C/html%3E",
-        "validation": {
-          "http_status": null,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-17T18:43:36.276231+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "error",
-      "summary": {
-        "error": "Could not resolve browser target '#does-not-exist' for click: Locator.wait_for: Timeout 2500ms exceeded.\nCall log:\nwaiting for locator(\"#does-not-exist\").first to be visible\n"
-      },
-      "timestamp": "2026-05-17T18:43:39.582052+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "dbaaad4f-8557-4514-9e85-49980439d8ec"
-      },
-      "timestamp": "2026-05-17T18:43:43.657732+00:00",
-      "tool_name": "browser_close"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb",
-        "title": "Google",
-        "url": "https://www.google.com/?zx=1779043427662",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-17T18:43:48.836138+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb"
-      },
-      "timestamp": "2026-05-17T18:43:49.786262+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb"
-      },
-      "timestamp": "2026-05-17T18:43:52.401625+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a4a88d7a-7824-44c7-aa87-91ccfe5f65fb"
-      },
-      "timestamp": "2026-05-17T18:43:57.188797+00:00",
-      "tool_name": "browser_close"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:44:26.535280+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:44:26.546303+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-17T18:44:26.655141+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "project_dir": "E:\\MAYDAY\\projects\\test_app"
-      },
-      "timestamp": "2026-05-21T09:47:35.042112+00:00",
-      "tool_name": "scaffold"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-56\\test_simple_file_prompt_recove0\\hello.txt"
-      },
-      "timestamp": "2026-05-21T09:48:14.047656+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T09:48:14.077858+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T09:48:14.088877+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T09:48:14.121118+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-21T09:59:55.114378+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787"
-      },
-      "timestamp": "2026-05-21T09:59:55.740943+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "0bbfef87-9724-4586-8b48-d2bf7eb7e787"
-      },
-      "timestamp": "2026-05-21T09:59:58.279746+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py"
-      },
-      "timestamp": "2026-05-21T09:59:58.312908+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt"
-      },
-      "timestamp": "2026-05-21T09:59:58.356222+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T09:59:58.675745+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "error",
-      "summary": {
-        "error": "[Errno 13] Permission denied: 'E:\\\\MAYDAY\\\\projects\\\\flappy_test'"
-      },
-      "timestamp": "2026-05-21T09:59:58.704459+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-21T10:00:11.321296+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64"
-      },
-      "timestamp": "2026-05-21T10:00:12.141462+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "05e8f029-9774-402c-b23e-65971d7a9b64"
-      },
-      "timestamp": "2026-05-21T10:00:15.025864+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py"
-      },
-      "timestamp": "2026-05-21T10:00:15.062468+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt"
-      },
-      "timestamp": "2026-05-21T10:00:15.156070+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T10:00:15.448424+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "error",
-      "summary": {
-        "error": "[Errno 13] Permission denied: 'E:\\\\MAYDAY\\\\projects\\\\flappy_test'"
-      },
-      "timestamp": "2026-05-21T10:00:15.479898+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-21T10:00:50.356132+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235"
-      },
-      "timestamp": "2026-05-21T10:00:51.603291+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "2b0ff64a-83fa-4f6a-bdba-f27902110235"
-      },
-      "timestamp": "2026-05-21T10:00:54.021589+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\main.py"
-      },
-      "timestamp": "2026-05-21T10:00:54.048779+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\pyqt6_calc_real\\requirements.txt"
-      },
-      "timestamp": "2026-05-21T10:00:54.106509+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T10:00:54.393338+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\flappy_test\\main.py"
-      },
-      "timestamp": "2026-05-21T10:00:54.422489+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\flappy_test\\requirements.txt"
-      },
-      "timestamp": "2026-05-21T10:00:55.056610+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T10:00:55.364200+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-21T10:01:33.091874+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404"
-      },
-      "timestamp": "2026-05-21T10:01:33.486442+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404"
-      },
-      "timestamp": "2026-05-21T10:01:34.455225+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "a06bd27a-cebd-497b-83cf-e6819c425404",
+        "session_id": "10e2f42b-83b2-4b51-9078-2a21a3745180",
         "title": "YouTube",
         "url": "https://www.youtube.com/",
         "validation": {
@@ -856,317 +385,13 @@
           "screenshot_exists": true
         }
       },
-      "timestamp": "2026-05-21T10:01:44.876117+00:00",
+      "timestamp": "2026-05-23T17:38:36.676655+00:00",
       "tool_name": "browser_open"
     },
     {
       "status": "success",
       "summary": {
-        "path": "E:\\MAYDAY\\tool_test_workspace\\pingpong_game\\pong.py"
-      },
-      "timestamp": "2026-05-21T10:01:48.887151+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\tool_test_workspace\\pingpong_game\\requirements.txt"
-      },
-      "timestamp": "2026-05-21T10:01:48.950607+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T10:01:49.234423+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\tool_test_workspace\\n8n_workflow\\workflow.json"
-      },
-      "timestamp": "2026-05-21T10:01:52.893994+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T10:02:15.514375+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c",
-        "title": "bad blood on youtube - YouTube",
-        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-21T10:02:32.051363+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "54fec673-a11d-4d43-a0a3-d5a3b662919c"
-      },
-      "timestamp": "2026-05-21T10:02:33.113196+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\phase05_audit_file.txt"
-      },
-      "timestamp": "2026-05-21T10:02:36.166263+00:00",
-      "tool_name": "file_read"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\test_success.txt"
-      },
-      "timestamp": "2026-05-21T10:02:39.318904+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-21T10:02:42.502456+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T10:02:57.389143+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946",
-        "title": "bad blood on youtube - YouTube",
-        "url": "https://www.youtube.com/results?search_query=bad+blood+on+youtube",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-21T10:03:13.383775+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "3e44d15e-d1b8-4f3c-9113-49988716c946"
-      },
-      "timestamp": "2026-05-21T10:03:14.145565+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\projects\\phase05_audit_file.txt"
-      },
-      "timestamp": "2026-05-21T10:03:17.255573+00:00",
-      "tool_name": "file_read"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\test_success.txt"
-      },
-      "timestamp": "2026-05-21T10:03:20.637802+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-21T10:03:24.512789+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "final_url": "https://www.youtube.com/results?search_query=suraj+bobah+hai",
-        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
-        "title": "suraj bobah hai - YouTube"
-      },
-      "timestamp": "2026-05-21T10:10:38.264249+00:00",
-      "tool_name": "browser_act"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "final_url": "https://www.youtube.com/results?search_query=play+an+english+song",
-        "session_id": "984ec301-bf3a-4129-b415-cf4896548a91",
-        "title": "play an english song - YouTube"
-      },
-      "timestamp": "2026-05-21T10:13:29.075342+00:00",
-      "tool_name": "browser_act"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-21T15:46:02.735046+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "final_url": "https://hypercyber.com/blogs/news/best-gaming-pc",
-        "session_id": "6775291d-a0c0-4770-a8a7-6d04d1d17504",
-        "title": "Best Gaming PC 2026: Top Picks for Every Budget | Hyper Cyber"
-      },
-      "timestamp": "2026-05-21T15:46:51.834928+00:00",
-      "tool_name": "browser_act"
-    },
-    {
-      "status": "error",
-      "summary": {
-        "error": "Event loop is closed! Is Playwright already stopped?"
-      },
-      "timestamp": "2026-05-21T15:49:18.792552+00:00",
-      "tool_name": "browser_act"
-    },
-    {
-      "status": "error",
-      "summary": {
-        "error": "Event loop is closed! Is Playwright already stopped?"
-      },
-      "timestamp": "2026-05-21T15:49:58.107188+00:00",
-      "tool_name": "browser_act"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "error": "",
-        "returncode": 0
-      },
-      "timestamp": "2026-05-21T15:54:51.786137+00:00",
-      "tool_name": "shell_run"
-    },
-    {
-      "status": "error",
-      "summary": {
-        "error": "Event loop is closed! Is Playwright already stopped?"
-      },
-      "timestamp": "2026-05-21T15:56:21.399299+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-57\\test_simple_file_prompt_recove0\\hello.txt"
-      },
-      "timestamp": "2026-05-21T16:26:24.098742+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T16:26:24.215149+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T16:26:24.227359+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T16:26:24.306684+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "project_dir": "E:\\MAYDAY\\projects\\test_app"
-      },
-      "timestamp": "2026-05-21T16:26:27.716308+00:00",
-      "tool_name": "scaffold"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "project_dir": "E:\\MAYDAY\\projects\\test_app"
-      },
-      "timestamp": "2026-05-21T16:26:34.601676+00:00",
-      "tool_name": "scaffold"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "project_dir": "E:\\MAYDAY\\projects\\test_app"
-      },
-      "timestamp": "2026-05-21T16:27:11.864425+00:00",
-      "tool_name": "scaffold"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-59\\test_simple_file_prompt_recove0\\hello.txt"
-      },
-      "timestamp": "2026-05-21T16:27:34.369200+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T16:27:34.404281+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T16:27:34.416392+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "cancelled",
-      "summary": {
-        "error": "User denied execution of Browser Open.",
-        "reason": "user_denied"
-      },
-      "timestamp": "2026-05-21T16:27:34.455784+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "99b7ddd4-d8c1-479e-bf06-42ecd3083d47",
+        "session_id": "1ce67eb5-7936-44b8-8117-9e63614cab4e",
         "title": "YouTube",
         "url": "https://www.youtube.com/",
         "validation": {
@@ -1175,24 +400,918 @@
           "screenshot_exists": true
         }
       },
-      "timestamp": "2026-05-21T17:10:29.623154+00:00",
+      "timestamp": "2026-05-23T17:40:24.287057+00:00",
       "tool_name": "browser_open"
     },
     {
       "status": "success",
+      "summary": {
+        "session_id": "913a577f-22a7-48ae-9d1b-c7246b2bc856",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-23T17:48:43.737301+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "913a577f-22a7-48ae-9d1b-c7246b2bc856",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-23T17:49:04.369621+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "typed value did not match target field"
+      },
+      "timestamp": "2026-05-23T17:49:23.311402+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "913a577f-22a7-48ae-9d1b-c7246b2bc856",
+        "title": "any viedo from beast boy shrub in youtube - YouTube",
+        "url": "https://www.youtube.com/results?search_query=any+viedo+from+beast+boy+shrub+in+youtube",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-23T17:51:15.364393+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "913a577f-22a7-48ae-9d1b-c7246b2bc856",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=2FdbPDPLEAA"
+      },
+      "timestamp": "2026-05-23T17:51:25.213218+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\output.xlsx"
+      },
+      "timestamp": "2026-05-23T17:58:38.564759+00:00",
+      "tool_name": "excel_create"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T17:59:58.803330+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:00:25.187057+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:00:44.760645+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:01:27.835386+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:03:12.200127+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:03:55.331633+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:05:12.157993+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:05:57.408162+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:06:38.349059+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:11:27.674733+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-23T18:12:07.508929+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:13:49.159319+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:14:02.546437+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:14:55.865083+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:15:04.989435+00:00",
+      "tool_name": "gmail_get_email_body"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Path is inside hard-blocked directory: C:\\Users"
+      },
+      "timestamp": "2026-05-23T18:20:10.357150+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\AI Experiments\\notes.txt"
+      },
+      "timestamp": "2026-05-23T18:21:25.482632+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\output.xlsx"
+      },
+      "timestamp": "2026-05-23T18:22:29.486004+00:00",
+      "tool_name": "excel_create"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:24:57.378188+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:26:31.744868+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:27:08.587812+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:27:29.913813+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:27:50.733162+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:28:09.633001+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:28:29.609845+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:29:03.487973+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:29:35.273545+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:30:06.216589+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:30:38.034107+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:31:50.984903+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:35:14.428532+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T18:45:15.809848+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "success",
       "summary": {},
-      "timestamp": "2026-05-21T17:14:48.577681+00:00",
+      "timestamp": "2026-05-23T18:48:15.654044+00:00",
       "tool_name": "web_search"
     },
     {
       "status": "success",
       "summary": {
-        "error": "",
-        "returncode": 0
+        "session_id": "3b1a48cb-ae0d-40c9-9f6b-a5a16c86f413",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
       },
-      "timestamp": "2026-05-21T17:19:13.619918+00:00",
-      "tool_name": "shell_run"
+      "timestamp": "2026-05-23T20:45:09.124597+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3b1a48cb-ae0d-40c9-9f6b-a5a16c86f413",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-23T20:45:12.215033+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3b1a48cb-ae0d-40c9-9f6b-a5a16c86f413",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-23T20:45:17.166071+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3b1a48cb-ae0d-40c9-9f6b-a5a16c86f413",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-23T20:46:20.058832+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3b1a48cb-ae0d-40c9-9f6b-a5a16c86f413",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-23T20:46:59.150748+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "3b1a48cb-ae0d-40c9-9f6b-a5a16c86f413",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-23T20:47:13.868815+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-23T20:49:03.800691+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T03:41:30.512161+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-24T03:41:35.965936+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "typed value did not match target field"
+      },
+      "timestamp": "2026-05-24T03:41:47.987326+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=your_video_",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T03:42:38.166381+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=your_video_",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T03:42:59.694601+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "Google",
+        "url": "https://www.google.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T03:44:18.896300+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      "timestamp": "2026-05-24T03:44:20.650181+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      "timestamp": "2026-05-24T03:44:25.662890+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "5bb47bdc-02b8-4fa0-a528-327064613ce4",
+        "title": "Gmail: Secure, AI-Powered Email for Everyone | Google Workspace",
+        "url": "https://workspace.google.com/intl/en-US/gmail/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T03:45:14.254926+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "BrowserContext.new_page: Connection closed while reading from the driver"
+      },
+      "timestamp": "2026-05-24T03:50:31.893982+00:00",
+      "tool_name": "browser_get_page_content"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "BrowserContext.new_page: Connection closed while reading from the driver"
+      },
+      "timestamp": "2026-05-24T03:51:18.773999+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": ""
+      },
+      "timestamp": "2026-05-24T03:55:02.044630+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:09:37.220644+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-24T04:09:42.158663+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "typed value did not match target field"
+      },
+      "timestamp": "2026-05-24T04:09:54.346646+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/watch?v=YOUR_SONG_V",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:11:47.038988+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-24T04:13:14.295783+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-24T04:13:28.548537+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "YouTube",
+        "url": "https://www.youtube.com/"
+      },
+      "timestamp": "2026-05-24T04:14:17.866208+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Google",
+        "url": "https://www.google.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:15:21.065801+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      "timestamp": "2026-05-24T04:15:22.653059+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Google",
+        "url": "https://www.google.com/"
+      },
+      "timestamp": "2026-05-24T04:15:25.484105+00:00",
+      "tool_name": "browser_type"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Reddit - The heart of the internet",
+        "url": "https://www.reddit.com/r/ai/?solution=eba62c6c58023546eba62c6c58023546&js_challenge=1&token=bbbe4bf1c9a2b5160829c4be34da58616517edb0413cdc2a944f02f704a5107a&jsc_orig_r=",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:16:29.402827+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Reddit - The heart of the internet",
+        "url": "https://www.reddit.com/r/ai/?solution=eba62c6c58023546eba62c6c58023546&js_challenge=1&token=bbbe4bf1c9a2b5160829c4be34da58616517edb0413cdc2a944f02f704a5107a&jsc_orig_r=",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:17:08.951526+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Amazon.com. Spend less. Smile more.",
+        "url": "https://www.amazon.com/",
+        "validation": {
+          "http_status": 202,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:18:12.394483+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "fd63ea04-ba1a-49d5-a28d-17a57bb1fb9e",
+        "title": "Amazon.com. Spend less. Smile more.",
+        "url": "https://www.amazon.com/",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-24T04:19:25.284161+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-24T04:21:13.418156+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.foe-mech.com/\nCall log:\nnavigating to \"https://www.foe-mech.com/\", waiting until \"domcontentloaded\"\n"
+      },
+      "timestamp": "2026-05-24T04:22:03.758591+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-24T04:22:18.306930+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "browser_open failed with HTTP 404 for https://www.tomshardware.com/reviews/pc-builds-2026"
+      },
+      "timestamp": "2026-05-24T04:23:18.619189+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:26:42.485875+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:28:43.287415+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:29:45.019453+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:30:25.062438+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:31:04.876708+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:32:24.422134+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:32:33.364640+00:00",
+      "tool_name": "gmail_get_email_body"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:33:14.362866+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:34:32.346299+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:34:40.918901+00:00",
+      "tool_name": "gmail_get_email_body"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:35:21.641014+00:00",
+      "tool_name": "gmail_get_unread"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Path is inside hard-blocked directory: C:\\Users"
+      },
+      "timestamp": "2026-05-24T04:38:43.607512+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\output.xlsx"
+      },
+      "timestamp": "2026-05-24T04:42:32.755796+00:00",
+      "tool_name": "excel_create"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:44:44.449027+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:46:12.336768+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Google OAuth credentials not found at E:\\MAYDAY\\config\\google_credentials.json. Create a Google Cloud desktop OAuth client with Calendar and Gmail APIs enabled, then save it as config/google_credentials.json."
+      },
+      "timestamp": "2026-05-24T04:47:45.397880+00:00",
+      "tool_name": "calendar_create_event"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:47:55.798466+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Event loop is closed! Is Playwright already stopped?"
+      },
+      "timestamp": "2026-05-24T04:48:04.191708+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-24T04:49:53.877301+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-24T04:54:37.360992+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "title": "Just a moment...",
+        "url": "https://www.pcpartpicker.com/search?q=PC+components+for+$1500"
+      },
+      "timestamp": "2026-05-24T04:54:49.347100+00:00",
+      "tool_name": "web_fetch"
     }
   ],
-  "updated_at": "2026-05-21T17:19:13.619918+00:00"
+  "updated_at": "2026-05-24T04:54:49.347100+00:00"
 }

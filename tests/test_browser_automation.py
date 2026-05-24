@@ -79,20 +79,21 @@ def test_open_real_url(local_site):
     assert screenshot.stat().st_size > 1024
 
 
-def test_act_form_fill_real(local_site):
+def test_atomic_form_fill_real(local_site):
     ba = BrowserAutomation()
     opened = ba.execute({"_tool_name": "browser_open", "url": f"{local_site}/form.html"})
 
     result = ba.execute(
         {
-            "_tool_name": "browser_act",
+            "_tool_name": "browser_type",
             "session_id": opened["session_id"],
-            "steps": [{"action": "type", "selector": "input[name=custname]", "value": "TEST"}],
+            "selector": "input[name=custname]",
+            "text": "TEST",
         }
     )
 
     assert result["status"] == "success"
-    assert result["step_results"][-1]["value"] == "TEST"
+    assert result["value"] == "TEST"
 
 
 def test_permission_denied_blocks(monkeypatch):

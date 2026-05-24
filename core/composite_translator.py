@@ -7,8 +7,7 @@ multi_browser, etc.) are NEVER preserved — they are decomposed into real tools
 or rejected outright.
 
 Allowed atomic tools for browser domain:
-    browser_open, browser_click, browser_type, browser_navigate,
-    browser_get_text, browser_screenshot, browser_close
+    browser_open, browser_click, browser_type, browser_wait, browser_scroll
 
 Allowed atomic tools for system domain:
     system_click, system_type, system_hotkey, system_info, system_screenshot
@@ -20,28 +19,23 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from runtime.action_schema import KNOWN_TOOLS
+from runtime.execution_registry import BROWSER_ATOMIC_TOOLS, KNOWN_TOOLS, PLANNER_PSEUDO_TOOLS
 
 logger = logging.getLogger("mayday.translator")
-
-# Planner-only pseudo-tools that must NEVER reach execution
-PLANNER_PSEUDO_TOOLS = {
-    "browser_act", "browser_chain", "browser_multi", "browser_sequence",
-    "browser_plan", "browser_steps", "multi_browser", "automation_chain",
-}
 
 # Mapping from browser_act step actions to real atomic tool names
 STEP_ACTION_TO_TOOL = {
     "open": "browser_open",
-    "navigate": "browser_navigate",
+    "navigate": "browser_open",
     "click": "browser_click",
     "type": "browser_type",
-    "wait_for": "browser_click",  # wait_for maps to click with retry semantics
+    "wait_for": "browser_wait",
+    "wait_for_element": "browser_wait_for_element",
     "get_text": "browser_get_text",
     "screenshot": "browser_screenshot",
-    "press": "browser_type",  # press maps to type with key semantics
-    "extract_meet_link": "browser_get_text",
-    "detect_login_state": "browser_get_text",
+    "verify": "browser_verify",
+    "close": "browser_close",
+    "scroll": "browser_scroll",
 }
 
 
@@ -126,13 +120,21 @@ class CompositeActionTranslator:
             if enforce_microstep:
                 first = atomic_tools[0]
                 logger.info("Microstep: decomposed multi_tool_call to single atomic tool: %s", first["tool_name"])
-                return {
+                translated = {
                     "action": "tool_call",
                     "tool_name": first["tool_name"],
                     "parameters": first["parameters"],
                 }
+                for key, value in action.items():
+                    if isinstance(key, str) and key.startswith("_"):
+                        translated[key] = value
+                return translated
 
-            return {"action": "multi_tool_call", "tools": atomic_tools}
+            translated = {"action": "multi_tool_call", "tools": atomic_tools}
+            for key, value in action.items():
+                if isinstance(key, str) and key.startswith("_"):
+                    translated[key] = value
+            return translated
 
         # ── Handle bare known tool names as action ────────────────────
         if action_name in KNOWN_TOOLS and action_name not in PLANNER_PSEUDO_TOOLS:
@@ -179,31 +181,67 @@ class CompositeActionTranslator:
                 continue
 
             params: dict[str, Any] = {}
-            if tool_name in ("browser_open", "browser_navigate"):
+            if tool_name not in KNOWN_TOOLS:
+                logger.warning("Decomposition produced unregistered tool: %s", tool_name)
+                continue
+            if tool_name.startswith("browser_") and tool_name not in BROWSER_ATOMIC_TOOLS:
+                logger.warning("Decomposition produced non-atomic browser tool: %s", tool_name)
+                continue
+
+            if tool_name == "browser_open":
                 url = step.get("url", "")
                 if isinstance(url, str) and url.strip():
                     params["url"] = url
                 else:
                     continue  # skip steps without valid URL
-            elif tool_name in ("browser_click",):
+            elif tool_name == "browser_click":
                 selector = step.get("selector", "")
                 if isinstance(selector, str) and selector.strip():
                     params["selector"] = selector
                 else:
                     continue
-            elif tool_name in ("browser_type",):
+            elif tool_name == "browser_type":
                 selector = step.get("selector", "")
-                text = step.get("text", step.get("value", step.get("key", "")))
+                text = step.get("text", step.get("value", ""))
                 if isinstance(selector, str) and selector.strip():
                     params["selector"] = selector
                     params["text"] = str(text) if text else ""
                 else:
                     continue
-            elif tool_name in ("browser_get_text",):
+            elif tool_name == "browser_wait":
+                selector = step.get("selector", "")
+                if isinstance(selector, str) and selector.strip():
+                    params["selector"] = selector
+                    timeout = step.get("timeout_ms", step.get("timeout", 10000))
+                    params["timeout_ms"] = int(timeout) if isinstance(timeout, (int, float)) else 10000
+                else:
+                    continue
+            elif tool_name == "browser_wait_for_element":
+                selector = step.get("selector", "")
+                if isinstance(selector, str) and selector.strip():
+                    params["selector"] = selector
+                    timeout = step.get("timeout_ms", step.get("timeout", 10000))
+                    params["timeout_ms"] = int(timeout) if isinstance(timeout, (int, float)) else 10000
+                else:
+                    continue
+            elif tool_name == "browser_get_text":
                 selector = step.get("selector", "body")
-                params["selector"] = selector if isinstance(selector, str) else "body"
-            elif tool_name in ("browser_screenshot",):
-                pass  # no params needed
+                params["selector"] = selector if isinstance(selector, str) and selector.strip() else "body"
+            elif tool_name == "browser_screenshot":
+                path = step.get("path")
+                if isinstance(path, str) and path.strip():
+                    params["path"] = path
+            elif tool_name == "browser_verify":
+                condition = step.get("condition", step.get("expected_text", step.get("text", "")))
+                if isinstance(condition, str) and condition.strip():
+                    params["condition"] = condition
+                else:
+                    continue
+            elif tool_name == "browser_close":
+                pass
+            elif tool_name == "browser_scroll":
+                amount = step.get("amount", step.get("delta_y", 600))
+                params["amount"] = int(amount) if isinstance(amount, (int, float)) else 600
 
             atomic_tools.append({"tool_name": tool_name, "parameters": params})
 

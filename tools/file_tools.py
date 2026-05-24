@@ -10,6 +10,11 @@ from core.exceptions import ScopeViolationError
 logger = logging.getLogger('mayday.tools.file')
 
 ALLOWED_ROOTS: list[str] = []
+TEXT_TEMPLATES = {
+    "blank_csv": "",
+    "blank_json": "{}",
+    "blank_txt": "",
+}
 
 def set_file_roots(roots: list[str]):
     global ALLOWED_ROOTS
@@ -45,12 +50,58 @@ class FileTools(BaseTool):
         if not p.exists():
             raise FileNotFoundError(f'File not found: {p}')
         content = p.read_text(encoding='utf-8', errors='replace')
-        return {'status': 'success', 'content': content, 'path': str(p), 'size': len(content)}
+        return {
+            'status': 'success',
+            'content': content,
+            'path': str(p),
+            'size': len(content),
+            'ready': True,
+            'next_step': 'Use this file content to answer, transform, or write an updated file.',
+        }
 
     def _write(self, params: dict) -> dict:
         p = self._validate_path(params.get('path', params.get('file_path', '')))
-        content = params.get('content', '')
         p.parent.mkdir(parents=True, exist_ok=True)
+        template = params.get('template')
+        if template == "blank_xlsx":
+            import openpyxl
+
+            wb = openpyxl.Workbook()
+            wb.save(p)
+            wb.close()
+            if not p.exists():
+                raise FileNotFoundError(f'Write verification failed; file missing: {p}')
+            sha256 = hashlib.sha256(p.read_bytes()).hexdigest()
+            logger.info(f'Written template: {p} ({p.stat().st_size} bytes)')
+            return {
+                'status': 'success',
+                'state': 'written',
+                'path': str(p),
+                'bytes_written': p.stat().st_size,
+                'bytes': p.stat().st_size,
+                'exists': p.exists(),
+                'sha256': sha256,
+                'verified': True,
+                'template': template,
+                'ready': True,
+                'next_step': 'Use this verified path and byte count in the final response.',
+            }
+        used_text_template = template in TEXT_TEMPLATES and 'content' not in params
+        if used_text_template:
+            content = TEXT_TEMPLATES[template]
+        else:
+            content = params.get('content', '')
+        if not isinstance(content, str):
+            raise TypeError('content must be a string')
+        if not used_text_template and not content.strip():
+            return {
+                'status': 'error',
+                'state': 'blocked_empty_content',
+                'path': str(p),
+                'error': 'Content is empty. Generate and validate non-empty content before calling file_write, or use an explicit blank_* template.',
+                'recoverable': True,
+                'next_step': 'Call generate_content first, validate minimum length, then retry file_write with content.',
+            }
         p.write_text(content, encoding='utf-8')
         if not p.exists():
             raise FileNotFoundError(f'Write verification failed; file missing: {p}')
@@ -61,11 +112,17 @@ class FileTools(BaseTool):
         logger.info(f'Written: {p} ({len(content)} chars)')
         return {
             'status': 'success',
+            'state': 'written',
             'path': str(p),
             'bytes_written': len(content.encode('utf-8')),
+            'bytes': len(content.encode('utf-8')),
             'chars_written': len(content),
+            'exists': p.exists(),
             'sha256': sha256,
             'verified': True,
+            'template': template,
+            'ready': True,
+            'next_step': 'Use this verified path and character count in the final response.',
         }
 
     def _delete(self, params: dict) -> dict:
@@ -75,7 +132,13 @@ class FileTools(BaseTool):
         if p.is_dir(): shutil.rmtree(p)
         else: p.unlink()
         logger.info(f'Deleted: {p}')
-        return {'status': 'success', 'path': str(p)}
+        return {
+            'status': 'success',
+            'path': str(p),
+            'exists': p.exists(),
+            'ready': True,
+            'next_step': 'Report the deleted path or continue only if another file action is required.',
+        }
 
     def _list(self, params: dict) -> dict:
         p = self._validate_path(params.get('path', params.get('directory', '.')))
@@ -85,4 +148,11 @@ class FileTools(BaseTool):
         for item in sorted(p.iterdir()):
             entries.append({'name': item.name, 'type': 'dir' if item.is_dir() else 'file',
                            'size': item.stat().st_size if item.is_file() else 0})
-        return {'status': 'success', 'path': str(p), 'entries': entries}
+        return {
+            'status': 'success',
+            'path': str(p),
+            'count': len(entries),
+            'entries': entries,
+            'ready': True,
+            'next_step': 'Use these entries to select the next file operation or answer.',
+        }
