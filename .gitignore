@@ -1,13 +1,40 @@
-__pycache__/ 
-models/ 
-model/ 
-runtime/browser_profile/ 
-*.pyc 
-*.log 
-logs/ 
-install_logs/ 
-scratch/ 
-tool_test_workspace/ 
-.mayday_salt 
-runtime/python/ 
-**/site-packages/ 
+# Python cache
+__pycache__/
+*.pyc
+
+# Local models
+models/
+model/
+*.gguf
+*.bin
+*.safetensors
+
+# Runtime state
+runtime/browser_profile/
+runtime/python/
+runtime/world_state.json
+
+# Logs
+*.log
+logs/
+install_logs/
+
+# Scratch/testing
+scratch/
+tool_test_workspace/
+
+# Secrets
+.env
+keys.enc
+.mayday_salt
+
+# Generated outputs
+output/
+*.xlsx
+*.tmp
+
+# Editor/OS junk
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
