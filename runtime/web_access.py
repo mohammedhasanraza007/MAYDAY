@@ -81,7 +81,13 @@ class WebAccessTool:
             return {"status": "error", "error": "web_search.provider must be a string when provided"}
 
         results = search(query, provider=provider)
-        return {"status": "success", "results": results, "count": len(results)}
+        return {
+            "status": "success",
+            "query": query,
+            "provider": provider,
+            "results": results,
+            "count": len(results),
+        }
 
 
 def _clean_optional(value: str | None) -> str | None:

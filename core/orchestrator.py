@@ -6,11 +6,14 @@ R11 intent routing + R10 guard for executable intents.
 from __future__ import annotations
 
 import gc
+import hashlib
 import json
 import logging
 import re
 from collections import deque
+from pathlib import Path
 from typing import Any, Callable
+from urllib.parse import urlparse
 
 from core.exceptions import (
     HardRuleViolationError,
@@ -21,7 +24,7 @@ from core.exceptions import (
 from core.intent_router import classify, is_executable_intent, required_tools_for
 from core.json_parser import parse_model_output, safe_response_object
 from core.session import SessionManager
-from core.tool_recovery import FINALIZE_AFTER_TOOL, recover_action_from_prompt
+from core.tool_recovery import FINALIZE_AFTER_TOOL, RECOVERY_SOURCE, recover_action_from_prompt
 from core.context_compressor import ContextCompressor
 from runtime.task_graph import TaskGraphExecutor
 from runtime.action_schema import validate
@@ -42,6 +45,47 @@ ChatOnlyOutputError = HardRuleViolationError
 
 
 import threading
+
+
+def compute_outcome_hash(tool_name: str, result: dict[str, Any]) -> str:
+    key_fields: dict[str, Any] = {"tool": tool_name}
+
+    if tool_name in (
+        "browser_open",
+        "browser_click",
+        "browser_wait_for_navigation",
+        "browser_press_key",
+        "browser_get_text",
+        "browser_scroll",
+    ):
+        url = str(result.get("url", ""))
+        parsed = urlparse(url)
+        key_fields["url"] = url
+        key_fields["netloc"] = parsed.netloc
+        key_fields["path"] = parsed.path[:80]
+        key_fields["query"] = parsed.query[:120]
+        key_fields["state"] = str(result.get("state", ""))
+
+    elif tool_name == "web_search":
+        key_fields["query"] = str(result.get("query", result.get("search_query", "")))[:100]
+
+    elif tool_name in ("gmail_get_unread", "gmail_get_email_body"):
+        emails = result.get("emails", [])
+        key_fields["count"] = str(result.get("count", len(emails) if isinstance(emails, list) else ""))
+        if isinstance(emails, list) and emails:
+            first = emails[0] if isinstance(emails[0], dict) else {}
+            key_fields["first_id"] = str(first.get("id", ""))[:20]
+
+    elif tool_name == "file_write":
+        key_fields["path"] = str(result.get("path", result.get("file_path", "")))
+        key_fields["chars"] = str(result.get("chars_written", result.get("size", result.get("bytes_written", ""))))
+
+    else:
+        key_fields["status"] = str(result.get("status", ""))
+        key_fields["data"] = json.dumps(result, sort_keys=True, default=str)[:200]
+
+    raw = json.dumps(key_fields, sort_keys=True, default=str)
+    return hashlib.md5(raw.encode()).hexdigest()
 
 
 class LoopGuard:
@@ -98,6 +142,15 @@ class Orchestrator:
         self._cancelled = False
         self._tools_used = []
         intent = self._build_validated_intent(user_prompt)
+        preflight_recovered = recover_action_from_prompt(user_prompt, intent, {})
+        if isinstance(preflight_recovered, dict) and preflight_recovered.get("action") == "respond":
+            self._last_provider = "prompt_recovery_preflight"
+            return self._build_final_response(preflight_recovered)
+        if preflight_recovered is not None:
+            intent = dict(intent)
+            intent["executable"] = True
+            intent["family"] = self._family_for_recovered_action(preflight_recovered, intent.get("family", "CHAT"))
+            intent["required_tools"] = self._tool_names_for_action(preflight_recovered)
         executable = intent["executable"]
         required = intent["required_tools"]
         system_prompt = self._system_prompt(intent)
@@ -128,15 +181,25 @@ class Orchestrator:
             if self._on_step:
                 self._on_step(step + 1, "Running agent step")
 
-            self._inference_depth += 1
-            try:
-                # E101: Compress messages to stay within token context window
-                compressed_messages = ContextCompressor.compress_messages(messages)
-                runtime_health_monitor.record("context_chars", sum(len(m.get("content", "")) for m in compressed_messages))
-                raw, provider = self._route(compressed_messages, user_prompt)
+            precovered = preflight_recovered if step == 0 else None
+            if precovered is not None:
+                raw = json.dumps(precovered)
+                provider = "prompt_recovery_preflight"
+                logger.info(
+                    "Prompt recovery preflight selected: %s",
+                    precovered.get(RECOVERY_SOURCE, "unknown"),
+                )
                 self._last_provider = provider
-            finally:
-                self._inference_depth -= 1
+            else:
+                self._inference_depth += 1
+                try:
+                    # E101: Compress messages to stay within token context window
+                    compressed_messages = ContextCompressor.compress_messages(messages)
+                    runtime_health_monitor.record("context_chars", sum(len(m.get("content", "")) for m in compressed_messages))
+                    raw, provider = self._route(compressed_messages, user_prompt)
+                    self._last_provider = provider
+                finally:
+                    self._inference_depth -= 1
 
             if not executable:
                 return raw.strip()
@@ -294,6 +357,11 @@ class Orchestrator:
                         "I was unable to generate a valid response for this task. "
                         "Try rephrasing the request or breaking it into smaller steps."
                     )
+                logger.info(
+                    "ASSISTANT-RESPONSE: provider=%s text=%s",
+                    self._last_provider,
+                    str(text).replace("\n", "\\n")[:2500],
+                )
                 if self._on_response:
                     self._on_response(text, self._last_provider)
                 self.session.add_to_history("assistant", text)
@@ -430,6 +498,18 @@ class Orchestrator:
             return [name for name in names if name]
         return [action_name] if action_name else []
 
+    def _family_for_recovered_action(self, action: dict[str, Any], fallback: str) -> str:
+        tools = set(self._tool_names_for_action(action))
+        if tools & {"web_search", "web_fetch"}:
+            return "WEB_ACCESS"
+        if any(tool.startswith("browser_") or tool.startswith("gmail_") or tool.startswith("calendar_") for tool in tools):
+            return "AUTOMATION"
+        if tools & {"shell_run", "powershell_run", "server_launch", "server_runner"}:
+            return "EXECUTION"
+        if tools & {"file_write", "file_read", "excel_create", "excel_write", "excel_read"}:
+            return "FILE_OPS"
+        return fallback or "CHAT"
+
     def _schema_failure_pattern(self, action: dict[str, Any], result: dict[str, Any]) -> str:
         if not isinstance(result, dict) or result.get("status") != "error":
             return ""
@@ -442,16 +522,27 @@ class Orchestrator:
     def _semantic_loop_pattern(self, action: dict[str, Any], result: dict[str, Any]) -> str:
         if not isinstance(result, dict):
             return ""
-        tools = ",".join(self._tool_names_for_action(action)) or "tool"
         status = str(result.get("status", "unknown"))
         if status == "error":
+            tools = ",".join(self._tool_names_for_action(action)) or "tool"
             error = self._normalize_error_pattern(self._first_error_text(result))
             classification = str(result.get("classification", ""))
             return f"{tools}:error:{classification}:{error}"
         if status == "success":
-            target = self._primary_target(action, result)
-            if target:
-                return f"{tools}:success:{target}"
+            if action.get("action") == "multi_tool_call":
+                pieces: list[str] = []
+                for entry in result.get("results", []):
+                    if not isinstance(entry, dict):
+                        continue
+                    tool_name = str(entry.get("tool", ""))
+                    tool_result = entry.get("result", {})
+                    if tool_name and isinstance(tool_result, dict):
+                        pieces.append(f"{tool_name}:{compute_outcome_hash(tool_name, tool_result)}")
+                if pieces:
+                    return "|".join(pieces)[:500]
+            tool_names = self._tool_names_for_action(action)
+            tool_name = tool_names[0] if tool_names else str(action.get("action", "tool"))
+            return f"{tool_name}:success:{compute_outcome_hash(tool_name, result)}"
         return ""
 
     def _first_error_text(self, result: dict[str, Any]) -> str:
@@ -592,7 +683,7 @@ class Orchestrator:
             raise SchemaValidationError("file_write content is empty and no content generator is available")
 
         path = str(params.get("path", params.get("file_path", ""))).strip()
-        minimum = max(threshold, 80)
+        minimum = max(threshold, 50)
         generation_prompt = self._content_generation_prompt(user_prompt, path, minimum)
         context = self._content_generation_context(messages)
         best = content.strip()
@@ -630,23 +721,24 @@ class Orchestrator:
 
     def _minimum_content_length(self, user_prompt: str, path: str) -> int:
         text = f"{user_prompt} {path}".lower()
-        if any(marker in text for marker in ("report", "article", "guide", "essay", "research")):
-            return 600
-        if any(marker in text for marker in ("comparison", "compare", "versus", "vs.")):
-            return 350
-        if any(marker in text for marker in ("summary", "summarize", "summarise")):
-            return 400
+        suffix = Path(path).suffix.lower()
+        if suffix in {".py", ".js", ".ts", ".tsx", ".jsx", ".html", ".css", ".json", ".yaml", ".yml"}:
+            return 50
+        if any(marker in text for marker in ("comparison", "compare", "versus", "vs.", "table", "top 5", "top-5")):
+            return 201
+        if any(marker in text for marker in ("report", "article", "guide", "essay", "research", "document", "summary", "summarize", "summarise", "write about", " about ", "overview")):
+            return 401
         if any(marker in text for marker in ("email draft", "draft email", "write an email")):
             return 120
-        if any(marker in text for marker in ("notes", "note", "write about", " about ", "document", "overview")):
-            return 180
-        return 0
+        if any(marker in text for marker in ("notes", "note", "list")):
+            return 101
+        return 100
 
     def _content_token_budget(self, user_prompt: str, path: str) -> int:
         minimum = self._minimum_content_length(user_prompt, path)
-        if minimum >= 600:
+        if minimum >= 401:
             return 1800
-        if minimum >= 350:
+        if minimum >= 201:
             return 1200
         return 900
 
@@ -746,6 +838,12 @@ class Orchestrator:
             return {"status": "error", "error": str(exc)}
 
         if isinstance(result, dict):
+            logger.info(
+                "TOOL-RESULT: tool=%s status=%s result=%s",
+                tool_name,
+                result.get("status", "unknown"),
+                json.dumps(result, sort_keys=True, default=str)[:800],
+            )
             return result
         return {"status": "error", "error": f"Engine returned non-dict result: {type(result).__name__}"}
 
@@ -825,12 +923,19 @@ class Orchestrator:
 
         family = intent["family"]
         allowed_actions_by_family: dict[str, set[str]] = {
-            "WEB_ACCESS": {"tool_call", "multi_tool_call", "web_search", "web_fetch"},
+            "WEB_ACCESS": {
+                "tool_call",
+                "multi_tool_call",
+                "web_search",
+                "web_fetch",
+                "file_write",
+                "excel_create",
+                "excel_write",
+            },
             "PROJECT_CREATION": {
                 "tool_call",
                 "multi_tool_call",
                 "scaffold",
-                "scaffold_engine",
                 "file_write",
                 "file_read",
                 "shell_run",
@@ -843,7 +948,6 @@ class Orchestrator:
                 "powershell_run",
                 "server_launch",
                 "scaffold",
-                "scaffold_engine",
                 "file_write",
                 "file_read",
                 "excel_create",
@@ -856,7 +960,9 @@ class Orchestrator:
                 "browser_open",
                 "browser_click",
                 "browser_type",
+                "browser_press_key",
                 "browser_wait",
+                "browser_wait_for_navigation",
                 "browser_wait_for_element",
                 "browser_get_text",
                 "browser_get_page_content",
@@ -865,6 +971,7 @@ class Orchestrator:
                 "browser_close",
                 "browser_scroll",
                 "calendar_create_event",
+                "calendar_create_event_via_browser",
                 "calendar_list_events",
                 "gmail_get_unread",
                 "gmail_get_email_body",
@@ -997,8 +1104,14 @@ class Orchestrator:
                 f"url={result.get('url', '')}"
             )
         if tool_name == "browser_open":
+            url = str(result.get("url", ""))
+            prefix = ""
+            if "web.whatsapp.com" in url.lower():
+                prefix = (
+                    "WhatsApp Web opened. If it shows a login screen, scan the QR code in the browser to continue. "
+                )
             return (
-                "browser_open executed: "
+                f"{prefix}browser_open executed: "
                 f"title={result.get('title', '')}; url={result.get('url', '')}; "
                 f"session_id={result.get('session_id', '')}; screenshot={result.get('screenshot', '')}; "
                 f"headless={result.get('headless', '')}"
@@ -1037,5 +1150,9 @@ class Orchestrator:
                         }
                     )
                     parts.append(f"{name}({fields})")
-            return "multi_tool_call executed: " + " | ".join(parts)
+            detail = "multi_tool_call executed: " + " | ".join(parts)
+            summary = action.get("_recovery_summary", "")
+            if isinstance(summary, str) and summary.strip():
+                return f"{summary.strip()}\n{detail}"
+            return detail
         return f"{tool_name} executed: {json.dumps(result, default=str)}"

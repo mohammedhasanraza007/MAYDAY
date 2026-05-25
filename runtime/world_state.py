@@ -155,7 +155,7 @@ class WorldState:
 
     def _update_filesystem_state(self, state: dict[str, Any], tool_name: str, result: dict[str, Any]) -> None:
         fs = state.setdefault("filesystem", {})
-        if tool_name in {"file_write", "scaffold", "scaffold_engine", "project"} and result.get("status") == "success":
+        if tool_name in {"file_write", "scaffold", "project"} and result.get("status") == "success":
             path = result.get("path") or result.get("project_dir")
             if isinstance(path, str) and path:
                 target = Path(path)

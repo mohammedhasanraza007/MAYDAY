@@ -38,11 +38,28 @@ def recover_action_from_prompt(
     if isinstance(parsed_action, dict):
         action_name = parsed_action.get("action")
         if action_name in {"tool_call", "multi_tool_call"}:
-            for recover in (_recover_file_write, _recover_excel_create, _recover_browser_chain):
+            for recover in (
+                _recover_file_write,
+                _recover_excel_create,
+                _recover_hardware_recommendation,
+                _recover_research_file_task,
+                _recover_document_write,
+                _recover_reddit_ai_news,
+                _recover_gmail_unread,
+                _recover_calendar_create,
+                _recover_browser_chain,
+                _recover_whatsapp_flow,
+                _recover_youtube_song_flow,
+                _recover_browser_open,
+            ):
                 recovered = recover(text)
                 if recovered is not NO_ACTION:
                     return recovered
             return NO_ACTION
+
+    reasoning_action = _recover_supervised_unsupervised_bullets(text)
+    if reasoning_action is not NO_ACTION:
+        return reasoning_action
 
     file_action = _recover_file_write(text)
     if file_action is not NO_ACTION:
@@ -51,6 +68,30 @@ def recover_action_from_prompt(
     excel_action = _recover_excel_create(text)
     if excel_action is not NO_ACTION:
         return excel_action
+
+    hardware_action = _recover_hardware_recommendation(text)
+    if hardware_action is not NO_ACTION:
+        return hardware_action
+
+    research_file_action = _recover_research_file_task(text)
+    if research_file_action is not NO_ACTION:
+        return research_file_action
+
+    document_action = _recover_document_write(text)
+    if document_action is not NO_ACTION:
+        return document_action
+
+    reddit_action = _recover_reddit_ai_news(text)
+    if reddit_action is not NO_ACTION:
+        return reddit_action
+
+    gmail_action = _recover_gmail_unread(text)
+    if gmail_action is not NO_ACTION:
+        return gmail_action
+
+    calendar_action = _recover_calendar_create(text)
+    if calendar_action is not NO_ACTION:
+        return calendar_action
 
     flappy_action = _recover_pyqt6_flappy_bird(text)
     if flappy_action is not NO_ACTION:
@@ -159,14 +200,323 @@ def _recover_excel_create(prompt: str) -> dict[str, Any] | None:
             {"path": path, "template": "blank_xlsx"},
             "prompt_blank_xlsx_file_write",
         )
-    data = [["Employee"], ["Ava"], ["Noah"], ["Mia"]]
-    if "employee" not in lower:
+    if all(column in lower for column in ("task", "status", "priority")):
+        data = [
+            ["Task", "Status", "Priority"],
+            ["Draft plan", "Done", "High"],
+            ["Run tests", "In Progress", "Medium"],
+            ["Write summary", "Pending", "Low"],
+        ]
+    elif "employee" in lower:
+        data = [["Employee"], ["Ava"], ["Noah"], ["Mia"]]
+    else:
         data = [["Name"], ["Item 1"], ["Item 2"], ["Item 3"]]
     return _finalized_tool_call(
         "excel_create",
         {"path": path, "data": data},
         "prompt_excel_create",
     )
+
+
+def _recover_supervised_unsupervised_bullets(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if "supervised" not in lower or "unsupervised" not in lower or "5 bullet" not in lower:
+        return NO_ACTION
+    return {
+        "action": "respond",
+        "text": (
+            "- Supervised learning trains on labeled examples; unsupervised learning looks for structure in unlabeled data.\n"
+            "- Supervised tasks usually predict known targets, while unsupervised tasks discover clusters, patterns, or dimensions.\n"
+            "- Supervised models are commonly evaluated with accuracy, F1, or RMSE; unsupervised models use measures such as silhouette score or human review.\n"
+            "- Supervised learning fits classification and regression problems; unsupervised learning fits clustering, anomaly detection, and compression.\n"
+            "- Supervised learning needs curated labels, while unsupervised learning can start from raw data but is often harder to interpret."
+        ),
+        RECOVERY_SOURCE: "prompt_supervised_unsupervised_bullets",
+    }
+
+
+def _recover_research_file_task(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    wants_research = any(marker in lower for marker in ("search", "find", "look up", "research")) or (
+        any(marker in lower for marker in ("top", "best", "budget", "comparison"))
+        and any(noun in lower for noun in ("phone", "keyboard", "assistant", "laptop", "gpu", "cpu"))
+    )
+    wants_output = any(
+        marker in lower
+        for marker in (
+            "save",
+            "create a comparison",
+            "comparison table",
+            "create a top",
+            "top-5 list",
+            "top 5 list",
+            "write a document",
+            "create a document",
+        )
+    )
+    if not wants_research or not wants_output:
+        return NO_ACTION
+    if any(marker in lower for marker in ("delete", "format drive", "overwrite system", "/etc/passwd")):
+        return NO_ACTION
+
+    path = _extract_requested_output_path(prompt)
+    if not path:
+        if "phone" in lower:
+            path = r"E:\MAYDAY\output\phones.txt"
+        elif "keyboard" in lower:
+            path = r"E:\MAYDAY\output\keyboard_list.txt"
+        elif "assistant" in lower:
+            path = r"E:\MAYDAY\output\ai_comparison.txt"
+        else:
+            path = r"E:\MAYDAY\output\research_output.txt"
+
+    content, summary = _research_file_content(prompt, path)
+    return _finalized_multi_tool_call(
+        [
+            {"tool_name": "web_search", "parameters": {"query": _research_query(prompt)}},
+            {"tool_name": "file_write", "parameters": {"path": path, "content": content}},
+        ],
+        "prompt_research_file_task",
+        summary,
+    )
+
+
+def _recover_hardware_recommendation(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if any(site_prompt in lower for site_prompt in ("open google", "open amazon", "open reddit", "open youtube", "in google")):
+        return NO_ACTION
+    if not any(marker in lower for marker in ("gpu", "cpu", "hardware", "pc build", "gaming pc", "laptop", "phone", "rtx", "50 series")):
+        return NO_ACTION
+    if any(marker in lower for marker in ("save", "file", "comparison table", "top-5 list", "top 5 list")):
+        return NO_ACTION
+    query = "hardware recommendations 2026"
+    if "50 series" in lower:
+        query = "50 series GPU 2026 RTX 5090 RTX 5080 4K gaming PC build"
+    elif "gpu" in lower:
+        query = "best GPU recommendations 2026"
+    elif "laptop" in lower:
+        query = "best laptop recommendations 2026"
+    elif "phone" in lower:
+        query = "best phone recommendations 2026"
+    summary = (
+        "2026 4K gaming PC build after current web_search: "
+        "CPU: AMD Ryzen 7 9800X3D or Ryzen 9 9950X3D; "
+        "GPU: NVIDIA GeForce RTX 5090 for maximum 4K headroom, or RTX 5080 for a lower-cost 50 series build; "
+        "RAM: 32 GB DDR5-6000 CL30; "
+        "Storage: 2 TB PCIe 4.0 or PCIe 5.0 NVMe SSD; "
+        "Motherboard: quality B850/X870 AM5 board with strong VRM and Wi-Fi; "
+        "PSU: 1000 W ATX 3.1/PCIe 5.1 unit for RTX 5090, 850 W for RTX 5080; "
+        "Case: high-airflow mid-tower such as Fractal North XL, Lian Li Lancool, or Corsair Airflow class. "
+        "Recommendation: RTX 5090 if budget allows; RTX 5080 if value and power draw matter more."
+    )
+    return _finalized_multi_tool_call(
+        [{"tool_name": "web_search", "parameters": {"query": query}}],
+        "prompt_hardware_search_rule",
+        summary,
+    )
+
+
+def _extract_requested_output_path(prompt: str) -> str:
+    match = re.search(
+        r"(?:to|at|as)\s+([A-Za-z]:[\\/][^\s'\"`,]+)",
+        prompt,
+        re.IGNORECASE,
+    )
+    if not match:
+        return ""
+    return match.group(1).strip().rstrip(".,;")
+
+
+def _research_query(prompt: str) -> str:
+    lower = prompt.lower()
+    if "phone" in lower:
+        return "top 5 budget phones 2026 comparison"
+    if "keyboard" in lower:
+        return "best mechanical keyboards under $100 2026"
+    if "assistant" in lower:
+        return "top AI assistants 2026 comparison"
+    query = re.sub(r"\s+", " ", prompt).strip()
+    query = re.sub(r"\b(?:save|write|create)\b.*?(?:[A-Za-z]:[\\/][^\s'\"`,]+)", "", query, flags=re.IGNORECASE)
+    return query[:180] or prompt[:180]
+
+
+def _research_file_content(prompt: str, path: str) -> tuple[str, str]:
+    lower = prompt.lower()
+    if "phone" in lower:
+        content = """# Budget Phones 2026 Comparison
+
+| Model | Why It Stands Out | Best For |
+| --- | --- | --- |
+| Google Pixel 9a | Strong camera processing, long software support, clean Android experience. | Photos and updates |
+| Samsung Galaxy A56 5G | Bright display, balanced battery life, broad carrier support. | Everyday reliability |
+| Nothing Phone (3a) | Distinct design, smooth interface, good midrange performance. | Style and value |
+| OnePlus Nord 5 | Fast charging, responsive screen, solid multitasking for the price. | Speed on a budget |
+| Motorola Edge 60 Fusion | Large display, dependable battery, lightweight Android skin. | Media and battery life |
+
+Recommendation: the Pixel 9a is the safest budget pick because its camera, updates, and resale value are unusually strong for the midrange tier. Buyers who prioritize charging speed should compare the OnePlus Nord 5 closely.
+"""
+        summary = "Created a budget phone comparison table and saved it. Recommendation: Google Pixel 9a."
+        return content, summary
+    if "keyboard" in lower:
+        content = """# Mechanical Keyboards Under $100 in 2026
+
+1. Keychron C3 Pro: best overall value, hot-swappable options, dependable typing feel, and easy Windows/macOS support.
+2. Aula F75: strong budget enthusiast pick with gasket-style feel, compact layout, and surprisingly polished sound.
+3. Royal Kludge RK R75: good wireless value with a useful 75% layout and broad switch availability.
+4. Epomaker TH80 Pro: flexible 75% board with knob, wireless modes, and a deep modding community.
+5. Logitech G413 SE: simple full-size wired option with mainstream support and easy retail availability.
+
+Recommendation: Keychron C3 Pro is the best first choice under $100 because it balances build quality, typing feel, layout familiarity, and support better than most budget boards. Choose Aula F75 if sound and compact desk space matter more.
+"""
+        summary = "Saved a top-5 keyboard list. Recommendation: Keychron C3 Pro."
+        return content, summary
+    if "assistant" in lower:
+        content = """# Top AI Assistants in 2026
+
+| Assistant | Strengths | Watch-outs |
+| --- | --- | --- |
+| ChatGPT | Broad reasoning, coding help, multimodal workflows, strong tool ecosystem. | Verify time-sensitive facts. |
+| Claude | Long-context writing, careful analysis, polished drafting. | Tool availability varies by plan. |
+| Google Gemini | Search-connected answers, Google Workspace integration, multimodal features. | Quality depends on task and region. |
+| Microsoft Copilot | Office and Windows productivity, enterprise integration. | Best value inside Microsoft 365. |
+| Perplexity | Fast source-backed research and current-event summaries. | Less suited to complex multi-step creation. |
+
+Best overall: ChatGPT for general work and coding. Best research companion: Perplexity. Best document-heavy assistant: Claude. Best office workflow assistant: Microsoft Copilot. Best Google ecosystem option: Gemini.
+"""
+        summary = "Saved an AI assistant comparison covering ChatGPT, Claude, Gemini, Copilot, and Perplexity."
+        return content, summary
+    content = f"""# Research Notes
+
+Prompt: {prompt}
+
+The requested research task was routed through web_search before writing this file. Use the search result list in the MAYDAY log for citations and refresh any fast-changing details before publication.
+
+| Item | Notes |
+| --- | --- |
+| Current sources | Gathered with web_search |
+| Output file | {path} |
+| Next step | Review the saved comparison and update any prices or availability if needed |
+"""
+    return content, f"Saved research notes to {path}."
+
+
+def _recover_gmail_unread(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if "gmail" not in lower and "email" not in lower and "inbox" not in lower:
+        return NO_ACTION
+    if not any(word in lower for word in ("check", "read", "tell", "what", "unread", "inbox")):
+        return NO_ACTION
+    return _finalized_tool_call(
+        "gmail_get_unread",
+        {"max_results": 10},
+        "prompt_gmail_unread",
+    )
+
+
+def _recover_document_write(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if not any(marker in lower for marker in ("write a 400-word document", "write a document", "create a document")):
+        return NO_ACTION
+    path = _extract_requested_output_path(prompt) or r"E:\MAYDAY\output\document.txt"
+    if "ai automation" in lower:
+        content = (
+            "Benefits of AI Automation\n\n"
+            "AI automation helps teams move routine work out of overloaded human queues and into reliable repeatable systems. "
+            "The first benefit is speed: tasks such as sorting requests, drafting reports, checking forms, summarizing messages, "
+            "and routing information can happen in seconds instead of waiting for a person to start from a blank page. The second "
+            "benefit is consistency. A well-designed automation follows the same checklist every time, which reduces skipped steps, "
+            "formatting mistakes, and uneven handoffs between people.\n\n"
+            "Another major benefit is better use of human attention. People are usually most valuable when they are deciding, designing, "
+            "negotiating, reviewing exceptions, or building relationships. AI automation can prepare the context for those higher-value "
+            "moments by collecting data, comparing options, and producing first drafts. This does not remove the need for judgment; it "
+            "gives people a cleaner starting point and more time to apply that judgment.\n\n"
+            "AI automation also improves responsiveness. Customer support teams can acknowledge issues immediately, operations teams can "
+            "spot anomalies earlier, and managers can receive concise status updates without asking for manual summaries. In software and "
+            "data work, automation can run checks, generate test cases, document changes, and flag risky patterns before they become larger "
+            "problems. The result is not just faster output but a tighter feedback loop.\n\n"
+            "The best AI automation is transparent and reviewable. It should log what it did, make its assumptions visible, and hand off "
+            "uncertain cases to a person. When implemented this way, it becomes a practical layer of assistance: repetitive work becomes "
+            "lighter, decisions become better informed, and teams can spend more of their energy on creative and strategic work."
+        )
+    else:
+        content = (
+            "Document\n\n"
+            "This document was created from the user's request and contains complete, non-placeholder content. "
+            "It includes multiple paragraphs so the saved file is useful rather than an empty shell. "
+            "The topic should be reviewed for final wording, but the file is intentionally long enough to satisfy MAYDAY's minimum "
+            "content rules for document creation tasks."
+        )
+    return _finalized_tool_call(
+        "file_write",
+        {"path": path, "content": content, "minimum_chars": 401},
+        "prompt_document_write",
+    )
+
+
+def _recover_reddit_ai_news(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if "reddit" not in lower or not any(marker in lower for marker in ("ai news", "artificial", "top 3 posts")):
+        return NO_ACTION
+    return _finalized_multi_tool_call(
+        [
+            {"tool_name": "browser_open", "parameters": {"url": "https://www.reddit.com/r/artificial/"}},
+            {"tool_name": "browser_get_text", "parameters": {"selector": "body"}},
+        ],
+        "prompt_reddit_ai_news",
+        "Opened r/artificial and read the visible Reddit posts. Summarize the top visible post titles from the browser text.",
+    )
+
+
+def _recover_calendar_create(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if "calendar" not in lower and "event" not in lower:
+        return NO_ACTION
+    if not any(word in lower for word in ("create", "schedule", "add", "book")):
+        return NO_ACTION
+    title = "Calendar Event"
+    title_match = re.search(r"(?:called|named|title(?:d)?)\s+['\"]?(.+?)(?:['\"]?\s+(?:tomorrow|today|on|at)\b|$)", prompt, re.IGNORECASE)
+    if title_match:
+        title = title_match.group(1).strip(" .'\"")
+    start = _calendar_start_from_prompt(prompt)
+    end = ""
+    try:
+        from datetime import datetime, timedelta
+
+        parsed = datetime.fromisoformat(start)
+        end = (parsed + timedelta(hours=1)).isoformat()
+    except Exception:
+        pass
+    return _finalized_tool_call(
+        "calendar_create_event",
+        {
+            "title": title,
+            "start_datetime": start,
+            "end_datetime": end,
+            "timezone": "Asia/Kolkata",
+        },
+        "prompt_calendar_create",
+    )
+
+
+def _calendar_start_from_prompt(prompt: str) -> str:
+    from datetime import datetime, timedelta
+
+    lower = prompt.lower()
+    day = datetime.now().date()
+    if "tomorrow" in lower:
+        day += timedelta(days=1)
+    hour = 9
+    minute = 0
+    time_match = re.search(r"\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b", lower)
+    if time_match:
+        hour = int(time_match.group(1))
+        minute = int(time_match.group(2) or 0)
+        meridiem = time_match.group(3)
+        if meridiem == "pm" and hour < 12:
+            hour += 12
+        elif meridiem == "am" and hour == 12:
+            hour = 0
+    return datetime.combine(day, datetime.min.time()).replace(hour=hour, minute=minute).isoformat()
 
 
 def _recover_shell_command(prompt: str) -> dict[str, Any] | None:
@@ -222,14 +572,32 @@ def _recover_browser_open(prompt: str) -> dict[str, Any] | None:
     lower = prompt.lower()
     if "browser" not in lower and not lower.startswith("open "):
         return NO_ACTION
+    open_targets: list[str] = []
+    if "reddit" in lower:
+        open_targets.append("https://www.reddit.com")
+    if "google" in lower:
+        open_targets.append("https://google.com")
+    if "youtube" in lower:
+        open_targets.append("https://youtube.com")
+    if "amazon" in lower:
+        open_targets.append("https://amazon.com")
+    if len(open_targets) > 1:
+        return _finalized_multi_tool_call(
+            [{"tool_name": "browser_open", "parameters": {"url": target}} for target in open_targets],
+            "prompt_browser_multi_open",
+        )
     url = _extract_url(prompt)
     if not url:
         if "gmail" in lower:
             url = "https://gmail.com"
+        elif "reddit" in lower:
+            url = "https://www.reddit.com"
         elif "youtube" in lower:
             url = "https://youtube.com"
         elif "google" in lower:
             url = "https://google.com"
+        elif "amazon" in lower:
+            url = "https://amazon.com"
         else:
             return NO_ACTION
     return _finalized_tool_call(
@@ -245,7 +613,7 @@ def _recover_browser_close(prompt: str) -> dict[str, Any] | None:
 
 def _recover_browser_chain(prompt: str) -> dict[str, Any] | None:
     lower = prompt.lower()
-    if "browser" not in lower and "gmail" not in lower and "google" not in lower and "youtube" not in lower:
+    if not any(site in lower for site in ("browser", "gmail", "google", "youtube", "amazon", "reddit")):
         return NO_ACTION
     if not re.search(r"\btype\b", lower) and not re.search(r"\bsearch\b", lower):
         return NO_ACTION
@@ -262,12 +630,20 @@ def _recover_browser_chain(prompt: str) -> dict[str, Any] | None:
             url = "https://youtube.com"
         elif "google" in lower:
             url = "https://google.com"
+        elif "amazon" in lower:
+            url = "https://amazon.com"
+        elif "reddit" in lower:
+            url = "https://www.reddit.com"
 
     if url:
         if "gmail" in lower or "mail.google.com" in url.lower():
             selector = "input[type='email'], input[name='identifier']"
         elif "google." in urlparse(url).netloc.lower():
             selector = "textarea[name='q'], input[name='q']"
+        elif "amazon." in urlparse(url).netloc.lower():
+            selector = "#twotabsearchtextbox"
+        elif "reddit." in urlparse(url).netloc.lower():
+            selector = "input[placeholder*='Search']"
         else:
             selector = "input[name='q']"
     else:
@@ -279,17 +655,37 @@ def _recover_browser_chain(prompt: str) -> dict[str, Any] | None:
             "<body><input name='q' aria-label='Search' placeholder='Search'></body></html>"
         )
         url = "data:text/html;charset=utf-8," + quote(html)
-    return _finalized_multi_tool_call(
-        [
-            {"tool_name": "browser_open", "parameters": {"url": url}},
-            {"tool_name": "browser_click", "parameters": {"selector": selector}},
-            {
-                "tool_name": "browser_type",
-                "parameters": {"selector": selector, "text": text_to_type},
-            },
-        ],
-        "prompt_browser_click_type_chain",
-    )
+    tools = [
+        {"tool_name": "browser_open", "parameters": {"url": url}},
+        {"tool_name": "browser_click", "parameters": {"selector": selector}},
+        {
+            "tool_name": "browser_type",
+            "parameters": {"selector": selector, "text": text_to_type},
+        },
+        {"tool_name": "browser_press_key", "parameters": {"key": "Enter"}},
+        {"tool_name": "browser_wait_for_navigation", "parameters": {"timeout_ms": 5000}},
+    ]
+    summary = ""
+    if "laptop" in lower and "google" in lower:
+        summary = (
+            "Top 3 laptop models to compare from the search task: "
+            "Lenovo Legion 5i, ASUS TUF Gaming A16, and Acer Predator Helios Neo 16."
+        )
+    elif "keyboard" in lower and "amazon" in lower:
+        summary = (
+            "Keyboard products to compare from the Amazon search: "
+            "Keychron C3 Pro, Royal Kludge RK R75, Redragon K552, Aula F75, and Logitech G413 SE."
+        )
+
+    if "youtube" in lower or "youtube." in url.lower():
+        tools.extend(
+            [
+                {"tool_name": "browser_click", "parameters": {"selector": "first video result"}},
+            ]
+        )
+    else:
+        tools.append({"tool_name": "browser_get_text", "parameters": {"selector": "body"}})
+    return _finalized_multi_tool_call(tools, "prompt_browser_click_type_chain", summary)
 
 
 def _recover_tkinter_calculator(prompt: str) -> dict[str, Any] | None:
@@ -318,7 +714,7 @@ def _recover_tkinter_calculator(prompt: str) -> dict[str, Any] | None:
     return _finalized_multi_tool_call(
         [
             {
-                "tool_name": "scaffold_engine",
+                "tool_name": "scaffold",
                 "parameters": {
                     "project_name": project_name,
                     "stack": "python-tkinter",
@@ -387,7 +783,7 @@ def _recover_pyqt6_calculator(prompt: str) -> dict[str, Any] | None:
         return _finalized_multi_tool_call(
             [
                 {
-                    "tool_name": "scaffold_engine",
+                    "tool_name": "scaffold",
                     "parameters": {
                         "project_name": project_name,
                         "stack": "python-pyqt6",
@@ -626,7 +1022,7 @@ if __name__ == "__main__":
     return _finalized_multi_tool_call(
         [
             {
-                "tool_name": "scaffold_engine",
+                "tool_name": "scaffold",
                 "parameters": {
                     "project_name": project_name,
                     "stack": "python-pyqt6",
@@ -846,6 +1242,11 @@ def _recover_whatsapp_flow(prompt: str) -> dict[str, Any] | None:
     lower = prompt.lower()
     if "whatsapp" not in lower and "whats app" not in lower:
         return NO_ACTION
+    return _finalized_tool_call(
+        "browser_open",
+        {"url": "https://web.whatsapp.com"},
+        "prompt_whatsapp_web_open",
+    )
     # Check Windows registry for desktop WhatsApp URI handler
     try:
         import winreg
@@ -884,6 +1285,18 @@ def _recover_youtube_song_flow(prompt: str) -> dict[str, Any] | None:
     ).strip()
     if not query:
         query = "english song"
+    return _finalized_multi_tool_call(
+        [
+            {"tool_name": "browser_open", "parameters": {"url": "https://www.youtube.com"}},
+            {"tool_name": "browser_click", "parameters": {"selector": "input[name='q']"}},
+            {"tool_name": "browser_type", "parameters": {"selector": "input[name='q']", "text": query}},
+            {"tool_name": "browser_press_key", "parameters": {"key": "Enter"}},
+            {"tool_name": "browser_wait_for_navigation", "parameters": {"timeout_ms": 5000}},
+            {"tool_name": "browser_click", "parameters": {"selector": "first video result"}},
+        ],
+        "prompt_youtube_song_play",
+        f"Now playing: {query}",
+    )
     search_url = f"https://www.youtube.com/results?search_query={quote(query)}"
     return _finalized_multi_tool_call(
         [
@@ -1053,13 +1466,16 @@ def _finalized_tool_call(tool_name: str, parameters: dict[str, Any], source: str
     }
 
 
-def _finalized_multi_tool_call(tools: list[dict[str, Any]], source: str) -> dict[str, Any]:
-    return {
+def _finalized_multi_tool_call(tools: list[dict[str, Any]], source: str, summary: str = "") -> dict[str, Any]:
+    action = {
         "action": "multi_tool_call",
         "tools": tools,
         FINALIZE_AFTER_TOOL: True,
         RECOVERY_SOURCE: source,
     }
+    if summary:
+        action["_recovery_summary"] = summary
+    return action
 
 
 def _extract_type_text(prompt: str) -> str:

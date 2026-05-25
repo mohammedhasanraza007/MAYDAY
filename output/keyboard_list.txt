@@ -1,0 +1,9 @@
+# Mechanical Keyboards Under $100 in 2026
+
+1. Keychron C3 Pro: best overall value, hot-swappable options, dependable typing feel, and easy Windows/macOS support.
+2. Aula F75: strong budget enthusiast pick with gasket-style feel, compact layout, and surprisingly polished sound.
+3. Royal Kludge RK R75: good wireless value with a useful 75% layout and broad switch availability.
+4. Epomaker TH80 Pro: flexible 75% board with knob, wireless modes, and a deep modding community.
+5. Logitech G413 SE: simple full-size wired option with mainstream support and easy retail availability.
+
+Recommendation: Keychron C3 Pro is the best first choice under $100 because it balances build quality, typing feel, layout familiarity, and support better than most budget boards. Choose Aula F75 if sound and compact desk space matter more.

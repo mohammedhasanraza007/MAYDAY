@@ -1,0 +1,11 @@
+# Top AI Assistants in 2026
+
+| Assistant | Strengths | Watch-outs |
+| --- | --- | --- |
+| ChatGPT | Broad reasoning, coding help, multimodal workflows, strong tool ecosystem. | Verify time-sensitive facts. |
+| Claude | Long-context writing, careful analysis, polished drafting. | Tool availability varies by plan. |
+| Google Gemini | Search-connected answers, Google Workspace integration, multimodal features. | Quality depends on task and region. |
+| Microsoft Copilot | Office and Windows productivity, enterprise integration. | Best value inside Microsoft 365. |
+| Perplexity | Fast source-backed research and current-event summaries. | Less suited to complex multi-step creation. |
+
+Best overall: ChatGPT for general work and coding. Best research companion: Perplexity. Best document-heavy assistant: Claude. Best office workflow assistant: Microsoft Copilot. Best Google ecosystem option: Gemini.

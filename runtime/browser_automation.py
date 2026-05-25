@@ -8,6 +8,12 @@ from typing import Any
 from urllib.parse import urlparse
 
 from tools.base_tool import BaseTool
+from tools.browser_manager import (
+    get_browser_page,
+    get_browser_session,
+    is_browser_runtime_error,
+    restart_browser,
+)
 from runtime import browser_audit_log
 from runtime.browser_session import SessionRegistry
 from runtime.browser_session import PROFILE_DIR
@@ -19,9 +25,57 @@ from runtime.playwright_runner import headless_requested
 MAYDAY_ROOT = Path(__file__).resolve().parent.parent
 LOGS_DIR = MAYDAY_ROOT / "logs"
 
+SITE_SELECTORS = {
+    "youtube.com": {
+        "search": [
+            "input#search",
+            "#search-input input",
+            "input[id='search']",
+            "ytd-searchbox input",
+            "input[name='search_query']",
+        ],
+        "search_button": [
+            "button#search-icon-legacy",
+            "#search-icon-legacy",
+            "button[aria-label='Search']",
+        ],
+        "first_result": [
+            "ytd-video-renderer:first-of-type h3 a",
+            "#video-title",
+            "a#video-title",
+        ],
+    },
+    "google.com": {
+        "search": ["textarea[name='q']", "input[name='q']", "#APjFqb"],
+        "first_result": ["h3.LC20lb", ".g a", "div.yuRUbf a"],
+    },
+    "reddit.com": {
+        "search": ["input[placeholder*='Search']", "#search-input", "input[type='text']"],
+    },
+    "amazon.com": {
+        "search": ["#twotabsearchtextbox", "input[name='field-keywords']"],
+        "search_button": ["#nav-search-submit-button", "input[type='submit']"],
+    },
+    "mail.google.com": {
+        "compose": ["div[gh='cm']", ".T-I.J-J5-Ji.T-I-KE"],
+    },
+}
+
+GENERIC_SEARCH_SELECTORS = [
+    "input[type='search']",
+    "input[placeholder*='Search']",
+    "textarea[placeholder*='Search']",
+    "input[aria-label*='Search']",
+    "textarea[aria-label*='Search']",
+    "input[name*='search' i]",
+    "input[name*='query' i]",
+]
+
 
 class BrowserActionError(RuntimeError):
-    pass
+    def __init__(self, message: str, payload: dict[str, Any] | None = None):
+        super().__init__(message)
+        self.payload = payload or {}
 
 
 class BrowserAutomation(BaseTool):
@@ -38,7 +92,9 @@ class BrowserAutomation(BaseTool):
             "browser_open",
             "browser_click",
             "browser_type",
+            "browser_press_key",
             "browser_wait",
+            "browser_wait_for_navigation",
             "browser_wait_for_element",
             "browser_get_text",
             "browser_get_page_content",
@@ -70,6 +126,10 @@ class BrowserAutomation(BaseTool):
                     "value": parameters.get("text", parameters.get("value", "")),
                 },
             )
+        if tool_name == "browser_press_key":
+            return self._press_key(parameters)
+        if tool_name == "browser_wait_for_navigation":
+            return self._wait_for_navigation(parameters)
         if tool_name in {"browser_wait", "browser_wait_for_element"}:
             return self._single_step(
                 parameters,
@@ -93,55 +153,102 @@ class BrowserAutomation(BaseTool):
             return self._scroll(parameters)
         return {"status": "error", "error": f"Unknown browser automation action: {tool_name}"}
 
+    def _press_key(self, params: dict) -> dict:
+        key = str(params.get("key", "Enter")).strip() or "Enter"
+        result = self._single_step(params, {"action": "press", "key": key})
+        if result.get("status") == "success":
+            result["key"] = key
+            result["state"] = "pressed"
+            result["next_step"] = (
+                "Pressed key. If this submitted a search, call browser_wait_for_navigation "
+                "then browser_get_text before responding."
+            )
+        return result
+
+    def _wait_for_navigation(self, params: dict) -> dict:
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
+        timeout_ms = int(params.get("timeout_ms", params.get("timeout", 5000)))
+        state = "loaded"
+        try:
+            page.wait_for_load_state("domcontentloaded", timeout=timeout_ms)
+        except Exception:
+            state = "timeout_ok"
+        self._wait_for_page_settle(page)
+        screenshot_path = self._screenshot_path(session.id, "wait_for_navigation")
+        page.screenshot(path=str(screenshot_path), full_page=False)
+        if not screenshot_path.exists():
+            raise BrowserActionError("browser_wait_for_navigation did not create a screenshot")
+        browser_audit_log.record("wait_for_navigation", {"timeout_ms": timeout_ms, "state": state}, session.id, screenshot_path)
+        return {
+            "status": "success",
+            "state": state,
+            "session_id": session.id,
+            "url": page.url,
+            "title": self._safe_title(page),
+            "timeout_ms": timeout_ms,
+            "screenshot": str(screenshot_path),
+            "ready": True,
+            "actionable": True,
+            "next_step": "Page load wait complete. Use browser_get_text to read content before responding.",
+        }
+
     def _open(self, params: dict) -> dict:
         url = self._normalize_url(params.get("url", ""))
         if not permission_gate.check_browser("open", target=url, already_approved=params.get("_gateway_approved") is True):
             return {"status": "cancelled", "reason": permission_gate.block_reason or "user_denied"}
-        session = SessionRegistry.create()
-        page = session.context.new_page()
-        session.pages.append(page)
-        response = page.goto(url, wait_until="domcontentloaded", timeout=20000)
-        if response is None and not self._allows_null_response(url):
-            raise BrowserActionError(f"browser_open returned no response for {url}")
-        if response is not None and response.status >= 400:
-            raise BrowserActionError(f"browser_open failed with HTTP {response.status} for {url}")
-        self._wait_for_page_settle(page)
-        self._raise_if_browser_error_page(page, "browser_open")
-        page.bring_to_front()
-        screenshot_path = self._screenshot_path(session.id, "open")
-        page.screenshot(path=str(screenshot_path), full_page=False)
-        if not screenshot_path.exists():
-            raise BrowserActionError("browser_open did not create a screenshot")
-        browser_audit_log.record("open", url, session.id, screenshot_path)
-        return {
-            "status": "success",
-            "state": "opened",
-            "session_id": session.id,
-            "url": page.url,
-            "title": page.title(),
-            "ready": True,
-            "note": "Page loaded. Use browser_get_text to read visible content.",
-            "next_step": "Use browser_get_text or browser_get_page_content to inspect page content; do not open the same URL again.",
-            "actionable": True,
-            "screenshot": str(screenshot_path),
-            "profile_dir": str(PROFILE_DIR),
-            "persistent": True,
-            "headless": headless_requested(),
-            "login_state": self._detect_login_state(page),
-            "validation": {
-                "opened": bool(page.url and page.url != "about:blank"),
-                "screenshot_exists": screenshot_path.exists(),
-                "http_status": response.status if response is not None else None,
-            },
-            "active_sessions": SessionRegistry.active_count(),
-        }
+        last_error = ""
+        for attempt in range(1, 3):
+            try:
+                session, page = get_browser_page(create_new=True, return_session=True)
+                response = page.goto(url, wait_until="domcontentloaded", timeout=20000)
+                if response is None and not self._allows_null_response(url):
+                    raise BrowserActionError(f"browser_open returned no response for {url}")
+                if response is not None and response.status >= 400:
+                    raise BrowserActionError(f"browser_open failed with HTTP {response.status} for {url}")
+                self._wait_for_page_settle(page)
+                self._raise_if_browser_error_page(page, "browser_open")
+                page.bring_to_front()
+                screenshot_path = self._screenshot_path(session.id, "open")
+                page.screenshot(path=str(screenshot_path), full_page=False)
+                if not screenshot_path.exists():
+                    raise BrowserActionError("browser_open did not create a screenshot")
+                browser_audit_log.record("open", url, session.id, screenshot_path)
+                return {
+                    "status": "success",
+                    "state": "opened",
+                    "session_id": session.id,
+                    "url": page.url,
+                    "title": page.title(),
+                    "ready": True,
+                    "note": "Page loaded. Use browser_get_text to read visible content.",
+                    "next_step": "Use browser_get_text or browser_get_page_content to inspect page content; do not open the same URL again.",
+                    "actionable": True,
+                    "screenshot": str(screenshot_path),
+                    "profile_dir": str(PROFILE_DIR),
+                    "persistent": True,
+                    "headless": headless_requested(),
+                    "login_state": self._detect_login_state(page),
+                    "validation": {
+                        "opened": bool(page.url and page.url != "about:blank"),
+                        "screenshot_exists": screenshot_path.exists(),
+                        "http_status": response.status if response is not None else None,
+                    },
+                    "active_sessions": SessionRegistry.active_count(),
+                    "attempts": attempt,
+                }
+            except Exception as exc:
+                last_error = str(exc)
+                if is_browser_runtime_error(exc):
+                    restart_browser()
+                    continue
+                raise
+        return {"status": "error", "error": f"Browser failed after restart. Try again. Last error: {last_error}"}
 
     def _navigate(self, params: dict) -> dict:
         url = self._normalize_url(params.get("url", ""))
         if not permission_gate.check_browser("navigate", target=url, already_approved=params.get("_gateway_approved") is True):
             return {"status": "cancelled", "reason": permission_gate.block_reason or "user_denied"}
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        page = self._page_for_session(session)
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
         response = page.goto(url, wait_until="domcontentloaded", timeout=20000)
         if response is None and not self._allows_null_response(url):
             raise BrowserActionError(f"browser_navigate returned no response for {url}")
@@ -188,12 +295,12 @@ class BrowserAutomation(BaseTool):
                 "completed_steps": 0,
             }
         try:
-            session = SessionRegistry.get(session_id) if session_id else SessionRegistry.latest()
+            session = get_browser_session(session_id)
         except RuntimeError:
             first_action = str(steps[0].get("action", "")).lower() if steps else ""
             if first_action not in {"open", "navigate"}:
                 raise
-            session = SessionRegistry.create()
+            session = get_browser_session()
         page = self._page_for_session(session)
         screenshots: list[str] = []
         step_results: list[dict[str, Any]] = []
@@ -215,14 +322,8 @@ class BrowserAutomation(BaseTool):
                 elif action == "type":
                     selector = step.get("selector", "")
                     value = step.get("value", step.get("text", ""))
-                    locator, resolved_selector, strategy = self._resolve_locator(page, selector, action)
-                    locator.click(timeout=10000)
-                    try:
-                        locator.fill("", timeout=5000)
-                        locator.type(value, delay=25, timeout=10000)
-                    except Exception:
-                        page.keyboard.press("Control+A")
-                        page.keyboard.type(value, delay=25)
+                    resolved_selector, strategy, type_extra = self._type_with_fallback(page, selector, value)
+                    extra.update(type_extra)
                 elif action == "wait_for":
                     locator, resolved_selector, strategy = self._resolve_locator(
                         page, step.get("selector", ""), action
@@ -256,6 +357,9 @@ class BrowserAutomation(BaseTool):
                     extra["meet_link"] = link
                 else:
                     raise BrowserActionError(f"Unsupported browser step: {action}")
+            except BrowserActionError:
+                browser_audit_log.record("error", step, session.id, None)
+                raise
             except Exception as exc:
                 browser_audit_log.record("error", step, session.id, None)
                 raise BrowserActionError(str(exc)) from exc
@@ -310,14 +414,24 @@ class BrowserAutomation(BaseTool):
         }
 
     def _single_step(self, params: dict, step: dict[str, Any]) -> dict:
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        action_result = self._act(
-            {
+        session = get_browser_session(params.get("session_id", ""))
+        try:
+            action_result = self._act(
+                {
+                    "session_id": session.id,
+                    "steps": [step],
+                    "_gateway_approved": params.get("_gateway_approved") is True,
+                }
+            )
+        except BrowserActionError as exc:
+            result = {
+                "status": "error",
+                "error": str(exc),
                 "session_id": session.id,
-                "steps": [step],
-                "_gateway_approved": params.get("_gateway_approved") is True,
+                "recovery_hint": "Try a different selector or inspect the page with browser_get_text before retrying.",
             }
-        )
+            result.update(exc.payload)
+            return result
         if action_result.get("status") != "success":
             return action_result
         page = self._page_for_session(session)
@@ -340,6 +454,10 @@ class BrowserAutomation(BaseTool):
             result["text"] = step.get("value", "")
             result["value"] = self._read_input_value(page, result["selector"])
             result["field"] = result["selector"]
+            if "tried_selectors" in last_step:
+                result["tried_selectors"] = last_step["tried_selectors"]
+            if "verification_prefix" in last_step:
+                result["verification_prefix"] = last_step["verification_prefix"]
         if step.get("action") == "wait_for":
             result["waited_ms"] = int(step.get("timeout", 10000))
         result["headless"] = headless_requested()
@@ -350,9 +468,13 @@ class BrowserAutomation(BaseTool):
         return result
 
     def _scroll(self, params: dict) -> dict:
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        page = self._page_for_session(session)
-        amount = int(params.get("amount", params.get("delta_y", 600)))
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
+        if "pixels" in params or "direction" in params:
+            pixels = int(params.get("pixels", 500))
+            direction = str(params.get("direction", "down")).lower()
+            amount = pixels if direction != "up" else -pixels
+        else:
+            amount = int(params.get("amount", params.get("delta_y", 600)))
         page.mouse.wheel(0, amount)
         self._wait_for_page_settle(page)
         screenshot_path = self._screenshot_path(session.id, "scroll")
@@ -375,8 +497,7 @@ class BrowserAutomation(BaseTool):
         }
 
     def _click_coordinates(self, params: dict) -> dict:
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        page = self._page_for_session(session)
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
         before = self._page_snapshot(page)
         x = int(params.get("x"))
         y = int(params.get("y"))
@@ -403,16 +524,22 @@ class BrowserAutomation(BaseTool):
     def _resolve_locator(self, page: Any, selector: str, action: str):
         candidates = self._selector_candidates(page, selector, action)
         last_error: Exception | None = None
+        tried_selectors: list[str] = []
         for candidate, strategy in candidates:
+            tried_selectors.append(self._candidate_label(candidate, strategy))
             try:
                 locator = self._locator_from_candidate(page, candidate, strategy)
-                locator.first.wait_for(timeout=2500)
+                locator.first.wait_for(state="visible", timeout=2500)
                 return locator.first, candidate, strategy
             except Exception as exc:
                 last_error = exc
                 continue
         raise BrowserActionError(
-            f"Could not resolve browser target '{selector}' for {action}: {last_error}"
+            f"Could not resolve browser target '{selector}' for {action}: {last_error}",
+            {
+                "tried_selectors": tried_selectors,
+                "recovery_hint": "Selector fallback failed. Inspect the page and retry with a visible selector.",
+            },
         )
 
     def _locator_from_candidate(self, page: Any, candidate: str, strategy: str):
@@ -426,6 +553,94 @@ class BrowserAutomation(BaseTool):
             return page.get_by_text(candidate)
         return page.locator(candidate)
 
+    def _type_with_fallback(self, page: Any, selector: str, value: str) -> tuple[str, str, dict[str, Any]]:
+        candidates = self._selector_candidates(page, selector, "type")
+        tried_selectors: list[str] = []
+        last_error = ""
+        expected = str(value)
+        prefix = expected[:10] if len(expected) > 10 else expected
+        for candidate, strategy in candidates:
+            label = self._candidate_label(candidate, strategy)
+            tried_selectors.append(label)
+            try:
+                locator = self._locator_from_candidate(page, candidate, strategy).first
+                locator.wait_for(state="visible", timeout=2500)
+                locator.click(timeout=5000)
+                try:
+                    locator.fill(expected, timeout=7000)
+                except Exception:
+                    locator.fill("", timeout=3000)
+                    locator.type(expected, delay=25, timeout=10000)
+                actual = self._read_locator_value(page, locator, candidate, strategy)
+                actual_prefix = actual[: len(prefix)] if prefix else actual
+                if not prefix or actual_prefix == prefix:
+                    return candidate, strategy, {
+                        "tried_selectors": tried_selectors,
+                        "verification_prefix": prefix,
+                        "typed_value": actual,
+                    }
+                last_error = (
+                    f"{label} accepted typing but verification failed "
+                    f"(expected prefix {prefix!r}, got {actual_prefix!r})"
+                )
+            except Exception as exc:
+                last_error = f"{label}: {exc}"
+                continue
+        raise BrowserActionError(
+            f"Could not type into a visible field for selector '{selector}': {last_error}",
+            {
+                "tried_selectors": tried_selectors,
+                "recovery_hint": "Inspect the page, choose a visible input selector, then retry browser_type.",
+            },
+        )
+
+    def _read_locator_value(self, page: Any, locator: Any, selector: str, strategy: str) -> str:
+        try:
+            return locator.input_value(timeout=1000)
+        except Exception:
+            if strategy == "role_searchbox":
+                try:
+                    return page.get_by_role("searchbox").first.input_value(timeout=1000)
+                except Exception:
+                    pass
+            return self._read_input_value(page, selector)
+
+    def _candidate_label(self, candidate: str, strategy: str) -> str:
+        if strategy == "role_searchbox":
+            return "role=searchbox"
+        if strategy in {"role_button", "role_link"}:
+            return f"{strategy}:{candidate}"
+        if strategy == "text":
+            return f"text={candidate}"
+        return candidate or strategy
+
+    def _selector_intent(self, page: Any, selector: str, action: str) -> str:
+        lowered = (selector or "").lower()
+        url = (getattr(page, "url", "") or "").lower()
+        if any(word in lowered for word in ("first result", "top result", "video result", "first video")):
+            return "first_result"
+        if any(word in lowered for word in ("search button", "submit search", "search icon")):
+            return "search_button"
+        if "compose" in lowered:
+            return "compose"
+        if action in {"type", "wait_for"} and (
+            not lowered
+            or any(word in lowered for word in ("search", "query", "search bar", "search box"))
+            or any(site in url for site in ("youtube.", "google.", "reddit.", "amazon."))
+        ):
+            return "search"
+        return ""
+
+    def _site_selector_candidates(self, page: Any, intent: str) -> list[str]:
+        if not intent:
+            return []
+        url = (getattr(page, "url", "") or "").lower()
+        selectors: list[str] = []
+        for site, groups in SITE_SELECTORS.items():
+            if site in url:
+                selectors.extend(groups.get(intent, []))
+        return selectors
+
     def _selector_candidates(self, page: Any, selector: str, action: str) -> list[tuple[str, str]]:
         raw = (selector or "").strip()
         lowered = raw.lower()
@@ -434,10 +649,16 @@ class BrowserAutomation(BaseTool):
         if raw:
             candidates.append((raw, "selector"))
 
+        intent = self._selector_intent(page, raw, action)
+        candidates.extend((site_selector, "selector") for site_selector in self._site_selector_candidates(page, intent))
+
         if action in {"type", "wait_for"} and any(
             word in lowered for word in ("search", "query", "search bar", "search box")
         ):
             candidates.append(("", "role_searchbox"))
+        if action in {"type", "wait_for"} and intent == "search":
+            candidates.append(("", "role_searchbox"))
+            candidates.extend((generic_selector, "selector") for generic_selector in GENERIC_SEARCH_SELECTORS)
 
         if "google." in url:
             if action == "click" and any(word in lowered for word in ("first result", "search result", "top result", "first link")):
@@ -545,8 +766,7 @@ class BrowserAutomation(BaseTool):
                 return ""
 
     def _screenshot(self, params: dict) -> dict:
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        page = self._page_for_session(session)
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
         screenshot_path = Path(params.get("path") or self._screenshot_path(session.id, "screenshot"))
         screenshot_path.parent.mkdir(parents=True, exist_ok=True)
         page.screenshot(path=str(screenshot_path), full_page=bool(params.get("full_page", False)))
@@ -569,8 +789,7 @@ class BrowserAutomation(BaseTool):
         }
 
     def _get_text(self, params: dict) -> dict:
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        page = self._page_for_session(session)
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
         selector = params.get("selector", "body")
         locator, resolved_selector, strategy = self._resolve_locator(page, selector, "wait_for")
         text = locator.inner_text(timeout=5000)
@@ -631,8 +850,7 @@ class BrowserAutomation(BaseTool):
         }
 
     def _verify(self, params: dict) -> dict:
-        session = SessionRegistry.get(params.get("session_id", "")) if params.get("session_id") else SessionRegistry.latest()
-        page = self._page_for_session(session)
+        session, page = get_browser_page(params.get("session_id", ""), return_session=True)
         condition = str(params.get("condition", "")).strip()
         if not condition:
             return {"status": "error", "error": "condition is required"}
@@ -739,14 +957,15 @@ class BrowserAutomation(BaseTool):
             try:
                 if not page.is_closed():
                     live_pages.append(page)
-            except Exception:
+            except Exception as exc:
+                if is_browser_runtime_error(exc):
+                    restarted_session, restarted_page = restart_browser()
+                    return restarted_page
                 continue
         session.pages = live_pages
         if live_pages:
             return live_pages[-1]
-        page = session.context.new_page()
-        session.pages.append(page)
-        return page
+        return get_browser_page(getattr(session, "id", ""), create_new=True)
 
     def _wait_for_page_settle(self, page: Any) -> None:
         try:
@@ -887,9 +1106,12 @@ class BrowserAutomation(BaseTool):
         if action == "type":
             expected_value = str(step.get("value", step.get("text", "")))
             actual_value = self._read_input_value(page, resolved_selector)
-            validation["value_matches"] = actual_value == expected_value
-            if actual_value != expected_value:
-                return {**validation, "ok": False, "reason": "typed value did not match target field"}
+            expected_prefix = expected_value[:10] if len(expected_value) > 10 else expected_value
+            actual_prefix = actual_value[: len(expected_prefix)] if expected_prefix else actual_value
+            validation["value_matches"] = actual_prefix == expected_prefix
+            validation["verification_prefix"] = expected_prefix
+            if actual_prefix != expected_prefix:
+                return {**validation, "ok": False, "reason": "type verification failed for target field"}
         elif action == "click" and self._click_should_wait_for_change(page, step, resolved_selector):
             changed = validation["url_changed"] or validation["title_changed"] or validation["body_changed"]
             validation["observable_change"] = changed

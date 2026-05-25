@@ -73,6 +73,20 @@ def _browser_wait(parameters: dict[str, Any]) -> tuple[bool, str]:
     return True, ""
 
 
+def _browser_press_key(parameters: dict[str, Any]) -> tuple[bool, str]:
+    key = parameters.get("key", "Enter")
+    if not isinstance(key, str) or not key.strip():
+        return False, "key must be a non-empty string"
+    return True, ""
+
+
+def _browser_wait_for_navigation(parameters: dict[str, Any]) -> tuple[bool, str]:
+    timeout_ms = parameters.get("timeout_ms", parameters.get("timeout", 5000))
+    if not isinstance(timeout_ms, int) or timeout_ms <= 0 or timeout_ms > 30000:
+        return False, "timeout_ms must be an integer between 1 and 30000"
+    return True, ""
+
+
 def _browser_get_text(parameters: dict[str, Any]) -> tuple[bool, str]:
     selector = parameters.get("selector", "body")
     if not isinstance(selector, str) or not selector.strip():
@@ -144,9 +158,15 @@ def _gmail_get_email_body(parameters: dict[str, Any]) -> tuple[bool, str]:
 
 
 def _browser_scroll(parameters: dict[str, Any]) -> tuple[bool, str]:
-    amount = parameters.get("amount", parameters.get("delta_y", 600))
+    if "pixels" in parameters or "direction" in parameters:
+        direction = parameters.get("direction", "down")
+        if direction not in {"up", "down"}:
+            return False, "direction must be 'up' or 'down'"
+        amount = parameters.get("pixels", 500)
+    else:
+        amount = parameters.get("amount", parameters.get("delta_y", 600))
     if not isinstance(amount, int):
-        return False, "amount must be an integer"
+        return False, "amount/pixels must be an integer"
     if abs(amount) > 5000:
         return False, "amount must be between -5000 and 5000"
     return True, ""
@@ -163,8 +183,15 @@ def _file_write(parameters: dict[str, Any]) -> tuple[bool, str]:
         return True, ""
     if not isinstance(parameters.get("content"), str):
         return False, "content must be a string unless template is provided"
-    if not parameters.get("content", "").strip():
+    content = parameters.get("content", "").strip()
+    if not content:
         return False, "content must be a non-empty string unless template is provided"
+    try:
+        minimum_chars = int(parameters.get("minimum_chars", 50))
+    except (TypeError, ValueError):
+        minimum_chars = 50
+    if len(content) < minimum_chars:
+        return False, f"content too short: {len(content)} chars; minimum is {minimum_chars}"
     return True, ""
 
 
@@ -263,7 +290,9 @@ BROWSER_ATOMIC_TOOLS = frozenset(
         "browser_open",
         "browser_click",
         "browser_type",
+        "browser_press_key",
         "browser_wait",
+        "browser_wait_for_navigation",
         "browser_wait_for_element",
         "browser_get_text",
         "browser_get_page_content",
@@ -291,7 +320,9 @@ _CONTRACTS: dict[str, ToolContract] = {
     "browser_open": ToolContract("browser_open", "internet_only", True, _non_empty_string("url")),
     "browser_click": ToolContract("browser_click", "internet_only", True, _browser_click),
     "browser_type": ToolContract("browser_type", "internet_only", True, _browser_type),
+    "browser_press_key": ToolContract("browser_press_key", "internet_only", True, _browser_press_key),
     "browser_wait": ToolContract("browser_wait", "internet_only", True, _browser_wait),
+    "browser_wait_for_navigation": ToolContract("browser_wait_for_navigation", "internet_only", True, _browser_wait_for_navigation),
     "browser_wait_for_element": ToolContract("browser_wait_for_element", "internet_only", True, _browser_wait),
     "browser_get_text": ToolContract("browser_get_text", "internet_only", True, _browser_get_text),
     "browser_get_page_content": ToolContract("browser_get_page_content", "internet_only", True, _browser_get_page_content),
@@ -300,6 +331,7 @@ _CONTRACTS: dict[str, ToolContract] = {
     "browser_close": ToolContract("browser_close", "internet_only", True, _ok),
     "browser_scroll": ToolContract("browser_scroll", "internet_only", True, _browser_scroll),
     "calendar_create_event": ToolContract("calendar_create_event", "internet_only", True, _calendar_create_event),
+    "calendar_create_event_via_browser": ToolContract("calendar_create_event_via_browser", "internet_only", True, _calendar_create_event),
     "calendar_list_events": ToolContract("calendar_list_events", "internet_only", True, _calendar_list_events),
     "excel_create": ToolContract("excel_create", "sandbox_only", True, _excel_data),
     "excel_read": ToolContract("excel_read", "sandbox_only", True, _path_like("path", "file_path")),
@@ -314,7 +346,6 @@ _CONTRACTS: dict[str, ToolContract] = {
     "powershell_run": ToolContract("powershell_run", "restricted", True, _non_empty_string("command")),
     "project": ToolContract("project", "sandbox_only", True, _scaffold),
     "scaffold": ToolContract("scaffold", "sandbox_only", True, _scaffold),
-    "scaffold_engine": ToolContract("scaffold_engine", "sandbox_only", True, _scaffold),
     "server_launch": ToolContract("server_launch", "restricted", True, _server_launch),
     "server_runner": ToolContract("server_runner", "restricted", True, _server_launch),
     "server_status": ToolContract("server_status", "restricted", True, _path_like("project_dir", "path")),
@@ -354,6 +385,11 @@ def validate_capability(tool_name: str, intent_family: str) -> tuple[bool, str]:
     valid, reason = validate_tool_name(tool_name)
     if not valid:
         return valid, reason
+    hybrid_allowed_tools = {
+        "WEB_ACCESS": {"file_write", "excel_create", "excel_write"},
+    }
+    if tool_name in hybrid_allowed_tools.get(intent_family, set()):
+        return True, ""
     capability = REGISTERED_TOOLS[tool_name].capability
     allowed_by_family = {
         "WEB_ACCESS": {"internet_only"},

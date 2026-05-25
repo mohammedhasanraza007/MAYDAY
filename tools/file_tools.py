@@ -102,6 +102,23 @@ class FileTools(BaseTool):
                 'recoverable': True,
                 'next_step': 'Call generate_content first, validate minimum length, then retry file_write with content.',
             }
+        if not used_text_template:
+            try:
+                minimum_chars = int(params.get('minimum_chars', 50))
+            except (TypeError, ValueError):
+                minimum_chars = 50
+            if len(content.strip()) < minimum_chars:
+                return {
+                    'status': 'error',
+                    'state': 'blocked_short_content',
+                    'path': str(p),
+                    'chars_written': 0,
+                    'minimum_chars': minimum_chars,
+                    'actual_chars': len(content.strip()),
+                    'error': f'content too short: {len(content.strip())} chars; minimum is {minimum_chars}. Regenerate complete content before calling file_write.',
+                    'recoverable': True,
+                    'next_step': 'Regenerate complete content that satisfies minimum_chars, then retry file_write.',
+                }
         p.write_text(content, encoding='utf-8')
         if not p.exists():
             raise FileNotFoundError(f'Write verification failed; file missing: {p}')

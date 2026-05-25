@@ -10,6 +10,8 @@ TRANSIENT_MARKERS = (
     "timeout",
     "timed out",
     "target page",
+    "event loop is closed",
+    "playwright has stopped",
     "context or browser has been closed",
     "browser has been closed",
     "page closed",

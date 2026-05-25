@@ -437,7 +437,7 @@ class ModelRouter:
             "Common required fields: file_write path+non-empty content OR path+template; "
             "web_search query; web_fetch url; browser_open url; shell_run command; "
             "browser_get_page_content url; calendar_create_event title+start_datetime (end_datetime optional); "
-            "gmail_get_unread max_results; gmail_get_email_body email_id; scaffold_engine project_name+stack+files.\n"
+            "gmail_get_unread max_results; gmail_get_email_body email_id; scaffold project_name+stack+files.\n"
             "For blank file creation use file_write template one of blank_xlsx, blank_csv, blank_json, blank_txt.\n"
             "For browser page reading use browser_get_page_content(url) or browser_get_text on an opened page. "
             "Do not invent page_fetcher, browser_wait_for, browser_wait_for_selector, browser_check, browser_extract, or browser_act.\n"
@@ -608,7 +608,7 @@ class ModelRouter:
                     tools.append(action_name)
                 
                 # Project creation must use scaffold, project, or file_write tools
-                proj_tools = {"scaffold", "scaffold_engine", "project", "file_write"}
+                proj_tools = {"scaffold", "project", "file_write"}
                 if not tools or not all(isinstance(t, str) and t in proj_tools for t in tools):
                     return False
                     

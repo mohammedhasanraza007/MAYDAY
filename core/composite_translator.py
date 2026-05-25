@@ -29,7 +29,10 @@ STEP_ACTION_TO_TOOL = {
     "navigate": "browser_open",
     "click": "browser_click",
     "type": "browser_type",
+    "press": "browser_press_key",
+    "press_key": "browser_press_key",
     "wait_for": "browser_wait",
+    "wait_for_navigation": "browser_wait_for_navigation",
     "wait_for_element": "browser_wait_for_element",
     "get_text": "browser_get_text",
     "screenshot": "browser_screenshot",
@@ -119,7 +122,7 @@ class CompositeActionTranslator:
 
             if enforce_microstep:
                 first = atomic_tools[0]
-                logger.info("Microstep: decomposed multi_tool_call to single atomic tool: %s", first["tool_name"])
+                logger.info("Microstep: selected first atomic planner action: %s", first["tool_name"])
                 translated = {
                     "action": "tool_call",
                     "tool_name": first["tool_name"],
@@ -208,6 +211,9 @@ class CompositeActionTranslator:
                     params["text"] = str(text) if text else ""
                 else:
                     continue
+            elif tool_name == "browser_press_key":
+                key = step.get("key", "Enter")
+                params["key"] = str(key) if key else "Enter"
             elif tool_name == "browser_wait":
                 selector = step.get("selector", "")
                 if isinstance(selector, str) and selector.strip():
@@ -216,6 +222,9 @@ class CompositeActionTranslator:
                     params["timeout_ms"] = int(timeout) if isinstance(timeout, (int, float)) else 10000
                 else:
                     continue
+            elif tool_name == "browser_wait_for_navigation":
+                timeout = step.get("timeout_ms", step.get("timeout", 5000))
+                params["timeout_ms"] = int(timeout) if isinstance(timeout, (int, float)) else 5000
             elif tool_name == "browser_wait_for_element":
                 selector = step.get("selector", "")
                 if isinstance(selector, str) and selector.strip():

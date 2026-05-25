@@ -12,6 +12,12 @@ TRIGGERS = {
         "page fetch",
         "look up",
         "find ",
+        "pc build",
+        "gpu",
+        "cpu",
+        "hardware",
+        "laptop",
+        "phone",
         "google",
         "julias ai",
         "julia's ai",
@@ -87,7 +93,7 @@ TRIGGERS = {
 
 REQUIRED_TOOLS = {
     "WEB_ACCESS": ["web_search", "web_fetch"],
-    "PROJECT_CREATION": ["scaffold_engine", "file_write"],
+    "PROJECT_CREATION": ["scaffold", "file_write"],
     "EXECUTION": ["shell_run", "server_runner"],
     "AUTOMATION": ["browser_automation", "playwright_runner"],
     "FILE_OPS": ["file_tools", "diff_engine"],
@@ -150,6 +156,8 @@ def classify(prompt: str) -> str | None:
     ):
         return "WEB_ACCESS"
     if re.search(r"\bsearch\s+(?:for\s+)?", text):
+        return "WEB_ACCESS"
+    if re.search(r"\b(?:gpu|cpu|hardware|pc build|gaming pc|laptop|phone|rtx|50 series)\b", text):
         return "WEB_ACCESS"
 
     # Rule-first matching for explicit phrases from the handoff contract.

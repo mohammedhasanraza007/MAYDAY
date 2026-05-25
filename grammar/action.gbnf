@@ -17,7 +17,9 @@ tool-name ::=
   "\"browser_open\"" |
   "\"browser_click\"" |
   "\"browser_type\"" |
+  "\"browser_press_key\"" |
   "\"browser_wait\"" |
+  "\"browser_wait_for_navigation\"" |
   "\"browser_wait_for_element\"" |
   "\"browser_get_text\"" |
   "\"browser_get_page_content\"" |
@@ -40,7 +42,6 @@ tool-name ::=
   "\"powershell_run\"" |
   "\"project\"" |
   "\"scaffold\"" |
-  "\"scaffold_engine\"" |
   "\"server_launch\"" |
   "\"server_runner\"" |
   "\"server_status\"" |

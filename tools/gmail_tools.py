@@ -1,9 +1,18 @@
 from __future__ import annotations
 
 import base64
+import json
+import logging
+import time
 from typing import Any
+from urllib.parse import quote
 
 from tools.base_tool import BaseTool
+from integrations.google_auth import OAUTH_SETUP_INSTRUCTIONS
+from tools.browser_manager import get_browser_page
+
+
+logger = logging.getLogger("mayday.tools.gmail")
 
 
 class GmailTools(BaseTool):
@@ -30,7 +39,10 @@ class GmailTools(BaseTool):
         from googleapiclient.discovery import build
         from integrations.google_auth import get_google_credentials
 
-        return build("gmail", "v1", credentials=get_google_credentials())
+        creds = get_google_credentials()
+        if creds is None:
+            return None
+        return build("gmail", "v1", credentials=creds)
 
     def _get_unread(self, params: dict[str, Any]) -> dict:
         try:
@@ -43,6 +55,12 @@ class GmailTools(BaseTool):
                 query += f" subject:{subject_filter}"
 
             service = self._service()
+            if service is None:
+                logger.info("OAuth not set up. Falling back to browser Gmail.")
+                return gmail_get_unread_via_browser(
+                    int(params.get("max_results", 10)),
+                    sender_filter,
+                )
             result = service.users().messages().list(
                 userId="me",
                 q=query,
@@ -84,11 +102,23 @@ class GmailTools(BaseTool):
                 ),
             }
         except Exception as exc:
-            return {"status": "error", "error": str(exc), "recoverable": False}
+            logger.info("Gmail API error on first attempt. Falling back to browser Gmail: %s", exc)
+            return gmail_get_unread_via_browser(
+                int(params.get("max_results", 10)),
+                str(params.get("sender_filter", "")).strip(),
+                oauth_error=str(exc),
+            )
 
     def _get_email_body(self, params: dict[str, Any]) -> dict:
         try:
-            detail = self._service().users().messages().get(
+            service = self._service()
+            if service is None:
+                return gmail_get_unread_via_browser(
+                    10,
+                    "",
+                    oauth_error="OAuth credentials unavailable for gmail_get_email_body",
+                )
+            detail = service.users().messages().get(
                 userId="me",
                 id=str(params.get("email_id", "")),
                 format="full",
@@ -117,3 +147,57 @@ class GmailTools(BaseTool):
                 if text:
                     return text
         return ""
+
+
+def gmail_get_unread_via_browser(
+    max_results: int = 10,
+    sender_filter: str = "",
+    oauth_error: str = "",
+) -> dict:
+    url = (
+        "https://mail.google.com/mail/u/0/#search/from:" + quote(sender_filter)
+        if sender_filter
+        else "https://mail.google.com/mail/u/0/#inbox"
+    )
+    session_id = ""
+    title = "Gmail"
+    page_url = url
+    content = "Gmail opened in browser fallback. Sign in if prompted, then review the inbox."
+    browser = "playwright"
+    try:
+        session, page = get_browser_page(create_new=False, return_session=True)
+        session_id = session.id
+        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+        time.sleep(2)
+        page_url = page.url
+        title = page.title()
+        try:
+            content = page.inner_text("body", timeout=5000)
+        except Exception as exc:
+            content = f"Gmail opened in browser, but visible text could not be read yet: {exc}"
+    except Exception as exc:
+        import webbrowser
+
+        logger.info("Playwright Gmail fallback failed; opening system browser: %s", exc)
+        webbrowser.open(url)
+        browser = "system_default"
+        oauth_error = oauth_error or str(exc)
+    result = {
+        "status": "success",
+        "source": "browser_fallback",
+        "browser": browser,
+        "session_id": session_id,
+        "url": page_url,
+        "title": title,
+        "content": content[:4000],
+        "max_results": max_results,
+        "note": "Retrieved via browser fallback. Set up OAuth for API access.\n" + OAUTH_SETUP_INSTRUCTIONS,
+        "oauth_error": oauth_error,
+        "ready": True,
+        "next_step": "Tell the user Gmail opened in the browser and show the OAuth setup instructions.",
+    }
+    logger.info(
+        "TOOL-RESULT: tool=gmail_get_unread_via_browser status=success result=%s",
+        json.dumps(result, sort_keys=True, default=str)[:800],
+    )
+    return result
