@@ -1,171 +1,76 @@
-# 🌌 M.A.Y.D.A.Y v5.0 — Offline-First Autonomous AI Software Factory
+🌌 M.A.Y.D.A.Y — Modular Agentic Yield & Desktop Automation Yard
 
 [![Local GGUF CPU](https://img.shields.io/badge/Model-Local%20GGUF%20CPU-blueviolet?style=for-the-badge)](#local-inference-layer)
 [![PyQt6 Desktop Interface](https://img.shields.io/badge/GUI-PyQt6%20Desktop-blue?style=for-the-badge)](#desktop-gui-workspace)
-[![Playwright Automation](https://img.shields.io/badge/Automation-Playwright-orange?style=for-the-badge)](#web-browser-automation)
-[![No-Mocks Security Guard](https://img.shields.io/badge/Execution-No--Mocks%20Verified-red?style=for-the-badge)](#safety-gateway--permission-controls)
+[![Playwright Automation](https://img.shields.io/badge/Automation-Playwright-orange?style=for-the-badge)](#browser-automation)
+[![No-Mocks Safety Guard](https://img.shields.io/badge/Execution-Safety%20Gated-red?style=for-the-badge)](#safety-gateway--permission-controls)
 [![License MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](#license)
 
-M.A.Y.D.A.Y (Modular Agentic Yield & Desktop Automation Yard) is a premium, offline-first autonomous software engineering factory and system automation workbench. Running locally on consumer hardware, Mayday utilizes CPU-quantized GGUF models (`Qwen2.5-Coder`) and a modular PyQt6 presentation workspace to convert natural language objectives into physical, verified actions on your local operating system.
+M.A.Y.D.A.Y (Modular Agentic Yield & Desktop Automation Yard) is an offline-first autonomous software engineering agent and system automation workbench. Running locally on consumer hardware, Mayday uses CPU-quantized GGUF models (`Qwen2.5-Coder`) and a modular PyQt6 desktop workspace to convert natural language objectives into physical, verified actions on your local operating system.
 
-Unlike chat-based LLM interfaces that return static markdown code blocks, Mayday operates within a strict **Observe-Act-Verify** loop. The agent possesses direct tool access to write, patch, and execute source code; automate browser interactions (form filling, website clicking, and media play); manage local development web servers; and perform desktop-level coordinates clicking, keyboard typing, and spreadsheet manipulations. All execution runs under a robust, user-gated safety approval dialog.
+Unlike chat-based LLM interfaces that return static markdown code blocks, Mayday operates within a strict **Observe → Act → Verify** loop. The agent has direct tool access to write, patch, and execute source code; automate browser interactions; manage local web servers; and perform desktop-level clicks, keyboard input, and file manipulations. All execution runs under a robust, user-gated safety approval dialog.
 
 ---
 
 ## 📸 Presentation & Live Execution Gallery
 
-Every image listed below is a real, un-mocked screenshot captured from the active PyQt6 application and browser automation windows during the live execution of the Mayday test suite:
+Every image below is a real screenshot captured from the active PyQt6 application and browser automation windows during live execution of the Mayday test suite.
 
 ### 1. Application Startup & Verification
-The initial desktop interface, verifying loading configurations, active local model tiers, system RAM monitors, and service status.
-![Application Startup Proof]<img width="1500" height="1000" alt="startup-proof" src="https://github.com/user-attachments/assets/3ed5177f-03e6-490d-a7a5-0b84276424ad" />
+The initial desktop interface verifying loaded configurations, active local model tiers, system RAM monitors, and service status.
+<img width="3072" height="1728" alt="startup-proof" src="https://github.com/user-attachments/assets/53b34fe9-515b-4e20-9a6e-949ca6d75802" />
 
 
 ### 2. Home Screen
 The clean, modern PyQt6 chat workspace showing the primary prompt input and the model integration status bar.
-![Home Screen]<img width="1200" height="800" alt="home-screen" src="https://github.com/user-attachments/assets/5ac314ea-7e37-43e7-89ef-2a6cbedb401a" />
+
+<img width="3072" height="1728" alt="main-window" src="https://github.com/user-attachments/assets/4945938d-6552-4af5-9b57-448a4e2f9786" />
 
 
-### 3. Task Planning
-The orchestrator in action, receiving a natural language instruction and compiling a structured execution plan.
-![Task Planning]<img width="1200" height="800" alt="task-planning" src="https://github.com/user-attachments/assets/20b04196-6b74-4eca-b77c-c1e9d372d9dc" />
+### 3. Browser Automation Driver
+The Playwright driver executing atomic browser operations, highlighting DOM elements and performing page interactions.
+
+<img width="3072" height="1728" alt="browser-test" src="https://github.com/user-attachments/assets/da0c8829-9f93-4fff-9eb8-b5b5a260f7b6" />
+
+### 4. Calculator Generation — Result
+The dark-themed glassmorphic calculator rendered live in a local browser session.
+<img width="552" height="725" alt="image" src="https://github.com/user-attachments/assets/5e2088f1-c257-4105-bdc3-6b883d195fc0" />
 
 
-### 4. Tool Execution & Console stdout
-A live look at the agent invoking a system tool and returning stdout directly to the integrated Terminal panel.
-![Tool Execution]<img width="1200" height="800" alt="task-planning" src="https://github.com/user-attachments/assets/e0eb8675-0c8a-4651-813f-e69f74657952" />
+### 5. Game Generation — Result
+The neon-styled Tic-Tac-Toe game scaffolded, hosted, and verified by Mayday in a live browser session.
 
-
-### 5. File Operations Explorer
-Visual verification of the file explorer tree, tracking modified codebases and assets generated by the agent.
-![File Operations]<img width="1200" height="800" alt="file-operations" src="https://github.com/user-attachments/assets/f5d54420-79ec-49e2-ba6f-d6dc00d5d718" />
-
-
-### 6. Playwright Browser Automation Driver
-The Playwright driver executing atomic browser operations, highlighting DOM elements and filling inputs.
-![Browser Automation]<img width="800" height="600" alt="youtube-interaction" src="https://github.com/user-attachments/assets/19c0f991-5904-4537-84cd-0be72201e03f" />
-
-
-### 7. Link Opening & Navigation Check
-Real-time navigation to external webpages to fetch data and verify web content structures.
-![Link Opening]<img width="800" height="600" alt="link-opening" src="https://github.com/user-attachments/assets/ee067fad-cc33-4c5e-92f2-c40d4f6ec471" />
-
-
-### 8. YouTube Media Search & Interaction
-Autonomous multimedia control showing YouTube navigation, input query searching, and video playback.
-![YouTube Interaction Result]<img width="3858" height="2178" alt="youtube-result" src="https://github.com/user-attachments/assets/e60d58fd-87f8-4467-b2da-7e62f390dc26" />
-
-
-### 9. Calculator Generation
-The output of a generated modern, dark-themed glassmorphic calculator rendering in a local browser session.
-![Calculator Generation Result]<img width="800" height="600" alt="browser-automation" src="https://github.com/user-attachments/assets/06b1c3b6-1506-49d5-a14e-8fa7df5a8066" />
-
-
-### 10. Game Generation
-Visual proof of the neon-styled Tic-Tac-Toe Arena game designed, scaffolded, and hosted by Mayday.
-![Game Generation Result]<img width="800" height="600" alt="mini-game" src="https://github.com/user-attachments/assets/08e696e1-4268-485f-a8e3-71f7ca1468ed" />
-
-
-### 11. Code Generation Response
-Synthesized python scripts displayed in the conversational panel with standard formatting and syntax highlighting.
-![Code Generation]<img width="1200" height="800" alt="code-generation" src="https://github.com/user-attachments/assets/931abd0c-34a0-458c-8f99-14de69739ab6" />
-
-
-### 12. Task Completion & Shutdown Verify
-The final state of an execution workflow showing success verification traces, file logs, and idle status.
-![Task Completion]<img width="1200" height="800" alt="task-completion" src="https://github.com/user-attachments/assets/66e9e0e8-1932-4a3e-94d9-d90e38a718aa" />
-
-
-### 13. System Dashboard Telemetry
-Telemetrics display showing real-time memory usage (RSS), model backend tiers, execution status, and threading stats.
-![Final System Dashboard]<img width="3858" height="2178" alt="final-dashboard" src="https://github.com/user-attachments/assets/3048c3d7-101f-47ec-bf3f-5f5db0f4c24b" />
-
-
-### 14. Workspace Panel Index
-Below are additional screenshots showing individual PyQt6 workspace view panels captured during initialization:
-* **Chat Workspace**: ![Chat Panel]<img width="1500" height="1000" alt="panel-chat" src="https://github.com/user-attachments/assets/918a1c57-254d-42cc-8cb0-799343f7bb76" />
-
-* **Agent Stream**: ![Agent Stream Panel]<img width="1500" height="1000" alt="panel-agentstream" src="https://github.com/user-attachments/assets/612893d2-6062-4d35-bfc4-886686721115" />
-
-* **Integrated Terminal**: ![Terminal Panel]<img width="1500" height="1000" alt="panel-terminal" src="https://github.com/user-attachments/assets/b1db1a3b-b4ba-4ac3-b1f9-041d94b14eb9" />
-
-* **Files Directory**: ![Files Panel]<img width="1500" height="1000" alt="panel-files" src="https://github.com/user-attachments/assets/456c897c-8162-4f64-b180-7bfea60f0d89" />
-
-* **Models Manager**: ![Models Panel]<img width="1500" height="1000" alt="panel-models" src="https://github.com/user-attachments/assets/dbaf987f-ff23-49bb-80ad-3f4074ef17be" />
-
-* **API Credentials Manager**: ![API Panel]<img width="1500" height="1000" alt="panel-api" src="https://github.com/user-attachments/assets/1aaf5fe8-09fd-4662-aa62-cf5626ed4740" />
-
-* **Skill Integration Registry**: ![Skills Panel]<img width="1500" height="1000" alt="panel-skills" src="https://github.com/user-attachments/assets/fb6085e7-5d3c-4f43-ba71-c3e9a9773172" />
-
-* **System Event Logs**: ![Logs Panel]<img width="1500" height="1000" alt="panel-logs" src="https://github.com/user-attachments/assets/8fce4bd7-64a3-4579-bf8d-eb0070665f1a" />
-
-* **Dashboard Monitor**: ![Dashboard Panel]<img width="1500" height="1000" alt="panel-dashboard" src="https://github.com/user-attachments/assets/837482f6-b095-43fd-b509-4be575a06182" />
+<img width="800" height="600" alt="game" src="https://github.com/user-attachments/assets/04c9cb34-1649-465d-8cd4-06aad6e9acde" />
 
 
 ---
 
-### 🧪 Interaction & Execution Test Trace Outputs
+## 🧪 Interaction & Execution Test Trace Outputs
 
-Below are the request and execution stages captured during live interactive test tasks:
+Below are the request and execution stages captured during live interactive test tasks.
 
-#### Test 1: Simple task response
-* **Input Request**: Hello, what can you do?
-* **Request Capture**: ![Simple Task Request]<img width="1500" height="1000" alt="simple-task-before" src="https://github.com/user-attachments/assets/1551c85c-dead-4db0-ab6a-ac45cb4c7e16" />
+#### Test 1: File creation
+* **Input Request**: Create a file called `test.txt` with `hello world`
+* **Request & Execution**: <img width="1400" height="787" alt="file-operation" src="images/file-operation.png" />
+* **Result Screenshot**: <img width="1400" height="787" alt="file-operation-response" src="images/file-operation-response.png" />
 
-* **Execution Result**: ![Simple Task Response]<img width="1500" height="1000" alt="simple-task-response" src="https://github.com/user-attachments/assets/5551e012-ee3f-405a-95c1-b23fbf2dcf08" />
+#### Test 2: Browser navigation
+* **Input Request**: Open `https://www.wikipedia.org`
+* **Execution Screenshot**: <img width="1400" height="787" alt="browser-test" src="images/browser-test.png" />
 
+#### Test 3: Calculator creation
+* **Input Request**: Create a simple calculator in `projects/calc`
+* **Request Capture**: <img width="3086" height="1742" alt="calculator-request" src="https://github.com/user-attachments/assets/6c675695-6b4c-4025-83d8-d59cfa43c8aa" />
 
-#### Test 2: Website content navigation
-* **Input Request**: Open https://www.wikipedia.org
-* **Request Capture**: ![Open Website Request]<img width="1500" height="1000" alt="open-website-request" src="https://github.com/user-attachments/assets/cfb1fc9f-66e6-4dfb-b149-b78600aa1072" />
+* **Execution Screenshot**: <img width="3072" height="1728" alt="file-operation-response" src="https://github.com/user-attachments/assets/8cb072c3-e010-483c-b6d0-0aa6e582fcef" />
 
-* **Execution Screenshot**: ![Open Website Execution]<img width="1500" height="1000" alt="open-website-execution" src="https://github.com/user-attachments/assets/d59dbb24-6f6b-44bf-b6ac-68f8c5bc2d86" />
-
-* **Result Screenshot**: ![Open Website Result]<img width="3858" height="2178" alt="open-website-result" src="https://github.com/user-attachments/assets/71c6ee79-154e-49dc-9678-0dced46390fd" />
-
-
-#### Test 3: YouTube media search
-* **Input Request**: Open YouTube and search for Python tutorial
-* **Request Capture**: ![YouTube Request]<img width="3858" height="2178" alt="youtube-request" src="https://github.com/user-attachments/assets/4f97c747-d13a-4ec2-b471-ef01152db253" />
-
-* **Execution Screenshot**: ![YouTube Execution]<img width="3858" height="2178" alt="youtube-execution" src="https://github.com/user-attachments/assets/d1440a62-4273-4863-8231-81c9772c67fa" />
-
-* **Result Screenshot**: ![YouTube Result]<img width="3858" height="2178" alt="youtube-result" src="https://github.com/user-attachments/assets/a3774931-45a2-40a4-9601-dd8ca6f440c9" />
+* **Result Screenshot**: <img width="552" height="725" alt="image" src="https://github.com/user-attachments/assets/fcdea949-d786-44b0-be7d-43c05daeec1d" />
 
 
-#### Test 4: Calculator creation
-* **Input Request**: Create a simple calculator in projects/calc
-* **Request Capture**: ![Calculator Request]<img width="3858" height="2178" alt="calculator-request" src="https://github.com/user-attachments/assets/757ce95b-d1d4-4640-9832-04d1c29f7433" />
 
-* **Execution Screenshot**: ![Calculator Generation]<img width="3858" height="2178" alt="calculator-generation" src="https://github.com/user-attachments/assets/ce887605-c401-4d54-af82-abe47db12ba5" />
-
-* **Result Screenshot**: ![Calculator Result]<img width="800" height="600" alt="calculator-app" src="https://github.com/user-attachments/assets/87c1f047-475f-4571-991b-c4275955a372" />
-
-#### Test 5: Game creation
-* **Input Request**: Create a tic-tac-toe game in projects/game
-* **Request Capture**: ![Game Request]<img width="3858" height="2178" alt="game-request" src="https://github.com/user-attachments/assets/51dbda38-d693-4cee-b781-5a75c6790ff1" />
-
-* **Execution Screenshot**: ![Game Generation]<img width="3858" height="2178" alt="game-generation" src="https://github.com/user-attachments/assets/1636696a-5410-4424-b2dc-0a43fbef487a" />
-
-* **Result Screenshot**: ![Game Result]<img width="3858" height="2178" alt="game-result" src="https://github.com/user-attachments/assets/67a7624b-2b89-4732-8815-40803d157848" />
-
-
-#### Test 6: File operations
-* **Input Request**: Create a file called test.txt with hello world
-* **Request & File Creation**: ![File Request]<img width="3858" height="2178" alt="file-request" src="https://github.com/user-attachments/assets/8b1de11d-921b-4315-bd9d-5c457d9dadff" />
-
-* **Execution Screenshot**: ![File Execution]<img width="3858" height="2178" alt="file-execution" src="https://github.com/user-attachments/assets/b311fd0d-84cb-49b0-9e2f-d7ad7cbf637c" />
-
-* **Result Screenshot**: ![File Result]<img width="3858" height="2178" alt="file-result" src="https://github.com/user-attachments/assets/492a349b-5e83-4c6e-bb44-5bbb2c8d13c1" />
-
-
-#### Test 7: Multi-step autonomous task
-* **Input Request**: Search for Python 3.13 release date and write the result to a file
-* **Request Capture**: ![Autonomous Request]<img width="3858" height="2178" alt="autonomous-request" src="https://github.com/user-attachments/assets/5660e747-d3a4-487a-ae93-c188acca660f" />
-
-* **Execution Screenshot**: ![Autonomous Execution]<img width="3858" height="2178" alt="autonomous-execution" src="https://github.com/user-attachments/assets/0227d5e1-5ebf-4f7c-af6e-bde7f6e346e2" />
-
-* **Result Screenshot**: ![Autonomous Result]<img width="3858" height="2178" alt="autonomous-result" src="https://github.com/user-attachments/assets/f7f0d4de-6493-4f69-a49d-289c748e3e01" />
+#### Test 4: Game creation
+* **Input Request**: Create a Tic-Tac-Toe game in `projects/game`
+* **Result Screenshot**: <img width="800" height="600" alt="game" src="https://github.com/user-attachments/assets/eb899db0-12a8-4e4b-9f0d-47387f032b0a" />
 
 
 
@@ -173,53 +78,52 @@ Below are the request and execution stages captured during live interactive test
 
 ## 📋 Capability & Tool Registry Matrix
 
-Mayday's features are strictly verified on disk and in memory. The table below maps each domain capability directly to its backend implementation:
+Mayday's features are verified on disk and in memory. The table below maps each domain capability to its backend implementation.
 
-| Functional Domain | Registered Tool | Implementation Code | Python Dependencies | Capability Description |
+| Functional Domain | Registered Tool | Implementation | Python Dependencies | Capability Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **Web Automation** | `browser_*` | [`tools/browser_tools.py`](file:///e:/MAYDAY/tools/browser_tools.py) | `playwright` (Sync API) | Navigates URLs, clicks selectors, types input values, triggers keypresses, scrolls pages, captures page screenshots, and extracts inner text/HTML elements. |
-| **Desktop Automation** | `system_*` | [`tools/system_tools.py`](file:///e:/MAYDAY/tools/system_tools.py) | `pyautogui`, `pywinauto`, `psutil` | Performs OS-level coordinates clicking, types keyboard events, presses key combinations (Alt+Tab, Ctrl+C), captures full desktop snapshots, and lists active process metadata. |
-| **Office Operations** | `excel_*` | [`tools/excel_tools.py`](file:///e:/MAYDAY/tools/excel_tools.py) | `pandas`, `openpyxl` | Generates `.xlsx` spreadsheet files from tabular JSON data, reads worksheets, and appends cell ranges to existing structures. |
-| **Code Generation** | `scaffold`, `project` | [`runtime/scaffold_engine.py`](file:///e:/MAYDAY/runtime/scaffold_engine.py) | Stdlib `os`, `pathlib` | Scaffolds directory layouts and generates template codebases for modern stacks (FastAPI, Flask, Static HTML/JS/CSS). |
-| **Preview Hosting** | `server_*` | [`runtime/server_runner.py`](file:///e:/MAYDAY/runtime/server_runner.py) | `subprocess`, `socket`, `httpx` | Detects open system ports dynamically, launches web servers, monitors process health, and pings until HTTP 200 is verified. |
-| **File Manipulation** | `file_*` | [`tools/file_tools.py`](file:///e:/MAYDAY/tools/file_tools.py) | Stdlib `os`, `pathlib` | Writes text, reads paths, deletes files, lists directories, and performs line-by-line insertions or block replacements. |
-| **Shell Access** | `shell_run`, `powershell_*` | [`tools/shell_tools.py`](file:///e:/MAYDAY/tools/shell_tools.py) | Stdlib `subprocess` | Runs safe system subprocesses under cmd or PowerShell with custom timeouts (default 30s) and captures stdout/stderr. |
-| **Communications** | `gmail_*`, `calendar_*` | [`tools/gmail_tools.py`](file:///e:/MAYDAY/tools/gmail_tools.py) | `google-api-python-client` | Lists unread email headers, extracts body contents, and schedules calendar events (falls back to browser automation on OAuth blocks). |
+| **Web Automation** | `browser_*` | `tools/browser_tools.py` | `playwright` (Sync API) | Navigates URLs, clicks selectors, types input values, triggers keypresses, scrolls pages, captures screenshots, and extracts inner text/HTML elements. |
+| **Desktop Automation** | `system_*` | `tools/system_tools.py` | `pyautogui`, `pywinauto`, `psutil` | OS-level coordinate clicking, keyboard events, key combinations (Alt+Tab, Ctrl+C), full desktop snapshots, and active process listing. |
+| **Office Operations** | `excel_*` | `tools/excel_tools.py` | `pandas`, `openpyxl` | Generates `.xlsx` spreadsheet files from tabular JSON data, reads worksheets, and appends cell ranges to existing structures. |
+| **Code Generation** | `scaffold`, `project` | `runtime/scaffold_engine.py` | `os`, `pathlib` | Scaffolds directory layouts and generates template codebases for modern stacks (FastAPI, Flask, Static HTML/JS/CSS). |
+| **Preview Hosting** | `server_*` | `runtime/server_runner.py` | `subprocess`, `socket`, `httpx` | Detects open system ports dynamically, launches web servers, monitors process health, and pings until HTTP 200 is verified. |
+| **File Manipulation** | `file_*` | `tools/file_tools.py` | `os`, `pathlib` | Writes text, reads paths, deletes files, lists directories, and performs line-by-line insertions or block replacements. |
+| **Shell Access** | `shell_run`, `powershell_*` | `tools/shell_tools.py` | `subprocess` | Runs safe system subprocesses under `cmd` or PowerShell with custom timeouts (default 30s) and captures stdout/stderr. |
+| **Communications** | `gmail_*`, `calendar_*` | `tools/gmail_tools.py` | `google-api-python-client` | Lists unread email headers, extracts body contents, and schedules calendar events. |
 
 ---
 
-## ⚙️ Architectural Blueprint
+## ⚙️ Architectural Diagrams
 
-Mayday separates user interaction, model reasoning, action permissions, and tool execution into distinct system layers:
+Mayday separates user interaction, model reasoning, action permissions, and tool execution into distinct system layers.
 
 ### 1. Modular System Architecture
-The relationship between PyQt6 presentation widgets, the central Orchestrator loop, GBNF action constraints, safety gates, and local GGUF/API models:
-![System Architecture]<img width="800" height="500" alt="architecture" src="https://github.com/user-attachments/assets/cf08df8c-9410-4dc0-b8b1-6285ecaf7b5e" />
+The relationship between PyQt6 presentation widgets, the central Orchestrator loop, GBNF action constraints, safety gates, and local GGUF/API models.
+
+<img width="800" height="500" alt="architecture" src="https://github.com/user-attachments/assets/a772c89c-0097-45ad-8004-cbdf7058676e" />
 
 
-### 2. Closed-Loop Agent Workflow
-The loop showing how user instructions are routed, formatted with GBNF rules, validated by safety gates, executed locally, and physically verified:
-![Agent Workflow]<img width="800" height="500" alt="agent-workflow" src="https://github.com/user-attachments/assets/2395007e-fa15-40de-be99-56ff444ec8f7" />
+### 2. Tool Pipeline Execution
+The process a tool payload traverses, from schema validation through thread dispatch to environment state verification.
+
+<img width="800" height="500" alt="tool exc pipline" src="https://github.com/user-attachments/assets/7201b8f8-4113-4e3c-83e2-72abbeee2fd2" />
 
 
-### 3. Tool Pipeline Execution
-The process a tool payload traverses, from schema validation to thread dispatch and environment state verification:
-![Tool Pipeline]<img width="800" height="500" alt="tool-pipeline" src="https://github.com/user-attachments/assets/2c255617-5afb-407f-88b4-081c8ed0fdc3" />
+### 3. Memory and Context Flow
+The three-tier memory architecture that routes tokens through working memory, context summaries, and disk-archived episodes.
 
-
-### 4. Memory and Context Flow
-The three-tier memory architecture that routes tokens through working memory, context summaries, and disk-archived episodes:
-![Memory Flow]<img width="800" height="500" alt="memory-flow" src="https://github.com/user-attachments/assets/f5f50c30-56e1-4a90-bdfa-9c069497db5d" />
+<img width="800" height="500" alt="memory and context flow" src="https://github.com/user-attachments/assets/419771c7-6d06-49ec-a780-7c45724d8824" />
 
 
 ---
 
 ## 🚀 Installation & Quick Start
 
-Mayday is built to run on Windows systems. Ensure Python 3.10+ is installed on your system path.
+Mayday is built to run on Windows systems. Ensure Python 3.10+ is installed and on your system path.
 
 ### 1. One-Click Bootstrap
-The recommended installation method is using the self-healing bootstrap batch script located in the repository root. This script auto-detects system paths, creates a virtual environment, installs dependencies, and downloads model weights:
+The recommended method uses the self-healing bootstrap batch script in the repository root. It auto-detects system paths, creates a virtual environment, installs dependencies, and downloads model weights.
+
 ```powershell
 .\build.bat
 ```
@@ -243,13 +147,15 @@ python -m playwright install chromium
 ```
 
 ### 3. Verification Launch
-Validate that the local GGUF weights load into memory and run inference successfully:
+Validate that local GGUF weights load into memory and run inference successfully:
+
 ```powershell
 .venv\Scripts\python.exe main.py --verify
 ```
 
 ### 4. Standard GUI Launch
 Run the primary PyQt6 desktop workspace:
+
 ```powershell
 .venv\Scripts\python.exe main.py
 ```
@@ -258,78 +164,82 @@ Run the primary PyQt6 desktop workspace:
 
 ## 🛠️ Configuration & Environment Variables
 
-System parameters can be controlled through environment variables or configured in the **API** tab of the dashboard:
+System parameters are controlled through environment variables or configured in the **API** tab of the dashboard.
 
-| Environment Variable | Supported Options | Default Value | Functional Impact |
+| Environment Variable | Supported Values | Default | Functional Impact |
 | :--- | :--- | :--- | :--- |
-| `MAYDAY_SAFE_MODE` | `0` or `1` | `0` | If set to `1`, skips loading GGUF weight files into system RAM and boots directly into lightweight API fallback state. |
-| `MAYDAY_BROWSER_HEADLESS` | `true` or `false` | `false` | Instructs the Playwright driver to run headless (invisible background process) or headful (visible browser window). |
-| `MAYDAY_BROWSER_EXECUTABLE` | Absolute Path | Auto-detected | Forces Playwright to use a specific browser binary path (e.g. Chrome, Brave, Edge) instead of packaged Chromium. |
-| `MAYDAY_ROOT` | Absolute Path | Directory of `build.bat` | Establishes the base directory path for file resolution patterns, preventing absolute path hardcoding. |
-| `MAYDAY_ACTION_MAX_TOKENS` | Integer | `200` | Limits model token generation length during action execution mode to prevent text filler. |
+| `MAYDAY_SAFE_MODE` | `0` or `1` | `0` | When `1`, skips GGUF weight loading and boots into lightweight API fallback state. |
+| `MAYDAY_BROWSER_HEADLESS` | `true` or `false` | `false` | Runs the Playwright driver headless (invisible) or headful (visible browser window). |
+| `MAYDAY_BROWSER_EXECUTABLE` | Absolute path | Auto-detected | Forces Playwright to use a specific browser binary (Chrome, Brave, Edge) instead of packaged Chromium. |
+| `MAYDAY_ROOT` | Absolute path | Directory of `build.bat` | Establishes the base directory for file resolution patterns, preventing absolute path hardcoding. |
+| `MAYDAY_ACTION_MAX_TOKENS` | Integer | `200` | Limits model token generation per action step to prevent text filler in structured outputs. |
 
 ---
 
 ## 🔒 Safety Gateway & Permission Controls
 
-Security is a primary concern for local agents with access to file manipulation and terminal command execution. Mayday enforces safety using a classification-based authorization grid and a GUI gateway prompt.
+Security is a primary concern for a local agent with file manipulation and terminal access. Mayday enforces safety through a classification-based authorization grid and a GUI gateway prompt.
 
-### 1. Capabilities Classifications
-Tools are assigned capabilities in [`runtime/execution_registry.py`](file:///e:/MAYDAY/runtime/execution_registry.py):
-*   **safe**: Non-destructive operations (e.g., `file_read`, `web_search`, `system_info`). Executed immediately.
-*   **restricted**: Destructive or system-mutating operations (e.g., `shell_run`, `file_delete`, `powershell_run`, `system_click`).
-*   **sandbox_only**: Operations restricted to the project output directories.
+### 1. Capability Classifications
+Tools are assigned capability levels in `runtime/execution_registry.py`:
+
+*   **safe** — Non-destructive operations (`file_read`, `web_search`, `system_info`). Executed immediately without prompting.
+*   **restricted** — Destructive or system-mutating operations (`shell_run`, `file_delete`, `powershell_run`, `system_click`). Require explicit approval.
+*   **sandbox_only** — Operations restricted to the `projects/` output directory.
 
 ### 2. Safety Permission Prompt
-When a tool labeled as **restricted** is invoked, the execution loop pauses. The PyQt6 thread intercepts the action and displays a graphical gateway block:
+When a **restricted** tool is invoked, the execution loop pauses. The PyQt6 thread intercepts the action and displays a graphical gateway dialog:
 
-*   **Allow**: Executes the current step.
-*   **Allow Always**: Grants execution permissions to this specific tool for the rest of the current session.
-*   **Deny**: Aborts the step and returns a cancellation error message, forcing the model to adapt its plan.
+*   **Allow** — Executes the current step only.
+*   **Allow Always** — Grants execution permission for this specific tool for the remainder of the current session.
+*   **Deny** — Aborts the step, returns a cancellation error, and forces the model to replan.
 
 ---
 
 ## 🧠 Reasoning & GBNF Grammar Controls
 
-To eliminate parsing failures common in local inference models, Mayday forces output formatting using context-free grammars.
+To eliminate JSON parsing failures common in locally quantized models, Mayday forces output formatting using context-free grammars.
 
 ### 1. Intent Router Pre-Classification
-Before invoking the model context, the query is passed to `core/intent_router.py`. The router uses keyword rules to classify queries:
+Before invoking the model, `core/intent_router.py` classifies the query using keyword rules into one of four categories:
+
 *   `PROJECT_CREATION`
 *   `EXECUTION_COMMANDS`
 *   `AUTOMATION_COMMANDS`
 *   `FILE_OPERATIONS`
 
-This pre-classification determines which subset of system tools are registered for the current task and selects the appropriate system prompt.
+This pre-classification selects the correct subset of system tools and the appropriate system prompt for the current task.
 
 ### 2. GBNF Action Grammar (`grammar/action.gbnf`)
-When executing tasks, Mayday forces the model to output a single JSON block matching a precise schema. This is achieved by loading a GBNF grammar definition during inference:
+During task execution, Mayday forces the model to output a single JSON block matching a precise schema. This is achieved by loading a GBNF grammar definition at inference time:
+
 ```gbnf
 root ::= ws action ws
 ws ::= [ \t\n\r]*
 action ::= tool-call | multi-call | respond-action
-tool-call ::= "{" ws "\\"action\\"" ws ":" ws "\\"tool_call\\"" ws "," ws "\\"tool_name\\"" ws ":" ws tool-name ws "," ws "\\"parameters\\"" ws ":" ws object ws "}"
-tool-name ::= "\\"browser_open\\"" | "\\"browser_click\\"" | "\\"file_write\\"" | "\\"shell_run\\"" | "\\"server_launch\\""
+tool-call ::= "{" ws "\"action\"" ws ":" ws "\"tool_call\"" ws "," ws "\"tool_name\"" ws ":" ws tool-name ws "," ws "\"parameters\"" ws ":" ws object ws "}"
+tool-name ::= "\"browser_open\"" | "\"browser_click\"" | "\"file_write\"" | "\"shell_run\"" | "\"server_launch\""
 ```
-By restricting model decoding to this grammar, parsing errors are eliminated.
+
+By constraining model decoding to this grammar, JSON parsing errors are eliminated entirely.
 
 ---
 
 ## 💾 Memory Hierarchy & Context Management
 
-To prevent context window overflow (4096 tokens max for GGUF), Mayday uses a three-tier memory architecture instead of simple chat history truncation:
+To prevent context window overflow (4096 tokens for GGUF models), Mayday uses a three-tier memory architecture rather than simple chat history truncation.
 
 ### 1. Active Working Memory
-The last 20 conversational turns are kept in the context window. This ensures the model retains immediate instructions and terminal outputs.
+The last 20 conversational turns are held in the live context window, ensuring the model retains immediate instructions and terminal outputs.
 
 ### 2. Hierarchical Condenser (`memory/condenser.py`)
-Turns older than the working memory window are processed by `HierarchicalCondenser`. It summarizes these turns into three-sentence paragraphs, preserving key file paths, tool actions, and terminal success statuses.
+Turns older than the working memory window are processed by `HierarchicalCondenser`. It compresses batches into three-sentence summaries, preserving key file paths, tool actions, and terminal success statuses. Condensed summaries are re-injected into context as prior history.
 
-### 3. Episode Archive
-Summarized session histories are saved to disk as JSON files inside `memory/episodes/`. This data is loaded as prior session context when the application is restarted.
+### 3. Episode Archive (`memory/episodes/`)
+Compressed session histories are serialized to JSON files on disk. On application restart, the most recent episode is loaded as prior session context, giving the model continuity across separate runs.
 
 ### 4. Failure Memory
-Tracks tool execution failures by hashing the tool name and arguments. If the same tool call fails twice, the orchestrator raises a recovery exception to alter the planning path.
+Failed tool calls are tracked by hashing the tool name and arguments. If the identical call fails twice, the orchestrator raises a `RecoveryException` and forces a replanning step rather than retrying indefinitely.
 
 ---
 
@@ -337,185 +247,163 @@ Tracks tool execution failures by hashing the tool name and arguments. If the sa
 
 ```
 MAYDAY/
-├── .gemini/                     # Development artifacts
-├── bootstrap/                   # Startup & self-healing UI
-│   └── bootstrap_ui.py          # Real installer UI (Phase 10)
+├── bootstrap/
+│   └── bootstrap_ui.py          # Self-healing installer UI
 ├── core/                        # Central orchestration & logic
-│   ├── context_compressor.py    # Word-count based helper
-│   ├── event_stream.py          # Pub-sub event stream dispatcher
+│   ├── context_compressor.py    # Word-count based context helper
+│   ├── event_stream.py          # Pub/sub event stream dispatcher
 │   ├── exceptions.py            # Central exception definitions
-│   ├── intent_router.py         # Classification-based tool routing
+│   ├── intent_router.py         # Keyword classification-based tool router
 │   ├── json_parser.py           # Robust JSON parsing fallback
 │   ├── orchestrator.py          # Main reasoning & execution loop
 │   ├── session.py               # Active context manager
-│   ├── skill_loader.py          # OpenHands skill registration
-│   └── tool_recovery.py         # Prompt-based JSON fallback parser
-├── docs/                        # Project documentation
-│   └── repository-analysis.md   # Architectural audit report
-├── grammar/                     # GBNF constraints
-│   └── action.gbnf              # JSON formatting grammar
-├── images/                      # Documentation graphics folder
-├── memory/                      # Episode storage
-│   ├── episodes/                # Saved session summaries (JSON)
-│   └── condenser.py             # Memory compression system
-├── model/                       # Model downloaders & loaders
-│   ├── downloader.py            # GGUF models download client
-│   └── loader.py                # CPU/GPU RAM preflight checker
-├── reports/                     # Audit outputs
-│   └── features.md              # Discovered features matrix
-├── runtime/                     # Schema validation & runners
-│   ├── action_schema.py         # Action definitions & types
-│   ├── engine.py                # Action execution manager
-│   ├── execution_budget.py      # Steps limit gate
-│   ├── execution_registry.py    # Tool contracts validation
+│   ├── skill_loader.py          # Skill registration
+│   └── tool_recovery.py         # Prompt-based JSON recovery parser
+├── grammar/
+│   └── action.gbnf              # GBNF constraints for action output
+├── images/                      # Documentation screenshots
+├── memory/
+│   ├── episodes/                # Disk-archived session summaries (JSON)
+│   └── condenser.py             # Hierarchical memory compressor
+├── model/
+│   ├── downloader.py            # GGUF model download client
+│   └── loader.py                # CPU/GPU RAM preflight checker & loader
+├── runtime/
+│   ├── action_schema.py         # Action type definitions
+│   ├── engine.py                # Action dispatch manager
+│   ├── execution_budget.py      # Step limit enforcement
+│   ├── execution_registry.py    # Tool contract validation registry
+│   ├── scaffold_engine.py       # Project scaffolder
 │   ├── server_runner.py         # Live web server preview hosting
-│   └── state_snapshot.py        # Filesystem changes verification
-├── skills/                      # Custom microagents & instructions
-├── tests/                       # Complete Pytest suite (106 tests)
-├── tools/                       # Tool implementation registry
+│   └── state_snapshot.py        # Filesystem change tracker
+├── skills/                      # Custom microagent skill files
+├── tests/                       # Pytest test suite
+├── tools/
 │   ├── base_tool.py             # Base tool class contract
 │   ├── browser_tools.py         # Playwright web automation
 │   ├── excel_tools.py           # pandas spreadsheet reader/writer
-│   ├── gmail_tools.py           # Google calendar/gmail tools
+│   ├── file_tools.py            # Filesystem operations
+│   ├── gmail_tools.py           # Gmail and Calendar tools
 │   ├── shell_tools.py           # Safe subprocess executor
-│   └── system_tools.py          # PyAutoGUI desktop coordinates controller
-├── ui/                          # GUI presentation widgets
+│   └── system_tools.py          # PyAutoGUI desktop controller
+├── ui/
 │   ├── main_window.py           # Main PyQt6 interface layout
-│   ├── panels.py                # Panels (Chat, Logs, Dashboard, etc.)
-│   └── theme.py                 # Dark theme styling definitions
-├── build.bat                    # Portable launcher batch script
-├── main.py                      # Main entry point (GUI/Verification)
+│   ├── panels.py                # Panel widgets (Chat, Logs, Dashboard, etc.)
+│   └── theme.py                 # Dark theme stylesheet definitions
+├── build.bat                    # Portable bootstrap launcher
+├── main.py                      # Entry point (GUI / --verify mode)
 ├── requirements.txt             # Pin-locked project dependencies
-└── README.md                    # Project documentation
+└── README.md
 ```
 
 ---
 
 ## 📈 Verified Task Execution Workflows
 
-Below are step-by-step trace files for common tasks, detailing how they are executed by Mayday's tool pipeline:
+Step-by-step trace files for common tasks, detailing how they are executed through Mayday's tool pipeline.
 
 ### Task A: Open a Website & Fetch Content
-1.  **User Prompt**: "Open the website https://www.wikipedia.org and get its main heading text."
-2.  **Intent Classifier**: Matches `AUTOMATION_COMMANDS` (requires `browser_open`, `browser_get_text`).
-3.  **Action Generation**: Model outputs:
-    `{"action":"tool_call","tool_name":"browser_open","parameters":{"url":"https://www.wikipedia.org"}}`
-4.  **Security Gate**: Classified as `safe` (web access). Executed immediately.
-5.  **Execution**: Playwright launches Chromium, navigates to the URL, and returns a page screenshot.
-6.  **Next Action**: Model parses screenshot observation, then outputs:
-    `{"action":"tool_call","tool_name":"browser_get_text","parameters":{"selector":"h1"}}`
-7.  **Observation**: Returns: `{"status":"success","text":"Wikipedia"}`.
-8.  **Completion**: Model outputs: `{"action":"respond","text":"The heading of Wikipedia is 'Wikipedia'."}`.
+1. **User Prompt**: "Open the website `https://www.wikipedia.org` and get its main heading text."
+2. **Intent Classifier**: Matches `AUTOMATION_COMMANDS` (requires `browser_open`, `browser_get_text`).
+3. **Action Generation**: Model outputs `{"action":"tool_call","tool_name":"browser_open","parameters":{"url":"https://www.wikipedia.org"}}`
+4. **Security Gate**: Classified as `safe` (web read). Executed immediately.
+5. **Execution**: Playwright launches Chromium, navigates to the URL, returns a page screenshot.
+6. **Next Action**: Model parses the screenshot observation and outputs `{"action":"tool_call","tool_name":"browser_get_text","parameters":{"selector":"h1"}}`
+7. **Observation**: Returns `{"status":"success","text":"Wikipedia"}`.
+8. **Completion**: Model outputs `{"action":"respond","text":"The heading of Wikipedia is 'Wikipedia'."}`.
 
 ### Task B: Create a Glassmorphic Calculator App
-1.  **User Prompt**: "Create a dark-themed glassmorphic calculator in projects/calc."
-2.  **Intent Classifier**: Matches `PROJECT_CREATION` (requires `scaffold`).
-3.  **Action Generation**: Model outputs `scaffold` tool call containing files parameter.
-4.  **Security Gate**: Classified as `restricted` (writing files). GUI displays permission prompt. User clicks **Allow**.
-5.  **Execution**: `scaffold_engine` writes files to `projects/calc/` (HTML, JS, and CSS structures).
-6.  **Next Action**: Model outputs:
-    `{"action":"tool_call","tool_name":"server_launch","parameters":{"project_dir":"projects/calc","stack":"static"}}`
-7.  **Execution**: `server_runner` scans ports, launches a server, pings it, and returns port details.
-8.  **Completion**: Playwright opens the local server URL, takes a screenshot of the calculator page, and displays it to the user.
+1. **User Prompt**: "Create a dark-themed glassmorphic calculator in `projects/calc`."
+2. **Intent Classifier**: Matches `PROJECT_CREATION` (requires `scaffold`).
+3. **Action Generation**: Model outputs a `scaffold` tool call with a `files` parameter.
+4. **Security Gate**: Classified as `restricted` (writing files). GUI displays permission prompt. User clicks **Allow**.
+5. **Execution**: `scaffold_engine` writes files to `projects/calc/` (HTML, JS, CSS structures).
+6. **Next Action**: Model outputs `{"action":"tool_call","tool_name":"server_launch","parameters":{"project_dir":"projects/calc","stack":"static"}}`
+7. **Execution**: `server_runner` scans ports, launches a server process, pings it, and returns the active port.
+8. **Completion**: Playwright opens the local server URL and takes a screenshot of the rendered calculator page.
 
-### Task C: Create a Simple Neon Tic-Tac-Toe Game
-1.  **User Prompt**: "Create a Tic-Tac-Toe game in projects/game."
-2.  **Intent Classifier**: Matches `PROJECT_CREATION` (requires `scaffold`).
-3.  **Action Generation**: Generates neon grid styling and game logic files.
-4.  **Security Gate**: Requires user confirmation. Approved by user.
-5.  **Execution**: `scaffold_engine` writes code.
-6.  **Next Action**: Model launches a local static server on the directory and navigates Playwright to the hosted URL.
-7.  **Completion**: Captures the game grid screen showing neon buttons, verifying correct rendering.
+### Task C: Create a Tic-Tac-Toe Game
+1. **User Prompt**: "Create a Tic-Tac-Toe game in `projects/game`."
+2. **Intent Classifier**: Matches `PROJECT_CREATION` (requires `scaffold`).
+3. **Action Generation**: Generates neon grid styling and game logic file payloads.
+4. **Security Gate**: Requires user confirmation. Approved.
+5. **Execution**: `scaffold_engine` writes all source files.
+6. **Next Action**: Model launches a local static server and navigates Playwright to the hosted URL.
+7. **Completion**: Captures the rendered game grid, confirming correct layout and styling.
 
-### Task D: Generate Fibonacci Code & Verify
-1.  **User Prompt**: "Write a Python script to calculate Fibonacci and run it to verify."
-2.  **Intent Classifier**: Matches `EXECUTION_COMMANDS` (requires `file_write`, `shell_run`).
-3.  **Action Generation**: Writes code to `projects/fib.py`.
-4.  **Security Gate**: User approves file write.
-5.  **Next Action**: Invokes shell command:
-    `{"action":"tool_call","tool_name":"shell_run","parameters":{"command":"python projects/fib.py"}}`
-6.  **Security Gate**: GUI displays warning for shell command execution. User clicks **Allow**.
-7.  **Execution**: Runs Python process, returns exit code 0 and stdout: `[0, 1, 1, 2, 3, 5, 8]`.
-8.  **Completion**: Model outputs final response summarizing run results.
+### Task D: Write & Run a Python Script
+1. **User Prompt**: "Write a Python script to calculate Fibonacci and run it to verify."
+2. **Intent Classifier**: Matches `EXECUTION_COMMANDS` (requires `file_write`, `shell_run`).
+3. **Action Generation**: Writes code to `projects/fib.py`.
+4. **Security Gate**: User approves file write.
+5. **Next Action**: Invokes `{"action":"tool_call","tool_name":"shell_run","parameters":{"command":"python projects/fib.py"}}`
+6. **Security Gate**: GUI displays shell command warning. User clicks **Allow**.
+7. **Execution**: Runs Python process, returns exit code `0` and stdout: `[0, 1, 1, 2, 3, 5, 8]`.
+8. **Completion**: Model summarises the verified run results.
 
-### Task E: Manipulate Existing Files
-1.  **User Prompt**: "Append a print statement to projects/fib.py."
-2.  **Intent Classifier**: Matches `FILE_OPERATIONS` (requires `file_patch` or `file_write`).
-3.  **Action Generation**: Generates diff or block replacement arguments.
-4.  **Security Gate**: User confirms.
-5.  **Execution**: Modifies `projects/fib.py` and returns size of file on disk.
-
-### Task F: Multi-Step Autonomous Workflow
-1.  **User Prompt**: "Find the current weather in New York and email it to my agenda."
-2.  **Intent Classifier**: Matches `AUTOMATION_COMMANDS` & `WEB_ACCESS`.
-3.  **Workflow**:
-    *   `web_search` weather details.
-    *   `browser_open` weather page to verify.
-    *   `gmail_get_unread` or `calendar_create_event` to write details.
-    *   System validates step execution, updating GUI dashboard telemetry.
+### Task E: Append to an Existing File
+1. **User Prompt**: "Append a print statement to `projects/fib.py`."
+2. **Intent Classifier**: Matches `FILE_OPERATIONS` (requires `file_patch` or `file_write`).
+3. **Action Generation**: Generates block replacement arguments targeting the file's end.
+4. **Security Gate**: User confirms.
+5. **Execution**: Modifies `projects/fib.py` and returns the updated file size on disk.
 
 ---
 
 ## ⚠️ System Limitations & Constraints
 
-While Mayday is a powerful local agent, users should be aware of several hardware and software limitations:
-
-*   **CPU Performance Bounds**: Quantized GGUF inference runs on CPU threads. Text generation speeds depend on CPU core counts and clocks. Token generation rates may vary from 2 to 15 tokens/sec.
-*   **System Memory Requirements**: If available system RAM is below 2.5 GB, local model loading is skipped, and the application defaults to **Safe Mode**. In Safe Mode, an external API key is required.
-*   **Playwright Dependencies**: Browser automation requires Playwright Chromium drivers. If drivers are missing, browser tools will fail. Install them using `python -m playwright install chromium`.
-*   **UIA Window Target Limits**: Coordinate-based clicking via PyAutoGUI relies on screen resolutions. Running the application inside nested VMs or RDP sessions may shift click locations if window scaling is altered.
+*   **CPU Performance**: Quantized GGUF inference runs on CPU threads. Token generation rates vary from 2–15 tokens/sec depending on CPU core count and clock speed.
+*   **System RAM**: If available system RAM is below 2.5 GB, local model loading is skipped and the application defaults to **Safe Mode**, requiring an external API key.
+*   **Playwright Drivers**: Browser automation requires Playwright Chromium drivers. If missing, install them with `python -m playwright install chromium`.
+*   **Display Scaling**: Coordinate-based clicking via PyAutoGUI depends on screen resolution. Running inside nested VMs or RDP sessions with non-100% scaling may offset click coordinates.
 
 ---
 
-## ❓ Frequently Asked Questions (FAQ)
+## ❓ Frequently Asked Questions
 
-### Q: Why does Mayday say it is in "Safe Mode" at startup?
-**A:** During initialization, `model/loader.py` checks available system RAM. If available RAM is below the 2.5 GB threshold required for the Tier 3 model, local loading is disabled to prevent system paging and instability. To use Mayday in Safe Mode, configure external API keys in the **API** panel.
+**Q: Why does Mayday report "Safe Mode" at startup?**
 
-### Q: How do I enable GPU acceleration for local GGUF models?
-**A:** If you have an NVIDIA or AMD GPU, install `llama-cpp-python` with CUDA or Vulkan backends. The startup script `model/loader.py` auto-detects DirectML, CUDA, or Vulkan libraries, and offloads layers to VRAM if system RAM conditions allow.
+`model/loader.py` checks available system RAM during initialisation. If free RAM is below the 2.5 GB threshold, local GGUF loading is disabled to prevent system paging and instability. Configure an external API key in the **API** panel to operate in Safe Mode.
 
-### Q: Can I run Mayday headlessly (without GUI panels)?
-**A:** Yes. Run `main.py` with the `--verify` flag to execute a headless verification check, or interface with the engine via the CLI by running:
+**Q: How do I enable GPU acceleration for local GGUF models?**
+
+Install `llama-cpp-python` built with CUDA, Vulkan, or DirectML backend flags. `model/loader.py` auto-detects available GPU libraries at startup and offloads model layers to VRAM when conditions allow. Priority order: DirectML → Vulkan → CUDA → CPU.
+
+**Q: Can I run Mayday without the GUI?**
+
+Yes. Run `main.py --verify` for a headless verification check, or interface with the engine directly via the CLI:
+
 ```powershell
 .venv\Scripts\python.exe -c "from runtime.engine import ExecutionEngine; print(ExecutionEngine())"
 ```
 
-### Q: Where are the files created by the agent stored?
-**A:** By default, the `scaffold` and `file_write` tools are restricted to write to the `projects/` subfolder inside the repository root, ensuring project isolation.
+**Q: Where are agent-created files stored?**
 
----
-
-## 🔧 Troubleshooting Manual
-
-### 1. Pywinauto / PyQt6 Initialization Errors
-*   **Symptom**: Application crashes immediately on startup with `ImportError` or `DLL load failed`.
-*   **Solution**: Ensure your virtual environment python is 64-bit and matching Python 3.10+. Re-run `.\build.bat` to rebuild venv libraries.
-
-### 2. Model Fails to Load / Process Terminated
-*   **Symptom**: Spawning worker process crashes or times out during loading.
-*   **Solution**: Check `logs/startup_trace.log` to see if the GGUF file is corrupted. If the size is incorrect, delete `models/tier3.gguf` and run `.\build.bat` to re-download.
-
-### 3. Playwright Browser Automation Crashes
-*   **Symptom**: Browser tools return `playwright.helper.Error: Executable doesn't exist`.
-*   **Solution**: Run `.venv\Scripts\python.exe -m playwright install chromium` to fetch the browser drivers.
+By default, `scaffold_engine.py` and `file_write` tools are restricted to the `projects/` subdirectory inside the repository root, ensuring isolation from system files.
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome! Please follow these guidelines:
-1.  Fork the repository.
-2.  Create your feature branch: `git checkout -b feature/my-feature`.
-3.  Commit your changes: `git commit -m 'feat: Add support for custom tool'`.
-4.  Push to the branch: `git push origin feature/my-feature`.
-5.  Submit a Pull Request.
+
+Contributions are welcome. Please follow these guidelines:
+
+1. Fork the repository.
+2. Create your feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m 'feat: add support for custom tool'`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Submit a Pull Request.
+
+New tools must declare a `base_tool.py` contract, register in `execution_registry.py` with an appropriate capability class, and include Pytest coverage in `tests/`.
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License - see the [`LICENSE`](file:///e:/MAYDAY/LICENSE) file for details.
+
+This project is licensed under the MIT License — see the `LICENSE` file for details.
 
 ## 🤝 Credits & Acknowledgements
-*   **Qwen Team** for the outstanding Qwen2.5-Coder model series.
-*   **llama.cpp** contributors for enabling high-performance CPU inference.
-*   **PyQt6** and **Playwright** maintainers for robust GUI and browser automation frameworks.
+
+*   **Qwen Team** — Qwen2.5-Coder model series
+*   **llama.cpp contributors** — High-performance CPU GGUF inference
+*   **PyQt6 maintainers** — Desktop GUI framework
+*   **Playwright maintainers** — Browser automation framework
