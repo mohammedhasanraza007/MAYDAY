@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import threading
 from typing import Any, Callable
 
 from runtime import browser_audit_log
@@ -10,14 +11,25 @@ from runtime.world_state import world_state
 class PermissionGate:
     def __init__(self) -> None:
         self._browser_callback: Callable[[str, Any, Any], bool | str] | None = None
-        self.cancelled = False
+        self._cancelled = threading.Event()
         self.block_reason = ""
+
+    @property
+    def cancelled(self) -> bool:
+        return self._cancelled.is_set()
+
+    @cancelled.setter
+    def cancelled(self, value: bool) -> None:
+        if value:
+            self._cancelled.set()
+        else:
+            self._cancelled.clear()
 
     def set_browser_callback(self, callback: Callable[[str, Any, Any], bool | str] | None) -> None:
         self._browser_callback = callback
 
     def check_browser(self, action: str, target: Any = None, preview: Any = None, already_approved: bool = False) -> bool:
-        if self.cancelled:
+        if self._cancelled.is_set():
             browser_audit_log.record(action, target or preview, None, None, user_approved=False)
             return False
         if already_approved:
@@ -28,20 +40,20 @@ class PermissionGate:
             approved = decision in {True, "ALLOW", "ALLOW_ALWAYS", "APPROVE", "approved"}
             browser_audit_log.record(action, target or preview, None, None, user_approved=approved)
             if not approved:
-                self.cancelled = True
+                self._cancelled.set()
                 self.block_reason = "user_denied"
                 world_state.set_permission_blocked("browser", self.block_reason)
             return approved
         approved = os.environ.get("MAYDAY_AUTO_APPROVE_BROWSER", "").strip().lower() in {"1", "true", "yes", "on"}
         browser_audit_log.record(action, target or preview, None, None, user_approved=approved)
         if not approved:
-            self.cancelled = True
+            self._cancelled.set()
             self.block_reason = "user_denied"
             world_state.set_permission_blocked("browser", self.block_reason)
         return approved
 
     def reset(self) -> None:
-        self.cancelled = False
+        self._cancelled.clear()
         self.block_reason = ""
         world_state.clear_permission_blocks()
 

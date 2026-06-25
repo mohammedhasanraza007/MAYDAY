@@ -71,14 +71,21 @@ class SessionManager:
 
     def add_to_history(self, role: str, content: str, metadata: dict | None = None) -> None:
         """Add an entry to session history."""
+        metadata = metadata or {}
         entry = {
             'step': self.step_count,
             'role': role,
             'content': content,
             'timestamp': time.time(),
-            'metadata': metadata or {},
+            'metadata': metadata,
         }
+        if metadata.get('pinned') is True:
+            entry['pinned'] = True
         self._history.append(entry)
+
+    def get_history(self) -> list[dict]:
+        """Return a copy of full session history."""
+        return list(self._history)
 
     def get_context_window(self) -> list[dict]:
         """

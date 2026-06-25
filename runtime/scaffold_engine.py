@@ -38,7 +38,7 @@ class ScaffoldEngine(BaseTool):
         if not isinstance(files, list) or not files:
             raise ScaffoldError("files must be a non-empty list")
 
-        temp_root = Path(tempfile.mkdtemp(prefix="mayday_scaffold_"))
+        temp_root = Path(tempfile.mkdtemp(prefix="mayday_scaffold_", dir=PROJECT_ROOT.parent))
         try:
             normalized_name = project_name.strip()
             file_paths: list[str] = []

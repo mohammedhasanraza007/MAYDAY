@@ -240,6 +240,10 @@ class ExecutionEngine:
 
     def _base_for_tool(self, tool_name: str) -> str:
         base = tool_name.split("_", 1)[0]
+        if tool_name in {"file_patch", "file_replace_block", "file_insert_after", "file_delete_lines"}:
+            return "patch"
+        if tool_name in {"run_tests", "run_pytest", "run_npm_test"}:
+            return "test_runner"
         if base == "shell" and "shell" not in self._tools and "powershell" in self._tools:
             return "powershell"
         if tool_name == "server_runner":

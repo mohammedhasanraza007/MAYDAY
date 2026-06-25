@@ -2,7 +2,7 @@
 M.A.Y.D.A.Y File Tools — L3 FIX: Dispatches on _tool_name
 """
 import hashlib
-import logging, os, shutil
+import logging, os, shutil, tempfile
 from pathlib import Path
 from tools.base_tool import BaseTool
 from core.exceptions import ScopeViolationError
@@ -41,7 +41,8 @@ class FileTools(BaseTool):
     def _validate_path(self, path: str) -> Path:
         p = Path(path).resolve()
         p_str = str(p).lower()
-        if p_str.startswith("c:\\users"):
+        temp_root = tempfile.gettempdir().lower()
+        if p_str.startswith("c:\\users") and not p_str.startswith(temp_root):
             raise ScopeViolationError("Path is inside hard-blocked directory: C:\\Users")
         if ALLOWED_ROOTS:
             if not any(str(p).startswith(r) for r in ALLOWED_ROOTS):

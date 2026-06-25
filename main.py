@@ -130,6 +130,8 @@ def initialize_application():
             from tools.system_tools import SystemTools
             from tools.project_tools import ProjectTools
             from tools.powershell_tools import PowerShellTools
+            from tools.patch_tools import PatchTools
+            from tools.test_runner import TestRunnerTool
             from ui.bridge import ModelLoadThread
 
             loader = ModelLoader()
@@ -148,10 +150,34 @@ def initialize_application():
                     "browser": BrowserTools(),
                     "system": SystemTools(),
                     "project": ProjectTools(),
+                    "patch": PatchTools(),
+                    "test_runner": TestRunnerTool(),
                     "powershell": powershell_tool,
                     "shell": powershell_tool,
                     "server": ServerRunner(),
                 })
+                try:
+                    from mcp.server import start_mcp_server
+
+                    mcp_tools = {
+                        "file": FileTools(),
+                        "browser": BrowserTools(),
+                        "system": SystemTools(),
+                        "shell": powershell_tool,
+                        "project": ProjectTools(),
+                        "patch": PatchTools(),
+                        "test_runner": TestRunnerTool(),
+                    }
+                    start_mcp_server(mcp_tools)
+                except Exception as e:
+                    logger.warning(f"MCP server could not start (non-fatal): {e}")
+                try:
+                    from core.skill_loader import skill_loader
+
+                    n = skill_loader.load()
+                    logger.info(f"Skill loader: {n} skills loaded")
+                except Exception as e:
+                    logger.warning(f"Skill loader could not start (non-fatal): {e}")
                 api = ApiManager()
                 window.api_manager = api
                 inference = InferenceEngine(loader)

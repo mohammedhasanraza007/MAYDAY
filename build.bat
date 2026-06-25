@@ -73,6 +73,9 @@ if errorlevel 1 (
     )
     "%VENV_PY%" -m pip install -r "%MAYDAY_ROOT%\requirements.txt"
     if errorlevel 1 exit /b 1
+    echo Installing optional MCP server dependencies...
+    "%VENV_PY%" -m pip install fastapi uvicorn pyyaml --quiet
+    if errorlevel 1 exit /b 1
     "%VENV_PY%" -m playwright install chromium
     if errorlevel 1 exit /b 1
 )

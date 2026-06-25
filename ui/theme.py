@@ -34,6 +34,11 @@ class ThemeConstants:
     INPUT_BG:      str = '#0D0D0D'   # Text input fields
     SCROLLBAR:     str = '#2A2A2A'   # Scrollbar thumb
     SELECTION:     str = '#1A3A5C'   # Text selection highlight
+    TAB_BG:         str = '#0D1117'   # Tab bar background
+    TAB_ACTIVE:     str = '#161B22'   # Active tab background
+    ACTION_BLUE:    str = '#58A6FF'   # Agent action events
+    OBS_GREEN:      str = '#3FB950'   # Successful observations
+    OBS_RED:        str = '#F85149'   # Failed observations
 
 
 # ── Singleton instance ────────────────────────────────────────────────────

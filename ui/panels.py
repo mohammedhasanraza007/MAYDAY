@@ -6,9 +6,9 @@ Functional panels for Chat, Model Management, and System Logs.
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit,
                              QLineEdit, QPushButton, QLabel, QScrollArea,
                              QProgressBar, QFrame, QGridLayout, QFileDialog,
-                             QCheckBox)
+                             QCheckBox, QTreeView)
 from PyQt6.QtCore import Qt, pyqtSignal, QObject
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QFileSystemModel
 from ui.theme import THEME, FONTS, INPUT_STYLE, BUTTON_STYLE, PRIMARY_BUTTON_STYLE
 import re
 import html
@@ -376,3 +376,207 @@ class DashboardPanel(QWidget):
         self.model_label.setText(model)
         self.status_label.setText(status)
         self.routing_label.setText(routing)
+
+
+class AgentStreamPanel(QWidget):
+    """Live scrolling view of agent action/observation events."""
+
+    event_received = pyqtSignal(object)
+
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(8)
+
+        header = QLabel("Agent Event Stream")
+        header.setStyleSheet(f"font-size: 16px; font-weight: bold; color: {THEME.ACCENT_GREEN};")
+        layout.addWidget(header)
+
+        self.stream_view = QTextEdit()
+        self.stream_view.setReadOnly(True)
+        self.stream_view.setStyleSheet(
+            f"background-color: {THEME.CODE_BG}; border: 1px solid {THEME.BORDER}; "
+            f"border-radius: 6px; padding: 10px; font-family: Consolas; font-size: 12px;"
+        )
+        layout.addWidget(self.stream_view)
+
+        clear_btn = QPushButton("Clear Stream")
+        clear_btn.setStyleSheet(BUTTON_STYLE)
+        clear_btn.clicked.connect(self.stream_view.clear)
+        layout.addWidget(clear_btn)
+
+        self.event_received.connect(self.append_event)
+        try:
+            from core.event_stream import agent_event_stream
+
+            agent_event_stream.subscribe(self._on_event)
+        except Exception:
+            pass
+
+    def _on_event(self, event) -> None:
+        self.event_received.emit(event)
+
+    def append_event(self, event) -> None:
+        try:
+            from core.event_stream import AgentAction, AgentObservation
+            import time
+
+            ts = time.strftime("%H:%M:%S", time.localtime(getattr(event, "timestamp", 0)))
+            if isinstance(event, AgentAction):
+                colour = THEME.ACTION_BLUE
+                label = f"[{ts}] ACTION: {event.tool or event.type}"
+                params_text = str(event.parameters)
+                params = params_text[:120] + ("..." if len(params_text) > 120 else "")
+                self.stream_view.append(
+                    f"<span style='color:{colour}'><b>{html.escape(label)}</b></span>"
+                    f"<br><span style='color:{THEME.DIM}; font-size:11px;'>{html.escape(params)}</span><br>"
+                )
+            elif isinstance(event, AgentObservation):
+                ok = event.status == "success"
+                colour = THEME.OBS_GREEN if ok else THEME.OBS_RED
+                label = f"[{ts}] {'OK' if ok else 'ERR'} RESULT: {event.status.upper()}"
+                result_preview = str(event.result)[:100]
+                self.stream_view.append(
+                    f"<span style='color:{colour}'><b>{html.escape(label)}</b></span>"
+                    f"<br><span style='color:{THEME.DIM}; font-size:11px;'>{html.escape(result_preview)}</span><br>"
+                )
+            self.stream_view.verticalScrollBar().setValue(
+                self.stream_view.verticalScrollBar().maximum()
+            )
+        except Exception:
+            pass
+
+
+class TerminalPanel(QWidget):
+    """Embedded terminal-style output panel."""
+
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(8)
+
+        header = QLabel("Terminal Output")
+        header.setStyleSheet(f"font-size: 16px; font-weight: bold; color: {THEME.ACCENT_GREEN};")
+        layout.addWidget(header)
+
+        self.terminal = QTextEdit()
+        self.terminal.setReadOnly(True)
+        self.terminal.setStyleSheet(
+            f"background-color: {THEME.CODE_BG}; color: {THEME.ACCENT_GREEN}; "
+            f"border: 1px solid {THEME.BORDER}; border-radius: 6px; padding: 10px; "
+            f"font-family: Consolas; font-size: 12px;"
+        )
+        layout.addWidget(self.terminal)
+
+        input_row = QHBoxLayout()
+        self.cmd_input = QLineEdit()
+        self.cmd_input.setPlaceholderText("Enter shell command (goes through permission gate)...")
+        self.cmd_input.setStyleSheet(INPUT_STYLE)
+        self.cmd_input.returnPressed.connect(self._run_command)
+
+        run_btn = QPushButton("Run")
+        run_btn.setStyleSheet(PRIMARY_BUTTON_STYLE)
+        run_btn.clicked.connect(self._run_command)
+
+        clear_btn = QPushButton("Clear")
+        clear_btn.setStyleSheet(BUTTON_STYLE)
+        clear_btn.clicked.connect(self.terminal.clear)
+
+        input_row.addWidget(self.cmd_input)
+        input_row.addWidget(run_btn)
+        input_row.addWidget(clear_btn)
+        layout.addLayout(input_row)
+
+    def _run_command(self):
+        cmd = self.cmd_input.text().strip()
+        if not cmd:
+            return
+        self.append_output(f"$ {cmd}")
+        self.cmd_input.clear()
+        self.append_output("[Routed to orchestrator via permission gate]\n")
+
+    def append_output(self, text: str, colour: str = "") -> None:
+        output_colour = colour or THEME.ACCENT_GREEN
+        self.terminal.append(
+            f"<span style='color:{output_colour}; font-family:Consolas;'>{html.escape(text)}</span>"
+        )
+        self.terminal.verticalScrollBar().setValue(
+            self.terminal.verticalScrollBar().maximum()
+        )
+
+
+class FileExplorerPanel(QWidget):
+    """Workspace file browser rooted at the MAYDAY project."""
+
+    def __init__(self, root_path: str = "."):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(8)
+
+        header = QLabel("Workspace Files")
+        header.setStyleSheet(f"font-size: 16px; font-weight: bold; color: {THEME.ACCENT_GREEN};")
+        layout.addWidget(header)
+
+        self.model = QFileSystemModel(self)
+        self.model.setRootPath(root_path)
+        self.tree = QTreeView()
+        self.tree.setModel(self.model)
+        self.tree.setRootIndex(self.model.index(root_path))
+        self.tree.setSortingEnabled(True)
+        self.tree.setAlternatingRowColors(False)
+        for column in range(1, 4):
+            self.tree.hideColumn(column)
+        self.tree.setStyleSheet(
+            f"QTreeView {{ background-color: {THEME.CODE_BG}; color: {THEME.TEXT}; "
+            f"border: 1px solid {THEME.BORDER}; border-radius: 6px; padding: 6px; }}"
+            f"QTreeView::item:selected {{ background-color: {THEME.SELECTION}; }}"
+        )
+        layout.addWidget(self.tree)
+
+
+class SkillManagerPanel(QWidget):
+    """Shows loaded skills and trigger keywords."""
+
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(8)
+
+        header = QLabel("Skill Manager (OpenHands Microagents)")
+        header.setStyleSheet(f"font-size: 16px; font-weight: bold; color: {THEME.ACCENT_GREEN};")
+        layout.addWidget(header)
+
+        self.skills_view = QTextEdit()
+        self.skills_view.setReadOnly(True)
+        self.skills_view.setStyleSheet(
+            f"background-color: {THEME.CODE_BG}; border: 1px solid {THEME.BORDER}; "
+            f"border-radius: 6px; padding: 10px; font-size: 12px;"
+        )
+        layout.addWidget(self.skills_view)
+
+        reload_btn = QPushButton("Reload Skills from Disk")
+        reload_btn.setStyleSheet(BUTTON_STYLE)
+        reload_btn.clicked.connect(self._reload)
+        layout.addWidget(reload_btn)
+
+        self._reload()
+
+    def _reload(self):
+        try:
+            from core.skill_loader import skill_loader
+
+            count = skill_loader.load()
+            lines = [f"<b style='color:{THEME.ACCENT_GREEN}'>{count} skills loaded</b><br><br>"]
+            for skill in skill_loader._skills:
+                triggers = ", ".join(skill.triggers[:6])
+                lines.append(
+                    f"<b style='color:{THEME.ACCENT_BLUE}'>{skill.name}</b> "
+                    f"<span style='color:{THEME.DIM}'>- triggers: {html.escape(triggers)}</span><br>"
+                )
+            self.skills_view.setHtml("".join(lines))
+        except Exception as exc:
+            self.skills_view.setText(f"Error loading skills: {exc}")

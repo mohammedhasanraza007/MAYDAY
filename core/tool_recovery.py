@@ -15,6 +15,10 @@ FILE_WRITE_PATTERN = re.compile(
     r"(?:text|content)\s+(?P<content>.+)\s*$",
     re.IGNORECASE | re.DOTALL,
 )
+DIRECT_FILE_WRITE_PATTERN = re.compile(
+    r"\bwrite\s+(?P<content>.+?)\s+to\s+(?P<path>[^\s'\"`,]+\.[A-Za-z0-9]{1,8})\s*$",
+    re.IGNORECASE | re.DOTALL,
+)
 EXACT_FILE_WRITE_PATTERN = re.compile(
     r"\b(?:create|write|make)\s+(?:this\s+exact\s+)?file\s*:\s*"
     r"(?P<path>.+?)\s+Contents\s*:\s*(?P<content>.+)\s*$",
@@ -47,6 +51,7 @@ def recover_action_from_prompt(
                 _recover_reddit_ai_news,
                 _recover_gmail_unread,
                 _recover_calendar_create,
+                _recover_julias_ai_flow,
                 _recover_browser_chain,
                 _recover_whatsapp_flow,
                 _recover_youtube_song_flow,
@@ -64,6 +69,10 @@ def recover_action_from_prompt(
     file_action = _recover_file_write(text)
     if file_action is not NO_ACTION:
         return file_action
+
+    scaffold_action = _recover_scaffold_project(text)
+    if scaffold_action is not NO_ACTION:
+        return scaffold_action
 
     excel_action = _recover_excel_create(text)
     if excel_action is not NO_ACTION:
@@ -113,14 +122,6 @@ def recover_action_from_prompt(
     if calculator_action is not NO_ACTION:
         return calculator_action
 
-    browser_chain_action = _recover_browser_chain(text)
-    if browser_chain_action is not NO_ACTION:
-        return browser_chain_action
-
-    browser_close_action = _recover_browser_close(text)
-    if browser_close_action is not NO_ACTION:
-        return browser_close_action
-
     # ── Phase 6B goal-oriented interceptors ──────────────────────────
     whatsapp_action = _recover_whatsapp_flow(text)
     if whatsapp_action is not NO_ACTION:
@@ -133,6 +134,14 @@ def recover_action_from_prompt(
     julias_action = _recover_julias_ai_flow(text)
     if julias_action is not NO_ACTION:
         return julias_action
+
+    browser_chain_action = _recover_browser_chain(text)
+    if browser_chain_action is not NO_ACTION:
+        return browser_chain_action
+
+    browser_close_action = _recover_browser_close(text)
+    if browser_close_action is not NO_ACTION:
+        return browser_close_action
 
     file_read_action = _recover_file_read(text)
     if file_read_action is not NO_ACTION:
@@ -166,7 +175,11 @@ def recover_action_from_prompt(
 
 
 def _recover_file_write(prompt: str) -> dict[str, Any] | None:
-    match = EXACT_FILE_WRITE_PATTERN.search(prompt) or FILE_WRITE_PATTERN.search(prompt)
+    match = (
+        EXACT_FILE_WRITE_PATTERN.search(prompt)
+        or FILE_WRITE_PATTERN.search(prompt)
+        or DIRECT_FILE_WRITE_PATTERN.search(prompt)
+    )
     if match is None:
         return NO_ACTION
 
@@ -180,8 +193,56 @@ def _recover_file_write(prompt: str) -> dict[str, Any] | None:
         {
             "path": raw_path,
             "content": content,
+            "minimum_chars": 1,
         },
         "prompt_file_write",
+    )
+
+
+def _recover_scaffold_project(prompt: str) -> dict[str, Any] | None:
+    lower = prompt.lower()
+    if "scaffold" not in lower and "create app" not in lower and "build app" not in lower:
+        return NO_ACTION
+    if "flask" not in lower:
+        return NO_ACTION
+    name_match = re.search(
+        r"\b(?:called|named|name(?:d)?\s+it)\s+['\"]?([a-zA-Z0-9_-]+)['\"]?",
+        prompt,
+        re.IGNORECASE,
+    )
+    project_name = name_match.group(1).strip() if name_match else "demo_api"
+    project_name = re.sub(r"[^a-zA-Z0-9_-]+", "_", project_name).strip("_").lower() or "demo_api"
+    files = [
+        {
+            "path": "app.py",
+            "content": (
+                "from flask import Flask, jsonify\n\n"
+                "app = Flask(__name__)\n\n"
+                "@app.get('/')\n"
+                "def index():\n"
+                "    return jsonify({'message': 'Hello from MAYDAY'})\n\n"
+                "if __name__ == '__main__':\n"
+                "    app.run(debug=True)\n"
+            ),
+        },
+        {"path": "requirements.txt", "content": "flask>=3.0\n"},
+        {
+            "path": "README.md",
+            "content": (
+                f"# {project_name}\n\n"
+                "A minimal Flask app scaffolded by MAYDAY.\n\n"
+                "## Run\n\n"
+                "```powershell\n"
+                "pip install -r requirements.txt\n"
+                "python app.py\n"
+                "```\n"
+            ),
+        },
+    ]
+    return _finalized_tool_call(
+        "scaffold",
+        {"project_name": project_name, "stack": "flask", "files": files},
+        "prompt_scaffold_flask",
     )
 
 
@@ -1363,18 +1424,6 @@ def _recover_youtube_song_flow(prompt: str) -> dict[str, Any] | None:
     query = query.rstrip(".?!")
     if not query:
         query = "english song"
-    return _finalized_multi_tool_call(
-        [
-            {"tool_name": "browser_open", "parameters": {"url": "https://www.youtube.com"}},
-            {"tool_name": "browser_click", "parameters": {"selector": "input[name='q']"}},
-            {"tool_name": "browser_type", "parameters": {"selector": "input[name='q']", "text": query}},
-            {"tool_name": "browser_press_key", "parameters": {"key": "Enter"}},
-            {"tool_name": "browser_wait_for_navigation", "parameters": {"timeout_ms": 5000}},
-            {"tool_name": "browser_click", "parameters": {"selector": "first video result"}},
-        ],
-        "prompt_youtube_song_play",
-        f"Now playing: {query}",
-    )
     search_url = f"https://www.youtube.com/results?search_query={quote(query)}"
     return _finalized_multi_tool_call(
         [

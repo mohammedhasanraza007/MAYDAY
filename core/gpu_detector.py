@@ -183,3 +183,48 @@ class GPUDetector:
         except Exception:
             return 0.0
         return 0.0
+
+
+def get_ml_offload_config() -> dict:
+    """
+    Return the optimal ML execution configuration for detected hardware.
+    Never raises; always returns a safe CPU fallback.
+    """
+    try:
+        info = GPUDetector.get_info()
+        vendor = info.get("vendor", "UNKNOWN").upper()
+        backend = info.get("backend", "CPU")
+        vram_gb = info.get("adapter_ram_gb", 0.0)
+
+        if vendor == "NVIDIA" and backend == "CUDA":
+            n_layers = min(32, max(0, int(vram_gb * 3)))
+            return {
+                "backend": "cuda",
+                "n_gpu_layers": n_layers,
+                "use_mmap": True,
+                "embedding_device": "cuda",
+                "available": True,
+            }
+        if vendor in ("AMD", "RADEON"):
+            return {
+                "backend": "vulkan",
+                "n_gpu_layers": 0,
+                "use_mmap": True,
+                "embedding_device": "cpu",
+                "available": True,
+            }
+        return {
+            "backend": "cpu",
+            "n_gpu_layers": 0,
+            "use_mmap": True,
+            "embedding_device": "cpu",
+            "available": False,
+        }
+    except Exception:
+        return {
+            "backend": "cpu",
+            "n_gpu_layers": 0,
+            "use_mmap": True,
+            "embedding_device": "cpu",
+            "available": False,
+        }

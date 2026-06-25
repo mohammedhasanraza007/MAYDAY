@@ -217,8 +217,9 @@ class ModelRouter:
                 return result, provider
             except PermissionDeniedError:
                 log_entry.update({"provider": "api_blocked", "reason": "approval_required"})
-                logger.info("API approval unavailable - routing to LOCAL")
+                logger.info("API approval unavailable - surfacing approval requirement")
                 gc.collect()
+                raise
             except ProviderFailureError as e:
                 self._handle_api_failure(e, self.api.active_provider_name() if self.api else "none", route_epoch)
                 gc.collect()
@@ -263,6 +264,17 @@ class ModelRouter:
             gc.collect()
 
         # ── API escalation ───────────────────────────────────────────
+        if (
+            has_api
+            and self.api is not None
+            and hasattr(self.api, "api_user_approved")
+            and not getattr(self.api, "api_user_approved", False)
+            and is_executable_intent(prompt)
+        ):
+            log_entry.update({"provider": "api_blocked", "reason": "approval_required_after_local_failure"})
+            self._route_log.append(log_entry)
+            raise PermissionDeniedError("API call requires explicit user approval")
+
         if self._should_route_to_api(prompt, score, intent_family, route_epoch) and is_api_currently_available():
             try:
                 result = self._call_api(api_messages, prompt, context, route_epoch)
@@ -275,8 +287,9 @@ class ModelRouter:
                 return result, provider
             except PermissionDeniedError:
                 log_entry.update({"provider": "api_blocked", "reason": "approval_required"})
-                logger.info("API approval unavailable during escalation - keeping LOCAL fallback")
+                logger.info("API approval unavailable during escalation - surfacing approval requirement")
                 gc.collect()
+                raise
             except ProviderFailureError as e:
                 self._handle_api_failure(e, self.api.active_provider_name() if self.api else "none", route_epoch)
 

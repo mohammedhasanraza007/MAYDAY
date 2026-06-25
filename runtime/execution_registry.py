@@ -285,6 +285,58 @@ def _web_fetch(parameters: dict[str, Any]) -> tuple[bool, str]:
     return True, ""
 
 
+def _file_patch(parameters: dict[str, Any]) -> tuple[bool, str]:
+    valid, reason = _path_like("path", "file_path")(parameters)
+    if not valid:
+        return valid, reason
+    for field in ("old_text", "new_text"):
+        if not isinstance(parameters.get(field), str):
+            return False, f"{field} must be a string"
+    if not parameters.get("old_text"):
+        return False, "old_text must be non-empty"
+    return True, ""
+
+
+def _file_replace_block(parameters: dict[str, Any]) -> tuple[bool, str]:
+    valid, reason = _path_like("path", "file_path")(parameters)
+    if not valid:
+        return valid, reason
+    for field in ("block_name", "new_content"):
+        if not isinstance(parameters.get(field), str) or not parameters[field].strip():
+            return False, f"{field} must be a non-empty string"
+    return True, ""
+
+
+def _file_insert_after(parameters: dict[str, Any]) -> tuple[bool, str]:
+    valid, reason = _path_like("path", "file_path")(parameters)
+    if not valid:
+        return valid, reason
+    for field in ("after_pattern", "insert_text"):
+        if not isinstance(parameters.get(field), str) or not parameters[field]:
+            return False, f"{field} must be a non-empty string"
+    return True, ""
+
+
+def _file_delete_lines(parameters: dict[str, Any]) -> tuple[bool, str]:
+    valid, reason = _path_like("path", "file_path")(parameters)
+    if not valid:
+        return valid, reason
+    start_line = parameters.get("start_line", 1)
+    end_line = parameters.get("end_line", start_line)
+    if not isinstance(start_line, int) or start_line < 1:
+        return False, "start_line must be a positive integer"
+    if not isinstance(end_line, int) or end_line < start_line:
+        return False, "end_line must be an integer greater than or equal to start_line"
+    return True, ""
+
+
+def _run_tests(parameters: dict[str, Any]) -> tuple[bool, str]:
+    project_dir = parameters.get("project_dir", ".")
+    if not isinstance(project_dir, str) or not project_dir.strip():
+        return False, "project_dir must be a non-empty string when provided"
+    return True, ""
+
+
 BROWSER_ATOMIC_TOOLS = frozenset(
     {
         "browser_open",
@@ -337,14 +389,21 @@ _CONTRACTS: dict[str, ToolContract] = {
     "excel_read": ToolContract("excel_read", "sandbox_only", True, _path_like("path", "file_path")),
     "excel_write": ToolContract("excel_write", "sandbox_only", True, _excel_data),
     "file_delete": ToolContract("file_delete", "sandbox_only", True, _path_like("path", "file_path")),
+    "file_delete_lines": ToolContract("file_delete_lines", "sandbox_only", True, _file_delete_lines),
+    "file_insert_after": ToolContract("file_insert_after", "sandbox_only", True, _file_insert_after),
     "file_list": ToolContract("file_list", "sandbox_only", True, _path_like("path", "directory")),
+    "file_patch": ToolContract("file_patch", "sandbox_only", True, _file_patch),
     "file_read": ToolContract("file_read", "sandbox_only", True, _path_like("path", "file_path")),
+    "file_replace_block": ToolContract("file_replace_block", "sandbox_only", True, _file_replace_block),
     "file_write": ToolContract("file_write", "sandbox_only", True, _file_write),
     "gmail_get_unread": ToolContract("gmail_get_unread", "internet_only", True, _gmail_get_unread),
     "gmail_get_email_body": ToolContract("gmail_get_email_body", "internet_only", True, _gmail_get_email_body),
     "powershell_python_script": ToolContract("powershell_python_script", "restricted", True, _powershell_python_script),
     "powershell_run": ToolContract("powershell_run", "restricted", True, _non_empty_string("command")),
     "project": ToolContract("project", "sandbox_only", True, _scaffold),
+    "run_npm_test": ToolContract("run_npm_test", "restricted", True, _run_tests),
+    "run_pytest": ToolContract("run_pytest", "restricted", True, _run_tests),
+    "run_tests": ToolContract("run_tests", "restricted", True, _run_tests),
     "scaffold": ToolContract("scaffold", "sandbox_only", True, _scaffold),
     "server_launch": ToolContract("server_launch", "restricted", True, _server_launch),
     "server_runner": ToolContract("server_runner", "restricted", True, _server_launch),

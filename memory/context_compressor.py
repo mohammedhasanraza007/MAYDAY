@@ -9,9 +9,17 @@ class ContextCompressor:
 
     def compress(self, history: list[dict]) -> str:
         """Compress history to fit within token budget."""
+        pinned_parts = []
         parts = []
         token_count = 0
-        for entry in reversed(history):
+        normal_entries = []
+        for entry in history:
+            content = entry.get('content', '')
+            if entry.get('pinned') is True or entry.get('role') == 'tool':
+                pinned_parts.append(content)
+            else:
+                normal_entries.append(entry)
+        for entry in reversed(normal_entries):
             content = entry.get('content', '')
             tokens = len(content.split())
             if token_count + tokens > self.max_tokens:
@@ -22,7 +30,7 @@ class ContextCompressor:
             else:
                 parts.insert(0, content)
                 token_count += tokens
-        return '\n'.join(parts)
+        return '\n'.join(pinned_parts + parts)
 
     def _summarize_entry(self, content: str) -> str:
         words = content.split()

@@ -2,36 +2,12 @@
   "browser": {
     "active": true,
     "active_sessions": 1,
-    "current_url": "https://www.reddit.com/",
+    "current_url": "https://www.youtube.com/watch?v=OYcsHXWUTYI",
     "headless": false,
     "login_state": "unknown",
     "profile_dir": "E:\\MAYDAY\\runtime\\browser_profile",
-    "session_id": "dfb9ccf6-ffec-4011-9de9-1c78be167a38",
+    "session_id": "425da85c-3834-442b-95f1-7d25d40c16f1",
     "tabs": [
-      {
-        "session_id": "dee566f2-3fb3-43cc-9827-c9094656ec75",
-        "timestamp": "2026-05-27T05:35:23.399207+00:00",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/"
-      },
-      {
-        "session_id": "dee566f2-3fb3-43cc-9827-c9094656ec75",
-        "timestamp": "2026-05-27T05:35:23.846121+00:00",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/results?search_query=MrBeast+latest+video"
-      },
-      {
-        "session_id": "dee566f2-3fb3-43cc-9827-c9094656ec75",
-        "timestamp": "2026-05-27T05:35:24.150555+00:00",
-        "title": "MrBeast latest video - YouTube",
-        "url": "https://www.youtube.com/results?search_query=MrBeast+latest+video"
-      },
-      {
-        "session_id": "dee566f2-3fb3-43cc-9827-c9094656ec75",
-        "timestamp": "2026-05-27T05:35:27.361170+00:00",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/watch?v=6Zy5VLcEbZc"
-      },
       {
         "session_id": "dfb9ccf6-ffec-4011-9de9-1c78be167a38",
         "timestamp": "2026-05-27T05:35:52.146209+00:00",
@@ -127,9 +103,33 @@
         "timestamp": "2026-05-27T05:37:06.897326+00:00",
         "title": "Reddit - The heart of the internet",
         "url": "https://www.reddit.com/"
+      },
+      {
+        "session_id": "a9bc4758-3d7a-458f-8e54-5b80c380ba83",
+        "timestamp": "2026-05-30T06:42:33.685207+00:00",
+        "title": "Example Domain",
+        "url": "https://example.com"
+      },
+      {
+        "session_id": "6a94e6cd-e33f-45a8-bcb6-356bb4ee7a8e",
+        "timestamp": "2026-05-30T06:44:54.787828+00:00",
+        "title": "Example Domain",
+        "url": "https://example.com"
+      },
+      {
+        "session_id": "425da85c-3834-442b-95f1-7d25d40c16f1",
+        "timestamp": "2026-05-30T08:12:43.369781+00:00",
+        "title": "tmkoc old vods - YouTube",
+        "url": "https://www.youtube.com/results?search_query=tmkoc+old+vods"
+      },
+      {
+        "session_id": "425da85c-3834-442b-95f1-7d25d40c16f1",
+        "timestamp": "2026-05-30T08:12:48.420566+00:00",
+        "title": "Jethalal Ne Liya Garam Garam Jalebi Fafda Ke Maje | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah - YouTube",
+        "url": "https://www.youtube.com/watch?v=OYcsHXWUTYI"
       }
     ],
-    "title": "Reddit - The heart of the internet"
+    "title": "Jethalal Ne Liya Garam Garam Jalebi Fafda Ke Maje | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah - YouTube"
   },
   "created_at": "2026-05-17T18:33:21.725869+00:00",
   "desktop": {
@@ -137,7 +137,7 @@
     "last_process": {}
   },
   "filesystem": {
-    "current_project_path": "E:\\MAYDAY\\output",
+    "current_project_path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-3\\test_simple_file_prompt_recove0",
     "verified_files": [
       {
         "path": "app.py",
@@ -403,588 +403,163 @@
         "path": "E:\\MAYDAY\\output\\keyboard_list.txt",
         "sha256": "cc6afeef460320e8351820c01d8d6852efa07034f8cc22a31c8d86a32eaa5a5e",
         "timestamp": "2026-05-24T20:18:22.202602+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:29:58.109568+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-71\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T06:35:11.734680+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:35:19.382957+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-72\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T06:35:36.069592+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:36:02.299813+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-73\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T06:36:18.783667+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:42:52.806004+00:00"
+      },
+      {
+        "path": "requirements.txt",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:42:52.806004+00:00"
+      },
+      {
+        "path": "README.md",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:42:52.806004+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\output\\test_output.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T06:43:16.512761+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:43:27.546942+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-74\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T06:43:44.126665+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\output\\test_output.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T06:44:33.378652+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:44:33.709627+00:00"
+      },
+      {
+        "path": "requirements.txt",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:44:33.709627+00:00"
+      },
+      {
+        "path": "README.md",
+        "sha256": "",
+        "timestamp": "2026-05-30T06:44:33.709627+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T07:07:21.559144+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-75\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T07:07:44.924393+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T07:59:09.801553+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-80\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-05-30T07:59:43.904471+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-05-30T08:02:16.988792+00:00"
+      },
+      {
+        "path": "requirements.txt",
+        "sha256": "",
+        "timestamp": "2026-05-30T08:02:16.988792+00:00"
+      },
+      {
+        "path": "README.md",
+        "sha256": "",
+        "timestamp": "2026-05-30T08:02:16.988792+00:00"
+      },
+      {
+        "path": "E:\\MAYDAY\\output\\research_output.txt",
+        "sha256": "e03c7a02743d529c40ec4676d7f9627d7a4f78219f880ef31c95b5328ad49d67",
+        "timestamp": "2026-05-30T08:14:25.127741+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-06-25T05:55:22.675508+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-2\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-06-25T05:55:59.109724+00:00"
+      },
+      {
+        "path": "app.py",
+        "sha256": "",
+        "timestamp": "2026-06-25T06:13:16.901865+00:00"
+      },
+      {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-3\\test_simple_file_prompt_recove0\\hello.txt",
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timestamp": "2026-06-25T06:13:43.998651+00:00"
       }
     ]
   },
   "last_tool": {
-    "status": "success",
-    "timestamp": "2026-05-27T06:04:32.396719+00:00",
-    "tool_name": "web_search"
+    "status": "cancelled",
+    "timestamp": "2026-06-25T06:13:49.303269+00:00",
+    "tool_name": "browser_open"
   },
   "permissions": {
-    "blocked": {}
+    "blocked": {
+      "browser": {
+        "reason": "user_denied",
+        "timestamp": "2026-06-25T06:13:49.303269+00:00"
+      }
+    }
   },
   "task_progress": [
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:02:38.621253+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/"
-      },
-      "timestamp": "2026-05-24T20:02:41.596179+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/"
-      },
-      "timestamp": "2026-05-24T20:02:54.667700+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/results?search_query=any+Beastie+Boys"
-      },
-      "timestamp": "2026-05-24T20:02:55.144278+00:00",
-      "tool_name": "browser_press_key"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "any Beastie Boys - YouTube",
-        "url": "https://www.youtube.com/results?search_query=any+Beastie+Boys"
-      },
-      "timestamp": "2026-05-24T20:02:55.646570+00:00",
-      "tool_name": "browser_wait_for_navigation"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/watch?v=z5rRZdiu1UE&list=RDz5rRZdiu1UE&start_radio=1"
-      },
-      "timestamp": "2026-05-24T20:02:58.687971+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:03.507705+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      "timestamp": "2026-05-24T20:03:03.822315+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      "timestamp": "2026-05-24T20:03:04.204026+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "best gaming laptops under $1500 in 2026, summarize top 3 - Google Search",
-        "url": "https://www.google.com/search?q=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&sca_esv=f1fb8f2ab13df819&sxsrf=ANbL-n5y6PH8gx66qXQIXukn2-ujpZW70A%3A1779652982120&source=hp&ei=dlkTapPMBaLjseMPnaCX-A8&iflsig=AFdpzrgAAAAAahNnhrZXt_HoS5pxGGBjV5RS9iiArzeb&ved=0ahUKEwiT38j-29KUAxWicWwGHR3QBf8Q4dUDCBk&uact=5&oq=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&gs_lp=Egdnd3Mtd2l6IjhiZXN0IGdhbWluZyBsYXB0b3BzIHVuZGVyICQxNTAwIGluIDIwMjYsIHN1bW1hcml6ZSB0b3AgMzIEECMYJzIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FSPkEUL4CWL4CcAJ4AJABAJgBTaABTaoBATG4AQPIAQD4AQGYAgOgAleoAgrCAgcQIxjqAhgnwgIKEAAYAxiPARjqApgDBPEFoL0TTsyTjgSSBwEzoAfMBrIHATG4B1DCBwUwLjIuMcgHB4AIAQ&sclient=gws-wiz"
-      },
-      "timestamp": "2026-05-24T20:03:06.119143+00:00",
-      "tool_name": "browser_press_key"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "best gaming laptops under $1500 in 2026, summarize top 3 - Google Search",
-        "url": "https://www.google.com/search?q=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&sca_esv=f1fb8f2ab13df819&sxsrf=ANbL-n5y6PH8gx66qXQIXukn2-ujpZW70A%3A1779652982120&source=hp&ei=dlkTapPMBaLjseMPnaCX-A8&iflsig=AFdpzrgAAAAAahNnhrZXt_HoS5pxGGBjV5RS9iiArzeb&ved=0ahUKEwiT38j-29KUAxWicWwGHR3QBf8Q4dUDCBk&uact=5&oq=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&gs_lp=Egdnd3Mtd2l6IjhiZXN0IGdhbWluZyBsYXB0b3BzIHVuZGVyICQxNTAwIGluIDIwMjYsIHN1bW1hcml6ZSB0b3AgMzIEECMYJzIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FSPkEUL4CWL4CcAJ4AJABAJgBTaABTaoBATG4AQPIAQD4AQGYAgOgAleoAgrCAgcQIxjqAhgnwgIKEAAYAxiPARjqApgDBPEFoL0TTsyTjgSSBwEzoAfMBrIHATG4B1DCBwUwLjIuMcgHB4AIAQ&sclient=gws-wiz"
-      },
-      "timestamp": "2026-05-24T20:03:08.492230+00:00",
-      "tool_name": "browser_wait_for_navigation"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "best gaming laptops under $1500 in 2026, summarize top 3 - Google Search",
-        "url": "https://www.google.com/search?q=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&sca_esv=f1fb8f2ab13df819&sxsrf=ANbL-n5y6PH8gx66qXQIXukn2-ujpZW70A%3A1779652982120&source=hp&ei=dlkTapPMBaLjseMPnaCX-A8&iflsig=AFdpzrgAAAAAahNnhrZXt_HoS5pxGGBjV5RS9iiArzeb&ved=0ahUKEwiT38j-29KUAxWicWwGHR3QBf8Q4dUDCBk&uact=5&oq=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&gs_lp=Egdnd3Mtd2l6IjhiZXN0IGdhbWluZyBsYXB0b3BzIHVuZGVyICQxNTAwIGluIDIwMjYsIHN1bW1hcml6ZSB0b3AgMzIEECMYJzIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FSPkEUL4CWL4CcAJ4AJABAJgBTaABTaoBATG4AQPIAQD4AQGYAgOgAleoAgrCAgcQIxjqAhgnwgIKEAAYAxiPARjqApgDBPEFoL0TTsyTjgSSBwEzoAfMBrIHATG4B1DCBwUwLjIuMcgHB4AIAQ&sclient=gws-wiz",
-        "validation": {
-          "text_extracted": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:08.584720+00:00",
-      "tool_name": "browser_get_text"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-24T20:03:11.993386+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\output\\ai_comparison.txt"
-      },
-      "timestamp": "2026-05-24T20:03:12.011407+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Gmail",
-        "url": "https://mail.google.com/mail/u/0/#inbox"
-      },
-      "timestamp": "2026-05-24T20:03:15.696771+00:00",
-      "tool_name": "gmail_get_unread"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "(4) WhatsApp",
-        "url": "https://web.whatsapp.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:23.521485+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Team Sync",
-        "url": "https://calendar.google.com/calendar/r/eventedit?text=Team%20Sync%20at%202026-05-26T15%3A00%3A00&dates=2026-05-26T15%3A00%3A00"
-      },
-      "timestamp": "2026-05-24T20:03:26.760609+00:00",
-      "tool_name": "calendar_create_event"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com. Spend less. Smile more.",
-        "url": "https://www.amazon.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:37.142337+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com. Spend less. Smile more.",
-        "url": "https://www.amazon.com/"
-      },
-      "timestamp": "2026-05-24T20:03:37.682372+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com. Spend less. Smile more.",
-        "url": "https://www.amazon.com/"
-      },
-      "timestamp": "2026-05-24T20:03:38.170546+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com : wireless mechanical keyboards",
-        "url": "https://www.amazon.com/s?k=wireless+mechanical+keyboards&crid=280YV4PIEXJP7&sprefix=wireless+mechanical+keyboards%2Caps%2C289&ref=nb_sb_noss_1"
-      },
-      "timestamp": "2026-05-24T20:03:42.731576+00:00",
-      "tool_name": "browser_press_key"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com : wireless mechanical keyboards",
-        "url": "https://www.amazon.com/s?k=wireless+mechanical+keyboards&crid=280YV4PIEXJP7&sprefix=wireless+mechanical+keyboards%2Caps%2C289&ref=nb_sb_noss_1"
-      },
-      "timestamp": "2026-05-24T20:03:43.007807+00:00",
-      "tool_name": "browser_wait_for_navigation"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com : wireless mechanical keyboards",
-        "url": "https://www.amazon.com/s?k=wireless+mechanical+keyboards&crid=280YV4PIEXJP7&sprefix=wireless+mechanical+keyboards%2Caps%2C289&ref=nb_sb_noss_1",
-        "validation": {
-          "text_extracted": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:43.126537+00:00",
-      "tool_name": "browser_get_text"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Artificial Intelligence (AI)",
-        "url": "https://www.reddit.com/r/artificial/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:50.209339+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Artificial Intelligence (AI)",
-        "url": "https://www.reddit.com/r/artificial/",
-        "validation": {
-          "text_extracted": true
-        }
-      },
-      "timestamp": "2026-05-24T20:03:50.328891+00:00",
-      "tool_name": "browser_get_text"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-24T20:03:54.117589+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-24T20:03:57.723538+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\output\\phones.txt"
-      },
-      "timestamp": "2026-05-24T20:03:57.741673+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\output\\ai_automation.txt"
-      },
-      "timestamp": "2026-05-24T20:04:01.330383+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:04:07.918610+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:04:12.424359+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "d29abd97-8679-41aa-8429-e3ef745012a3",
-        "title": "Amazon.com. Spend less. Smile more.",
-        "url": "https://www.amazon.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:04:22.042058+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\output.xlsx"
-      },
-      "timestamp": "2026-05-24T20:05:29.280391+00:00",
-      "tool_name": "excel_create"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-24T20:05:32.757545+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\output\\keyboard_list.txt"
-      },
-      "timestamp": "2026-05-24T20:05:32.778989+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:12:55.159031+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/"
-      },
-      "timestamp": "2026-05-24T20:12:58.071069+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/"
-      },
-      "timestamp": "2026-05-24T20:13:11.138978+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "any Beastie Boys - YouTube",
-        "url": "https://www.youtube.com/results?search_query=any+Beastie+Boys"
-      },
-      "timestamp": "2026-05-24T20:13:11.704076+00:00",
-      "tool_name": "browser_press_key"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "any Beastie Boys - YouTube",
-        "url": "https://www.youtube.com/results?search_query=any+Beastie+Boys"
-      },
-      "timestamp": "2026-05-24T20:13:11.990817+00:00",
-      "tool_name": "browser_wait_for_navigation"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "YouTube",
-        "url": "https://www.youtube.com/watch?v=z5rRZdiu1UE&list=RDz5rRZdiu1UE&start_radio=1"
-      },
-      "timestamp": "2026-05-24T20:13:15.334936+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "Google",
-        "url": "https://www.google.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:13:21.148685+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      "timestamp": "2026-05-24T20:13:21.465146+00:00",
-      "tool_name": "browser_click"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "Google",
-        "url": "https://www.google.com/"
-      },
-      "timestamp": "2026-05-24T20:13:21.829220+00:00",
-      "tool_name": "browser_type"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "best gaming laptops under $1500 in 2026, summarize top 3 - Google Search",
-        "url": "https://www.google.com/search?q=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&sca_esv=f1fb8f2ab13df819&sxsrf=ANbL-n4njZwhruXnGkBB-dWHRqCWiXeqAg%3A1779653599123&source=hp&ei=31sTar_bBd2UseMPodGR6Q0&iflsig=AFdpzrgAAAAAahNp79s9_k4ND2nkCJXpbCex7t3Y2iYy&ved=0ahUKEwj_xuOk3tKUAxVdSmwGHaFoJN0Q4dUDCBk&uact=5&oq=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&gs_lp=Egdnd3Mtd2l6IjhiZXN0IGdhbWluZyBsYXB0b3BzIHVuZGVyICQxNTAwIGluIDIwMjYsIHN1bW1hcml6ZSB0b3AgMzIEECMYJzIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FSIcGUNECWNECcAJ4AJABAJgBU6ABU6oBATG4AQPIAQD4AQGYAgOgAl2oAgrCAgcQIxjqAhgnwgIKEAAYAxiPARjqApgDBPEFKFmBNaxZAQOSBwEzoAfMBrIHATG4B1bCBwUwLjIuMcgHCIAIAQ&sclient=gws-wiz"
-      },
-      "timestamp": "2026-05-24T20:13:22.931679+00:00",
-      "tool_name": "browser_press_key"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "best gaming laptops under $1500 in 2026, summarize top 3 - Google Search",
-        "url": "https://www.google.com/search?q=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&sca_esv=f1fb8f2ab13df819&sxsrf=ANbL-n4njZwhruXnGkBB-dWHRqCWiXeqAg%3A1779653599123&source=hp&ei=31sTar_bBd2UseMPodGR6Q0&iflsig=AFdpzrgAAAAAahNp79s9_k4ND2nkCJXpbCex7t3Y2iYy&ved=0ahUKEwj_xuOk3tKUAxVdSmwGHaFoJN0Q4dUDCBk&uact=5&oq=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&gs_lp=Egdnd3Mtd2l6IjhiZXN0IGdhbWluZyBsYXB0b3BzIHVuZGVyICQxNTAwIGluIDIwMjYsIHN1bW1hcml6ZSB0b3AgMzIEECMYJzIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FSIcGUNECWNECcAJ4AJABAJgBU6ABU6oBATG4AQPIAQD4AQGYAgOgAl2oAgrCAgcQIxjqAhgnwgIKEAAYAxiPARjqApgDBPEFKFmBNaxZAQOSBwEzoAfMBrIHATG4B1bCBwUwLjIuMcgHCIAIAQ&sclient=gws-wiz"
-      },
-      "timestamp": "2026-05-24T20:13:25.305398+00:00",
-      "tool_name": "browser_wait_for_navigation"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "best gaming laptops under $1500 in 2026, summarize top 3 - Google Search",
-        "url": "https://www.google.com/search?q=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&sca_esv=f1fb8f2ab13df819&sxsrf=ANbL-n4njZwhruXnGkBB-dWHRqCWiXeqAg%3A1779653599123&source=hp&ei=31sTar_bBd2UseMPodGR6Q0&iflsig=AFdpzrgAAAAAahNp79s9_k4ND2nkCJXpbCex7t3Y2iYy&ved=0ahUKEwj_xuOk3tKUAxVdSmwGHaFoJN0Q4dUDCBk&uact=5&oq=best+gaming+laptops+under+%241500+in+2026%2C+summarize+top+3&gs_lp=Egdnd3Mtd2l6IjhiZXN0IGdhbWluZyBsYXB0b3BzIHVuZGVyICQxNTAwIGluIDIwMjYsIHN1bW1hcml6ZSB0b3AgMzIEECMYJzIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FSIcGUNECWNECcAJ4AJABAJgBU6ABU6oBATG4AQPIAQD4AQGYAgOgAl2oAgrCAgcQIxjqAhgnwgIKEAAYAxiPARjqApgDBPEFKFmBNaxZAQOSBwEzoAfMBrIHATG4B1bCBwUwLjIuMcgHCIAIAQ&sclient=gws-wiz",
-        "validation": {
-          "text_extracted": true
-        }
-      },
-      "timestamp": "2026-05-24T20:13:25.399117+00:00",
-      "tool_name": "browser_get_text"
-    },
-    {
-      "status": "success",
-      "summary": {},
-      "timestamp": "2026-05-24T20:13:28.965380+00:00",
-      "tool_name": "web_search"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "path": "E:\\MAYDAY\\output\\ai_comparison.txt"
-      },
-      "timestamp": "2026-05-24T20:13:28.987751+00:00",
-      "tool_name": "file_write"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "Gmail",
-        "url": "https://mail.google.com/mail/u/0/#inbox"
-      },
-      "timestamp": "2026-05-24T20:13:32.698631+00:00",
-      "tool_name": "gmail_get_unread"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "(4) WhatsApp",
-        "url": "https://web.whatsapp.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:13:41.253440+00:00",
-      "tool_name": "browser_open"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "Team Sync",
-        "url": "https://calendar.google.com/calendar/r/eventedit?text=Team%20Sync%20at%202026-05-26T15%3A00%3A00&dates=2026-05-26T15%3A00%3A00"
-      },
-      "timestamp": "2026-05-24T20:13:44.803663+00:00",
-      "tool_name": "calendar_create_event"
-    },
-    {
-      "status": "success",
-      "summary": {
-        "session_id": "69ff8161-5d8a-444f-8613-2b18fafac94c",
-        "title": "Amazon.com. Spend less. Smile more.",
-        "url": "https://www.amazon.com/",
-        "validation": {
-          "http_status": 200,
-          "opened": true,
-          "screenshot_exists": true
-        }
-      },
-      "timestamp": "2026-05-24T20:13:54.275330+00:00",
-      "tool_name": "browser_open"
-    },
     {
       "status": "success",
       "summary": {
@@ -1502,7 +1077,481 @@
       "summary": {},
       "timestamp": "2026-05-27T06:04:32.396719+00:00",
       "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-30T06:29:58.109568+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:30:16.020918+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:30:16.034435+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:30:16.075923+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-71\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-30T06:35:11.734680+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-30T06:35:19.382957+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-72\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-30T06:35:36.069592+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:35:36.464779+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:35:36.477837+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:35:36.515974+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-30T06:36:02.299813+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-73\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-30T06:36:18.783667+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:36:19.171131+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:36:19.183076+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:36:19.219610+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "Permission required for Browser Open but UI is not connected.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:39:54.162383+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "error",
+      "summary": {
+        "error": "Page.goto: Timeout 20000ms exceeded.\nCall log:\nnavigating to \"https://example.com/\", waiting until \"domcontentloaded\"\n"
+      },
+      "timestamp": "2026-05-30T06:40:50.736462+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "final_url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EExample%20Domain%3C/title%3E%3C/head%3E%3Cbody%3E%3Ch1%3EExample%20Domain%3C/h1%3E%3Cp%3EThis%20page%20is%20available%20as%20an%20offline%20MAYDAY%20smoke-test%20fallback%20because%20the%20live%20example.com%20navigation%20failed.%3C/p%3E%3C/body%3E%3C/html%3E",
+        "session_id": "a9bc4758-3d7a-458f-8e54-5b80c380ba83",
+        "title": "Example Domain",
+        "url": "https://example.com",
+        "validation": {
+          "fallback_error": "Page.goto: Timeout 20000ms exceeded.\nCall log:\nnavigating to \"https://example.com/\", waiting until \"domcontentloaded\"\n",
+          "http_status": null,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-30T06:42:33.685207+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\demo_api"
+      },
+      "timestamp": "2026-05-30T06:42:52.806004+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\output\\test_output.txt"
+      },
+      "timestamp": "2026-05-30T06:43:16.512761+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-30T06:43:27.546942+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-74\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-30T06:43:44.126665+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:43:44.541137+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:43:44.554673+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T06:43:44.593519+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\output\\test_output.txt"
+      },
+      "timestamp": "2026-05-30T06:44:33.378652+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\demo_api"
+      },
+      "timestamp": "2026-05-30T06:44:33.709627+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "final_url": "data:text/html;charset=utf-8,%3C%21doctype%20html%3E%3Chtml%3E%3Chead%3E%3Ctitle%3EExample%20Domain%3C/title%3E%3C/head%3E%3Cbody%3E%3Ch1%3EExample%20Domain%3C/h1%3E%3Cp%3EThis%20page%20is%20available%20as%20an%20offline%20MAYDAY%20smoke-test%20fallback%20because%20the%20live%20example.com%20navigation%20failed.%3C/p%3E%3C/body%3E%3C/html%3E",
+        "session_id": "6a94e6cd-e33f-45a8-bcb6-356bb4ee7a8e",
+        "title": "Example Domain",
+        "url": "https://example.com",
+        "validation": {
+          "fallback_error": "Page.goto: Timeout 20000ms exceeded.\nCall log:\nnavigating to \"https://example.com/\", waiting until \"domcontentloaded\"\n",
+          "http_status": null,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-30T06:44:54.787828+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-30T07:07:21.559144+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-75\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-30T07:07:44.924393+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T07:07:45.644267+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T07:07:45.741144+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T07:07:45.971174+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-05-30T07:59:09.801553+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-80\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-05-30T07:59:43.904471+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T07:59:45.014890+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T07:59:45.093477+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-05-30T07:59:45.342074+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\demo_api"
+      },
+      "timestamp": "2026-05-30T08:02:16.988792+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "425da85c-3834-442b-95f1-7d25d40c16f1",
+        "title": "tmkoc old vods - YouTube",
+        "url": "https://www.youtube.com/results?search_query=tmkoc+old+vods",
+        "validation": {
+          "http_status": 200,
+          "opened": true,
+          "screenshot_exists": true
+        }
+      },
+      "timestamp": "2026-05-30T08:12:43.369781+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "session_id": "425da85c-3834-442b-95f1-7d25d40c16f1",
+        "title": "Jethalal Ne Liya Garam Garam Jalebi Fafda Ke Maje | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah - YouTube",
+        "url": "https://www.youtube.com/watch?v=OYcsHXWUTYI"
+      },
+      "timestamp": "2026-05-30T08:12:48.420566+00:00",
+      "tool_name": "browser_click"
+    },
+    {
+      "status": "success",
+      "summary": {},
+      "timestamp": "2026-05-30T08:14:22.707546+00:00",
+      "tool_name": "web_search"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "E:\\MAYDAY\\output\\research_output.txt"
+      },
+      "timestamp": "2026-05-30T08:14:25.127741+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-06-25T05:55:22.675508+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-2\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-06-25T05:55:59.109724+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-06-25T05:56:10.261066+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-06-25T05:56:10.280301+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-06-25T05:56:10.622910+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "project_dir": "E:\\MAYDAY\\projects\\test_app"
+      },
+      "timestamp": "2026-06-25T06:13:16.901865+00:00",
+      "tool_name": "scaffold"
+    },
+    {
+      "status": "success",
+      "summary": {
+        "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\pytest-of-Admin\\pytest-3\\test_simple_file_prompt_recove0\\hello.txt"
+      },
+      "timestamp": "2026-06-25T06:13:43.998651+00:00",
+      "tool_name": "file_write"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-06-25T06:13:49.217658+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User previously denied browser access (Browser Open). Reset permission blocks explicitly before retrying.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-06-25T06:13:49.238088+00:00",
+      "tool_name": "browser_open"
+    },
+    {
+      "status": "cancelled",
+      "summary": {
+        "error": "User denied execution of Browser Open.",
+        "reason": "user_denied"
+      },
+      "timestamp": "2026-06-25T06:13:49.303269+00:00",
+      "tool_name": "browser_open"
     }
   ],
-  "updated_at": "2026-05-27T06:04:32.396719+00:00"
+  "updated_at": "2026-06-25T06:13:49.303269+00:00"
 }

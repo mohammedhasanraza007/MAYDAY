@@ -10,6 +10,7 @@ import hashlib
 import json
 import logging
 import re
+import uuid
 from collections import deque
 from pathlib import Path
 from typing import Any, Callable
@@ -26,6 +27,9 @@ from core.json_parser import parse_model_output, safe_response_object
 from core.session import SessionManager
 from core.tool_recovery import FINALIZE_AFTER_TOOL, RECOVERY_SOURCE, recover_action_from_prompt
 from core.context_compressor import ContextCompressor
+from core.event_stream import AgentAction, AgentObservation, agent_event_stream
+from core.skill_loader import skill_loader
+from memory.condenser import FailureMemory, HierarchicalCondenser
 from runtime.task_graph import TaskGraphExecutor
 from runtime.action_schema import validate
 from runtime.execution_budget import ExecutionBudget, MAX_STEPS_PER_TASK
@@ -124,6 +128,8 @@ class Orchestrator:
         self._tools_used: list[dict[str, Any]] = []
         self._lock = threading.Lock()
         self._snapshot_manager = StateSnapshotManager()
+        self._condenser = HierarchicalCondenser()
+        self._failure_memory = FailureMemory()
 
     def set_callbacks(
         self,
@@ -154,6 +160,9 @@ class Orchestrator:
         executable = intent["executable"]
         required = intent["required_tools"]
         system_prompt = self._system_prompt(intent)
+        skill_injection = skill_loader.get_injections(user_prompt)
+        if skill_injection:
+            system_prompt = skill_injection + "\n" + system_prompt
         last_action_fingerprint = ""
         repeated_action_count = 0
         last_tool_result: dict[str, Any] | None = None
@@ -161,11 +170,17 @@ class Orchestrator:
         budget = ExecutionBudget()
         schema_failures = 0
 
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ]
         self.session.add_to_history("user", user_prompt)
+        compressed_history = self._condenser.compress(self.session.get_history())
+        messages = [{"role": "system", "content": system_prompt}]
+        for entry in compressed_history:
+            content = str(entry.get("content", ""))
+            if not content:
+                continue
+            role = str(entry.get("role", "user"))
+            if role not in {"system", "user", "assistant", "tool"}:
+                role = "user"
+            messages.append({"role": role, "content": content})
 
         for step in range(MAX_STEPS):
             budget.consume_step()
@@ -202,7 +217,18 @@ class Orchestrator:
                     self._inference_depth -= 1
 
             if not executable:
-                return raw.strip()
+                try:
+                    parsed_non_exec = parse_model_output(raw)
+                    if parsed_non_exec.get("action") != "respond":
+                        return self._build_final_response(
+                            {
+                                "action": "respond",
+                                "text": "Execution was blocked because the request intent was not validated for tool use.",
+                            }
+                        )
+                    return self._build_final_response(parsed_non_exec)
+                except Exception:
+                    return raw.strip()
 
             try:
                 action = self._prepare_action(raw, provider, user_prompt, messages)
@@ -433,7 +459,7 @@ class Orchestrator:
         messages.append({"role": "assistant", "content": compressed_action})
         messages.append({"role": "tool", "content": compressed_result})
         self.session.add_to_history("assistant", compressed_action, {"kind": "tool_action"})
-        self.session.add_to_history("tool", compressed_result, {"kind": "tool_result"})
+        self.session.add_to_history("tool", compressed_result, {"kind": "tool_result", "pinned": True})
 
     def _append_schema_failure_feedback(
         self,
@@ -455,6 +481,12 @@ class Orchestrator:
         }
         messages.append({"role": "assistant", "content": compressed_raw})
         messages.append({"role": "tool", "content": ContextCompressor.compress_tool_result(result)})
+        self.session.add_to_history("assistant", compressed_raw, {"kind": "schema_failure"})
+        self.session.add_to_history(
+            "tool",
+            ContextCompressor.compress_tool_result(result),
+            {"kind": "schema_failure_result", "pinned": True},
+        )
 
     def _format_tool_result_context(self, action: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         context = dict(result)
@@ -666,7 +698,11 @@ class Orchestrator:
         path = str(params.get("path", params.get("file_path", ""))).strip()
         path_lower = path.lower()
         import os
-        if path_lower.startswith("c:\\users") or not os.path.isabs(path):
+        import tempfile
+
+        temp_root = tempfile.gettempdir().lower()
+        is_temp_path = path_lower.startswith(temp_root)
+        if (path_lower.startswith("c:\\users") and not is_temp_path) or not os.path.isabs(path):
             filename = os.path.basename(path)
             if not filename:
                 filename = "notes.txt"
@@ -681,8 +717,16 @@ class Orchestrator:
         content = params.get("content", "")
         if not isinstance(content, str):
             return params
-        threshold = self._minimum_content_length(user_prompt, str(params.get("path", params.get("file_path", ""))))
+        if "minimum_chars" in params:
+            try:
+                threshold = int(params.get("minimum_chars", 0))
+            except (TypeError, ValueError):
+                threshold = 0
+        else:
+            threshold = self._minimum_content_length(user_prompt, str(params.get("path", params.get("file_path", ""))))
         if content.strip() and (threshold <= 0 or len(content.strip()) >= threshold):
+            return params
+        if content.strip() and re.search(r"\bwith\s+(?:text|content)\b", user_prompt, flags=re.IGNORECASE):
             return params
         if threshold <= 0 and content.strip():
             return params
@@ -843,12 +887,34 @@ class Orchestrator:
         if self._on_tool_call:
             self._on_tool_call(tool_name, parameters)
 
+        failure_params = dict(parameters or {})
+        if self._failure_memory.should_skip(tool_name, failure_params):
+            return {
+                "status": "error",
+                "error": (
+                    "I tried this action twice and it failed both times. "
+                    "Please check the error log or try a different approach."
+                ),
+                "classification": "failure_memory",
+            }
+
         safe_params = dict(parameters or {})
         safe_params.setdefault("_sandbox_mode", False)
         safe_params.setdefault("_intent_family", intent["family"])
         valid, reason = validate_capability(tool_name, intent["family"])
         if not valid:
+            self._failure_memory.record(tool_name, failure_params)
             return {"status": "error", "error": reason, "classification": "capability_violation"}
+
+        action_id = str(uuid.uuid4())[:8]
+        agent_event_stream.emit(
+            AgentAction(
+                type="tool_call",
+                tool=tool_name,
+                parameters=safe_params,
+                action_id=action_id,
+            )
+        )
 
         try:
             if hasattr(self.engine, "execute"):
@@ -856,11 +922,24 @@ class Orchestrator:
             elif hasattr(self.engine, "execute_tool"):
                 result = self.engine.execute_tool(tool_name, safe_params)
             else:
-                return {"status": "error", "error": "Engine has no execution entrypoint"}
+                result = {"status": "error", "error": "Engine has no execution entrypoint"}
         except Exception as exc:
-            return {"status": "error", "error": str(exc)}
+            result = {"status": "error", "error": str(exc)}
 
         if isinstance(result, dict):
+            status = str(result.get("status", "error"))
+            if status == "error":
+                self._failure_memory.record(tool_name, failure_params)
+            elif status not in {"success", "pending", "cancelled"}:
+                status = "error"
+            agent_event_stream.emit(
+                AgentObservation(
+                    action_id=action_id,
+                    status=status,
+                    result=result,
+                    pinned=True,
+                )
+            )
             logger.info(
                 "TOOL-RESULT: tool=%s status=%s result=%s",
                 tool_name,
@@ -868,7 +947,17 @@ class Orchestrator:
                 json.dumps(result, sort_keys=True, default=str)[:800],
             )
             return result
-        return {"status": "error", "error": f"Engine returned non-dict result: {type(result).__name__}"}
+        error_result = {"status": "error", "error": f"Engine returned non-dict result: {type(result).__name__}"}
+        self._failure_memory.record(tool_name, failure_params)
+        agent_event_stream.emit(
+            AgentObservation(
+                action_id=action_id,
+                status="error",
+                result=error_result,
+                pinned=True,
+            )
+        )
+        return error_result
 
     def _chain_lengths(self, action: dict[str, Any]) -> tuple[int, int]:
         if action.get("action") == "multi_tool_call":
@@ -998,6 +1087,10 @@ class Orchestrator:
                 "scaffold",
                 "file_write",
                 "file_read",
+                "file_patch",
+                "file_replace_block",
+                "file_insert_after",
+                "file_delete_lines",
                 "shell_run",
                 "powershell_run",
             },
@@ -1010,9 +1103,16 @@ class Orchestrator:
                 "scaffold",
                 "file_write",
                 "file_read",
+                "file_patch",
+                "file_replace_block",
+                "file_insert_after",
+                "file_delete_lines",
                 "excel_create",
                 "excel_write",
                 "excel_read",
+                "run_tests",
+                "run_pytest",
+                "run_npm_test",
             },
             "AUTOMATION": {
                 "tool_call",
@@ -1036,7 +1136,19 @@ class Orchestrator:
                 "gmail_get_unread",
                 "gmail_get_email_body",
             },
-            "FILE_OPS": {"tool_call", "multi_tool_call", "file_read", "file_write", "excel_create", "excel_write", "excel_read"},
+            "FILE_OPS": {
+                "tool_call",
+                "multi_tool_call",
+                "file_read",
+                "file_write",
+                "file_patch",
+                "file_replace_block",
+                "file_insert_after",
+                "file_delete_lines",
+                "excel_create",
+                "excel_write",
+                "excel_read",
+            },
         }
         allowed = allowed_actions_by_family.get(family)
         if not allowed or action_name not in allowed:
@@ -1058,9 +1170,32 @@ class Orchestrator:
 
     def _action_fingerprint(self, action: dict[str, Any]) -> str:
         try:
-            return json.dumps(action, sort_keys=True, default=str)
+            action_name = str(action.get("action", ""))
+            if action_name == "tool_call":
+                return self._tool_call_signature(
+                    str(action.get("tool_name", "")),
+                    action.get("parameters", {}),
+                )
+            if action_name == "multi_tool_call":
+                signatures = [
+                    self._tool_call_signature(
+                        str(entry.get("tool_name", "")),
+                        entry.get("parameters", {}),
+                    )
+                    for entry in action.get("tools", [])
+                    if isinstance(entry, dict)
+                ]
+                return hashlib.md5("|".join(signatures).encode()).hexdigest()
+            payload = dict(action)
+            payload.pop("action", None)
+            return self._tool_call_signature(action_name, payload)
         except Exception:
             return str(action)
+
+    def _tool_call_signature(self, tool_name: str, parameters: dict[str, Any]) -> str:
+        params_json = json.dumps(parameters or {}, sort_keys=True, separators=(",", ":"), default=str)
+        raw = tool_name + params_json
+        return hashlib.md5(raw.encode()).hexdigest()
 
     def _allowed_recovery_repeat(
         self,
@@ -1099,6 +1234,13 @@ class Orchestrator:
 
     def _should_return_tool_evidence(self, action: dict[str, Any], result: dict[str, Any], user_prompt: str = "") -> bool:
         if action.get(FINALIZE_AFTER_TOOL) is True:
+            return True
+        if (
+            result.get("status") == "success"
+            and action.get("action") == "tool_call"
+            and action.get("tool_name") == "browser_open"
+            and "title" in (user_prompt or "").lower()
+        ):
             return True
         if result.get("status") == "success" and self._simple_browser_open_completed(action, user_prompt):
             return True
