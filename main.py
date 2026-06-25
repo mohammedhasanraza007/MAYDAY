@@ -120,7 +120,6 @@ def initialize_application():
             from core.orchestrator import Orchestrator
             from model.loader import ModelLoader
             from model.inference import InferenceEngine
-            from model.lora_manager import LoRAManager
             from runtime.engine import ExecutionEngine
             from runtime.api_manager import ApiManager
             from runtime.server_runner import ServerRunner
@@ -135,10 +134,6 @@ def initialize_application():
 
             loader = ModelLoader()
             window.loader = loader
-
-            # Wire LoRA manager
-            lora_mgr = LoRAManager(model_loader=loader)
-            window.lora_manager = lora_mgr
 
             available = loader.get_available_models()
 

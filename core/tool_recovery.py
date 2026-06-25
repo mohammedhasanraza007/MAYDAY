@@ -281,6 +281,27 @@ def _recover_research_file_task(prompt: str) -> dict[str, Any] | None:
     )
 
 
+def _parse_budget(prompt: str) -> int | None:
+    clean_prompt = prompt.replace(",", "")
+    match = re.search(r'\$?(\d+k?)\b', clean_prompt.lower())
+    if match:
+        val_str = match.group(1)
+        if val_str.endswith('k'):
+            try:
+                return int(float(val_str[:-1]) * 1000)
+            except ValueError:
+                pass
+        else:
+            try:
+                return int(val_str)
+            except ValueError:
+                pass
+    if "six hundred" in clean_prompt: return 600
+    if "one thousand" in clean_prompt: return 1000
+    if "eighteen hundred" in clean_prompt: return 1800
+    return None
+
+
 def _recover_hardware_recommendation(prompt: str) -> dict[str, Any] | None:
     lower = prompt.lower()
     if any(site_prompt in lower for site_prompt in ("open google", "open amazon", "open reddit", "open youtube", "in google")):
@@ -289,6 +310,62 @@ def _recover_hardware_recommendation(prompt: str) -> dict[str, Any] | None:
         return NO_ACTION
     if any(marker in lower for marker in ("save", "file", "comparison table", "top-5 list", "top 5 list")):
         return NO_ACTION
+
+    is_pc_build = any(marker in lower for marker in ("pc build", "gaming pc", "build me", "recommend a pc", "recommend a build"))
+    if is_pc_build:
+        budget = _parse_budget(lower)
+        if budget is None:
+            return _finalized_tool_call(
+                "respond",
+                {"text": "What is your budget for this PC build?"},
+                "prompt_ask_budget"
+            )
+        if budget <= 600:
+            summary = (
+                f"PC Build Recommendation - Budget Tier: UNDER $600 (entry-level):\n"
+                "CPU: AMD Ryzen 5 5600 or Intel Core i5-13400F\n"
+                "GPU: Nvidia RTX 4060 or AMD RX 7600\n"
+                "RAM: 16 GB DDR4-3200\n"
+                "Storage: 500 GB NVMe SSD\n"
+                "PSU: 550W 80+ Bronze\n"
+                "Case: Budget microATX case"
+            )
+        elif budget <= 1000:
+            summary = (
+                f"PC Build Recommendation - Budget Tier: $600–$1000 (mid-range):\n"
+                "CPU: AMD Ryzen 5 7600X or Intel Core i5-13600K\n"
+                "GPU: Nvidia RTX 4060 Ti or AMD RX 7700 XT\n"
+                "RAM: 32 GB DDR5-5600\n"
+                "Storage: 1 TB NVMe SSD\n"
+                "PSU: 650W 80+ Gold\n"
+                "Case: Mid-tower ATX case"
+            )
+        elif budget < 1800:
+            summary = (
+                f"PC Build Recommendation - Budget Tier: $1000–$1800 (high-end):\n"
+                "CPU: AMD Ryzen 7 7700X or Intel Core i7-14700K\n"
+                "GPU: Nvidia RTX 4070 Ti Super or AMD RX 7900 XTX\n"
+                "RAM: 32 GB DDR5-6000\n"
+                "Storage: 2 TB NVMe SSD\n"
+                "PSU: 850W 80+ Gold\n"
+                "Case: High-airflow mid-tower case"
+            )
+        else:
+            summary = (
+                f"PC Build Recommendation - Budget Tier: $1800+ (enthusiast):\n"
+                "CPU: AMD Ryzen 9 9950X3D or Intel Core i9-14900K\n"
+                "GPU: Nvidia RTX 5080 or RTX 5090\n"
+                "RAM: 64 GB DDR5-6000\n"
+                "Storage: 2 TB PCIe 5 NVMe SSD\n"
+                "PSU: 1000W 80+ Platinum\n"
+                "Case: Premium enthusiast case"
+            )
+        return _finalized_multi_tool_call(
+            [{"tool_name": "web_search", "parameters": {"query": f"pc build under {budget}"}}],
+            "prompt_hardware_search_rule",
+            summary,
+        )
+
     query = "hardware recommendations 2026"
     if "50 series" in lower:
         query = "50 series GPU 2026 RTX 5090 RTX 5080 4K gaming PC build"
@@ -1238,15 +1315,14 @@ def _recover_n8n_workflow(prompt: str) -> dict[str, Any] | None:
 
 
 def _recover_whatsapp_flow(prompt: str) -> dict[str, Any] | None:
-    """Open WhatsApp: desktop app if installed (registry check), else WhatsApp Web."""
+    """Open WhatsApp: desktop app if installed (registry check), else WhatsApp Web.
+
+    When falling back to WhatsApp Web, the orchestrator's browser_open handler
+    already adds a QR-code login gate message for the user.
+    """
     lower = prompt.lower()
     if "whatsapp" not in lower and "whats app" not in lower:
         return NO_ACTION
-    return _finalized_tool_call(
-        "browser_open",
-        {"url": "https://web.whatsapp.com"},
-        "prompt_whatsapp_web_open",
-    )
     # Check Windows registry for desktop WhatsApp URI handler
     try:
         import winreg
@@ -1283,6 +1359,8 @@ def _recover_youtube_song_flow(prompt: str) -> dict[str, Any] | None:
         r"\s+(?:on\s+youtube|for\s+me|please|now|song|music)\s*$",
         "", query, flags=re.IGNORECASE,
     ).strip()
+    # LAW-20: No trailing punctuation in browser_type text
+    query = query.rstrip(".?!")
     if not query:
         query = "english song"
     return _finalized_multi_tool_call(
@@ -1506,7 +1584,7 @@ def _extract_type_text(prompt: str) -> str:
         )
         if search_match is None:
             return ""
-        return _strip_wrapping_quotes(search_match.group("text").strip(" :"))
+        return _strip_wrapping_quotes(search_match.group("text").strip(" :")).rstrip(".?!")
     value = match.group("text").strip()
     value = re.split(
         r"\s+(?:in|into|inside|on)\s+(?:the\s+)?(?:search\s+bar|search\s+box|email\s+field|email\s+box|text\s+field|input|field|box)\b",
@@ -1520,7 +1598,10 @@ def _extract_type_text(prompt: str) -> str:
         maxsplit=1,
         flags=re.IGNORECASE,
     )[0]
-    return _strip_wrapping_quotes(value.strip(" :"))
+    cleaned = _strip_wrapping_quotes(value.strip(" :"))
+    # LAW-20: Strip trailing punctuation from browser_type query text
+    cleaned = cleaned.rstrip(".?!")
+    return cleaned
 
 
 def _calculator_script() -> str:

@@ -168,6 +168,28 @@ class CalendarTools(BaseTool):
             return {"status": "error", "error": str(exc), "recoverable": False}
 
 
+def _format_calendar_datetime(dt_str: str) -> str:
+    """Convert various datetime formats to Google Calendar's YYYYMMDDTHHmmSS format.
+
+    LAW-21: No dashes, no colons — pure compact format.
+    """
+    import re
+    # Strip any timezone suffix for formatting
+    cleaned = re.sub(r"[Zz]$", "", dt_str.strip())
+    cleaned = re.sub(r"[+-]\d{2}:\d{2}$", "", cleaned)
+    # Remove dashes, colons, and spaces
+    cleaned = cleaned.replace("-", "").replace(":", "").replace(" ", "T")
+    # Ensure we have a T separator
+    if "T" not in cleaned and len(cleaned) >= 8:
+        cleaned = cleaned[:8] + "T" + cleaned[8:]
+    # Pad to at least YYYYMMDDTHHmmSS
+    if "T" in cleaned:
+        date_part, time_part = cleaned.split("T", 1)
+        time_part = (time_part + "000000")[:6]
+        cleaned = f"{date_part}T{time_part}"
+    return cleaned
+
+
 def calendar_create_event_via_browser(
     title: str,
     start_datetime: str,
@@ -178,24 +200,48 @@ def calendar_create_event_via_browser(
     oauth_error: str = "",
     **_kwargs: Any,
 ) -> dict:
-    text = f"{title} at {start_datetime}".strip()
+    import time as _time
+
+    text = title.strip()
     details = description.strip()
+
+    # LAW-21: Build dates parameter with compact format (no dashes, no colons)
+    start_compact = _format_calendar_datetime(start_datetime) if start_datetime else ""
+    end_compact = _format_calendar_datetime(end_datetime) if end_datetime else ""
+    if start_compact and not end_compact:
+        # Default to 1 hour after start
+        try:
+            base = datetime.strptime(start_compact, "%Y%m%dT%H%M%S")
+            end_compact = (base + timedelta(hours=1)).strftime("%Y%m%dT%H%M%S")
+        except ValueError:
+            end_compact = start_compact
+
     params = [f"text={quote(text)}"]
     if details:
         params.append(f"details={quote(details)}")
     if location:
         params.append(f"location={quote(location)}")
-    if start_datetime:
-        params.append(f"dates={quote(start_datetime)}")
+    if start_compact and end_compact:
+        params.append(f"dates={start_compact}/{end_compact}")
+    elif start_compact:
+        params.append(f"dates={start_compact}/{start_compact}")
+
     url = "https://calendar.google.com/calendar/r/eventedit?" + "&".join(params)
     session_id = ""
     page_url = url
+    page_title = "Google Calendar"
     browser = "playwright"
     try:
-        session, page = get_browser_page(create_new=False, return_session=True)
+        # Use create_new=True to avoid TargetClosedError on stale singleton frames
+        session, page = get_browser_page(create_new=True, return_session=True)
         session_id = session.id
         page.goto(url, wait_until="domcontentloaded", timeout=30000)
+        _time.sleep(2)
         page_url = page.url
+        try:
+            page_title = page.title()
+        except Exception:
+            pass
     except Exception as exc:
         import webbrowser
 
@@ -211,6 +257,7 @@ def calendar_create_event_via_browser(
         "session_id": session_id,
         "url": page_url,
         "title": title,
+        "page_title": page_title,
         "start_datetime": start_datetime,
         "end_datetime": end_datetime,
         "timezone": timezone,

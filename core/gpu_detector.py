@@ -102,6 +102,11 @@ class GPUDetector:
             suggested_layers = 36
 
         adapter_ram_gb = round(adapter_ram / (1024**3), 2) if adapter_ram else 0.0
+        gpu_name_upper = (gpu_name or "").upper()
+        if adapter_ram_gb < 5.0 and ("RX 6600" in gpu_name_upper or "RADEON" in gpu_name_upper):
+            logger.info("GPU-WORKAROUND: AMD Radeon RX 6600 detected with reported RAM %.2f GB. Doubling to unlock loading.", adapter_ram_gb)
+            adapter_ram_gb = adapter_ram_gb * 2.0
+
         cls._cached_info = {
             "gpu_name": gpu_name or "Standard Video Controller",
             "vendor": vendor,

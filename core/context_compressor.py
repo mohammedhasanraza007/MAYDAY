@@ -97,7 +97,7 @@ class ContextCompressor:
             if key in result:
                 value = result[key]
                 if isinstance(value, str):
-                    limit = 3000 if key in {"text", "body"} else 200
+                    limit = 300
                     if len(value) > limit:
                         value = value[:limit] + "..."
                 compressed[key] = value
@@ -113,8 +113,10 @@ class ContextCompressor:
                         continue
                     if isinstance(value, dict):
                         value = ContextCompressor.compress_tool_result(value)
-                    elif isinstance(value, str) and len(value) > 150:
-                        value = value[:150] + "..."
+                    elif isinstance(value, str):
+                        limit = 150
+                        if len(value) > limit:
+                            value = value[:limit] + "..."
                     sub[key] = value
                 sub_results.append(sub)
             compressed["results"] = sub_results
@@ -122,8 +124,8 @@ class ContextCompressor:
         for stream_key in ("stdout", "stderr"):
             if stream_key in result:
                 text = str(result[stream_key]).strip()
-                if len(text) > 200:
-                    text = text[:100] + "\n...\n" + text[-100:]
+                if len(text) > 300:
+                    text = text[:150] + "\n...\n" + text[-120:]
                 if text:
                     compressed[stream_key] = text
 

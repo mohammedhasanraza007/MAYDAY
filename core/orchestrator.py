@@ -245,7 +245,7 @@ class Orchestrator:
                         continue
                     action_name = action.get("action")
 
-            if executable and step == 0 and action_name == "respond" and provider not in {"exhausted", "circuit_breaker"}:
+            if executable and step == 0 and action_name == "respond" and provider not in {"exhausted", "circuit_breaker"} and schema_failures == 0:
                 raise ChatOnlyOutputError(
                     "Executable intent detected but model returned respond — required tools were: "
                     + ", ".join(required)
@@ -663,6 +663,19 @@ class Orchestrator:
         user_prompt: str,
         messages: list[dict[str, str]],
     ) -> dict[str, Any]:
+        path = str(params.get("path", params.get("file_path", ""))).strip()
+        path_lower = path.lower()
+        import os
+        if path_lower.startswith("c:\\users") or not os.path.isabs(path):
+            filename = os.path.basename(path)
+            if not filename:
+                filename = "notes.txt"
+            path = f"E:\\MAYDAY\\output\\{filename}"
+            params = dict(params)
+            params["path"] = path
+            if "file_path" in params:
+                params["file_path"] = path
+
         if params.get("template"):
             return params
         content = params.get("content", "")
@@ -721,6 +734,12 @@ class Orchestrator:
 
     def _minimum_content_length(self, user_prompt: str, path: str) -> int:
         text = f"{user_prompt} {path}".lower()
+        import re
+        word_match = re.search(r'(\d+)\s*word', text)
+        if word_match:
+            word_target = int(word_match.group(1))
+            return max(50, word_target * 5)
+
         suffix = Path(path).suffix.lower()
         if suffix in {".py", ".js", ".ts", ".tsx", ".jsx", ".html", ".css", ".json", ".yaml", ".yml"}:
             return 50
@@ -736,6 +755,10 @@ class Orchestrator:
 
     def _content_token_budget(self, user_prompt: str, path: str) -> int:
         minimum = self._minimum_content_length(user_prompt, path)
+        if minimum >= 2000:
+            return 3000
+        if minimum >= 1000:
+            return 2400
         if minimum >= 401:
             return 1800
         if minimum >= 201:
@@ -906,12 +929,49 @@ class Orchestrator:
         family = classify(user_prompt)
         required = required_tools_for(user_prompt)
         executable = is_executable_intent(user_prompt)
+
+        # LAW-22: Content requested inside chat must respond inline (no file_write
+        # fallback) unless the user explicitly asks to save to a file.
+        if executable and self._is_inline_content_request(user_prompt):
+            logger.info("LAW-22: inline content request detected — forcing CHAT mode")
+            family = "CHAT"
+            required = []
+            executable = False
+
         return {
             "raw_input": user_prompt,
             "family": family or "CHAT",
             "required_tools": required,
             "executable": executable,
         }
+
+    @staticmethod
+    def _is_inline_content_request(user_prompt: str) -> bool:
+        """Detect prompts that ask for text content inline (essay, list, explanation)
+        without explicit file/save intent.
+
+        Returns True when the model should respond inline instead of using file_write.
+        """
+        lower = user_prompt.lower()
+
+        # If the user explicitly wants a file, let the tool handle it
+        file_keywords = (
+            "save", "file", "write to", "save to", "create a file",
+            "make a file", "write a file", "to disk", "output to",
+            ".txt", ".md", ".py", ".js", ".html", ".csv", ".json",
+            ".xlsx", "spreadsheet", "excel",
+        )
+        if any(kw in lower for kw in file_keywords):
+            return False
+
+        # Content-generation verbs that suggest inline response
+        content_verbs = (
+            "list ", "explain", "describe", "summarize", "summarise",
+            "write me", "write a ", "tell me", "give me", "draft ",
+            "compare", "what is", "what are", "how to", "why ",
+            "define ", "outline", "pros and cons",
+        )
+        return any(kw in lower for kw in content_verbs)
 
     def _action_allowed_for_intent(self, action: dict[str, Any], intent: dict[str, Any]) -> bool:
         action_name = action.get("action", "")

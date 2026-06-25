@@ -40,6 +40,9 @@ class FileTools(BaseTool):
 
     def _validate_path(self, path: str) -> Path:
         p = Path(path).resolve()
+        p_str = str(p).lower()
+        if p_str.startswith("c:\\users"):
+            raise ScopeViolationError("Path is inside hard-blocked directory: C:\\Users")
         if ALLOWED_ROOTS:
             if not any(str(p).startswith(r) for r in ALLOWED_ROOTS):
                 raise ScopeViolationError(f'Path {p} outside allowed roots')

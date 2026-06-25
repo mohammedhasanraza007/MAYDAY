@@ -1,8 +1,8 @@
 """
 M.A.Y.D.A.Y Main Window — v5.0 Fully Integrated
 ==================================================
-Compliance: Sidebar navigation, Chat, Model Manager, LoRA, API, Dashboard.
-Thread cleanup on finish. RAM tracking via psutil. LoRA wired to real backend.
+Compliance: Sidebar navigation, Chat, Model Manager, API, Dashboard.
+Thread cleanup on finish. RAM tracking via psutil.
 """
 import gc
 import logging
@@ -15,7 +15,7 @@ from PyQt6.QtCore import Qt, pyqtSlot, QTimer
 
 from ui.theme import THEME, FONTS, SIDEBAR_STYLE, SIDEBAR_BTN_STYLE
 from ui.panels import (ChatPanel, ModelManagerPanel, LogsPanel,
-                       DashboardPanel, LoRAManagerPanel, APIManagerPanel)
+                       DashboardPanel, APIManagerPanel)
 from ui.bridge import InferenceThread, LogSignalHandler, DownloadThread, GatewaySignalBridge
 from model.downloader import DOWNLOAD_TARGETS
 from runtime.permission_gate import permission_gate
@@ -30,7 +30,6 @@ class MainWindow(QMainWindow):
         self.orchestrator = orchestrator
         self.loader = loader
         self.downloader = downloader
-        self.lora_manager = None  # Set after services init
         self.api_manager = None
         self.active_threads: list = []
 
@@ -80,9 +79,8 @@ class MainWindow(QMainWindow):
             ("Factory Dashboard", 0),
             ("Chat Assistant", 1),
             ("Model Manager", 2),
-            ("LoRA Manager", 3),
-            ("API Configuration", 4),
-            ("System Logs", 5)
+            ("API Configuration", 3),
+            ("System Logs", 4)
         ]
 
         for text, index in nav_items:
@@ -108,7 +106,6 @@ class MainWindow(QMainWindow):
         self.pane_dashboard = DashboardPanel()
         self.pane_chat = ChatPanel()
         self.pane_models = ModelManagerPanel(DOWNLOAD_TARGETS)
-        self.pane_lora = LoRAManagerPanel()
         self.pane_api = APIManagerPanel()
         self.pane_logs = LogsPanel()
 
@@ -117,10 +114,7 @@ class MainWindow(QMainWindow):
         self.pane_models.download_model.connect(self.handle_download_request)
         self.pane_models.load_model.connect(self.handle_load_request)
 
-        # Connections — LoRA (folder-based)
-        self.pane_lora.ingest_folder.connect(self.handle_lora_ingest)
-        self.pane_lora.prepare_dataset.connect(self.handle_lora_prepare)
-        self.pane_lora.load_adapter.connect(self.handle_lora_load_adapter)
+
 
         self.pane_api.api_keys_saved.connect(self.handle_api_key_save)
         self.pane_api.api_approval_changed.connect(self.handle_api_approval_changed)
@@ -131,7 +125,6 @@ class MainWindow(QMainWindow):
         self.content_stack.addWidget(self.pane_dashboard)
         self.content_stack.addWidget(self.pane_chat)
         self.content_stack.addWidget(self.pane_models)
-        self.content_stack.addWidget(self.pane_lora)
         self.content_stack.addWidget(self.pane_api)
         self.content_stack.addWidget(self.pane_logs)
 
@@ -303,50 +296,7 @@ class MainWindow(QMainWindow):
             self.status.showMessage(f"Failed to load/verify Tier {tier}.")
             self._refresh_model_status()
 
-    # ── LoRA Handlers (Folder-Based) ──────────────────────────────────────
 
-    def handle_lora_ingest(self, folder_path):
-        """Handle folder ingestion from LoRA panel."""
-        if self.lora_manager is None:
-            self.pane_lora.ingest_status.setText("Error: LoRA manager not initialized")
-            return
-
-        self.status.showMessage(f"Ingesting folder: {folder_path}...")
-        try:
-            stats = self.lora_manager.ingest_folder(folder_path)
-            self.pane_lora.update_ingest_status(stats)
-            self.status.showMessage("Folder ingestion complete.")
-        except Exception as e:
-            self.pane_lora.ingest_status.setText(f"Error: {e}")
-            self.status.showMessage(f"Ingestion failed: {e}")
-
-    def handle_lora_prepare(self, output_path):
-        """Handle JSONL dataset preparation."""
-        if self.lora_manager is None:
-            return
-        try:
-            result_path = self.lora_manager.prepare_dataset(output_path)
-            self.pane_lora._log(f"Dataset saved: {result_path}")
-            self.status.showMessage(f"Dataset prepared: {result_path}")
-        except Exception as e:
-            self.pane_lora._log(f"Prepare error: {e}")
-            self.status.showMessage(f"Dataset preparation failed: {e}")
-
-    def handle_lora_load_adapter(self, adapter_path):
-        """Handle GGUF adapter loading."""
-        if self.lora_manager is None:
-            return
-        try:
-            ok = self.lora_manager.load_adapter(adapter_path)
-            if ok:
-                self.pane_lora.update_adapter_status(adapter_path)
-                self.status.showMessage(f"Adapter loaded: {adapter_path}")
-            else:
-                self.pane_lora.update_adapter_status(None)
-                self.status.showMessage("Adapter load failed.")
-        except Exception as e:
-            self.pane_lora._log(f"Adapter error: {e}")
-            self.status.showMessage(f"Adapter load failed: {e}")
 
     # ── Public API ────────────────────────────────────────────────────────
 

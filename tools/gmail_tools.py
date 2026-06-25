@@ -164,17 +164,42 @@ def gmail_get_unread_via_browser(
     page_url = url
     content = "Gmail opened in browser fallback. Sign in if prompted, then review the inbox."
     browser = "playwright"
+    emails_parsed: list[dict] = []
     try:
         session, page = get_browser_page(create_new=False, return_session=True)
         session_id = session.id
         page.goto(url, wait_until="domcontentloaded", timeout=30000)
-        time.sleep(2)
+        time.sleep(3)
         page_url = page.url
         title = page.title()
         try:
             content = page.inner_text("body", timeout=5000)
         except Exception as exc:
             content = f"Gmail opened in browser, but visible text could not be read yet: {exc}"
+
+        # Parse real email data from visible page text
+        if content and len(content) > 50:
+            lines = [line.strip() for line in content.splitlines() if line.strip()]
+            # Gmail inbox lines typically contain sender, subject, snippet, and date info
+            # Extract consecutive line groups that look like email entries
+            i = 0
+            while i < len(lines) and len(emails_parsed) < max_results:
+                line = lines[i]
+                # Skip navigation/menu lines
+                if len(line) < 3 or line.lower() in ("inbox", "starred", "snoozed", "sent", "drafts", "more", "compose"):
+                    i += 1
+                    continue
+                # Heuristic: email rows often have sender name, then subject, then snippet
+                # Look for lines that contain " - " separator (Gmail subject - snippet pattern)
+                if " - " in line and i > 0:
+                    parts = line.split(" - ", 1)
+                    emails_parsed.append({
+                        "from": lines[i - 1] if i > 0 else "Unknown",
+                        "subject": parts[0].strip()[:120],
+                        "preview": parts[1].strip()[:200] if len(parts) > 1 else "",
+                    })
+                i += 1
+
     except Exception as exc:
         import webbrowser
 
