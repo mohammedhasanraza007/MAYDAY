@@ -1,40 +1,83 @@
-# Python cache
-__pycache__/
-*.pyc
+Python cache
 
-# Local models
+pycache/
+*.py[cod]
+*$py.class
+
+Virtual environments
+
+.venv/
+venv/
+env/
+ENV/
+
+Local models
+
 models/
 model/
 *.gguf
 *.bin
 *.safetensors
 
-# Runtime state
+Runtime state
+
 runtime/browser_profile/
 runtime/python/
 runtime/world_state.json
 
-# Logs
+Logs
+
 *.log
 logs/
 install_logs/
 
-# Scratch/testing
+Scratch/testing
+
 scratch/
 tool_test_workspace/
 
-# Secrets
+Secrets
+
 .env
+.env.*
 keys.enc
 .mayday_salt
 
-# Generated outputs
+Generated outputs
+
 output/
 *.xlsx
 *.tmp
 
-# Editor/OS junk
+Build artifacts
+
+build/
+dist/
+*.egg-info/
+
+Editor/OS junk
+
 .vscode/
 .idea/
 Thumbs.db
 Desktop.ini
+
+Operating system
+
+.DS_Store
+
+Test artifacts
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+Mayday screenshots & reports (optional)
+
+Uncomment if you don't want generated docs committed
+
+images/
+
+reports/
+
+docs/
